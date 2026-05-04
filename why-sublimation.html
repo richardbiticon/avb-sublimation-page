@@ -1,0 +1,1482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why Custom Sublimated Jerseys | All Volleyball</title>
+<meta name="description" content="Custom sublimated jerseys built for your program. Volleyball-only since 1995. Done correctly. On time. Under budget.">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Tailwind via the official Play CDN. Prototype only; the Shopify port should compile Tailwind from source. -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          'avb-black':    '#0A0A0A',
+          'avb-body':     '#242424',
+          'avb-red':      '#C23946',
+          'avb-red-dark': '#A82F3B',
+          'avb-offwhite': '#FCF8F7',
+          'avb-grey':     '#6B6C6C',
+          'avb-divider':  '#E8E6E4',
+          'avb-promo':    '#F2F2F2',
+        },
+        fontFamily: {
+          display: ['Oswald', 'sans-serif'],
+          body:    ['Inter',  'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
+
+<!-- Three.js as ES modules. Used only by the jersey explorer. -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+  }
+}
+</script>
+
+<style>
+  body { font-family: 'Inter', sans-serif; color: #242424; background: #fff; -webkit-font-smoothing: antialiased; }
+  .font-display { font-family: 'Oswald', sans-serif; }
+  .display-tight { letter-spacing: -0.015em; }
+
+  /* Hero loads with a single slow fade. No looping. */
+  .hero-fade { opacity: 0; animation: heroFade 900ms ease-out 80ms forwards; }
+  @keyframes heroFade { to { opacity: 1; } }
+
+  /* Reveal-on-scroll. CSS hides the initial state; GSAP fades in.
+     If GSAP fails to load, the JS fallback adds .is-visible. */
+  .reveal { opacity: 0; transform: translateY(20px); }
+  .reveal.is-visible { opacity: 1; transform: translateY(0);
+    transition: opacity 800ms cubic-bezier(.2,.7,.2,1), transform 800ms cubic-bezier(.2,.7,.2,1); }
+
+  /* Timeline dots transition position when the date changes. */
+  .timeline-dot { transition: left 500ms cubic-bezier(.4,0,.2,1); }
+  .timeline-dot.target .dot-mark { animation: pulseRed 1.2s ease-out; }
+  @keyframes pulseRed {
+    0%   { box-shadow: 0 0 0 0 rgba(194,57,70,.55); }
+    100% { box-shadow: 0 0 0 14px rgba(194,57,70,0); }
+  }
+
+  /* Calendar */
+  .cal-cell { aspect-ratio: 1 / 1; }
+  .cal-day {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-feature-settings: 'tnum';
+    font-size: 0.9rem;
+    transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+  }
+  .cal-day--default  { color: #0A0A0A; }
+  .cal-day--default:hover  { background-color: #FCF8F7; }
+  .cal-day--today    { color: #0A0A0A; font-weight: 600; box-shadow: inset 0 0 0 1px #0A0A0A; }
+  .cal-day--today:hover    { background-color: #0A0A0A; color: #fff; }
+  .cal-day--selected { background-color: #C23946; color: #fff; font-weight: 600; }
+  .cal-day--disabled { color: rgba(107,108,108,0.32); cursor: not-allowed; }
+
+  /* Quick-pick scenario chips under the calendar */
+  .scenario-chip {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    padding: 7px 14px;
+    border: 1px solid #E8E6E4;
+    background: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-weight: 600;
+    color: #0A0A0A;
+    transition: all 200ms ease;
+    cursor: pointer;
+  }
+  .scenario-chip:hover { border-color: #0A0A0A; background: #0A0A0A; color: #fff; }
+  .scenario-chip.active { background: #0A0A0A; color: #fff; border-color: #0A0A0A; }
+
+  /* Hide scrollbar on the nav row when it overflows. */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+
+  /* Buttons */
+  .btn-red { background-color: #C23946; transition: background-color 200ms ease, transform 250ms cubic-bezier(.2,.7,.2,1); }
+  .btn-red:hover { background-color: #A82F3B; }
+  .btn-ghost-light { transition: background-color 200ms ease, border-color 200ms ease; }
+  .btn-ghost-light:hover { background-color: rgba(255,255,255,.06); }
+  .btn-ghost-dark { transition: background-color 200ms ease, color 200ms ease; }
+  .btn-ghost-dark:hover { background-color: #0A0A0A; color: #fff; }
+
+  .link-inline { text-decoration: underline; text-decoration-color: transparent;
+    text-underline-offset: 4px; transition: text-decoration-color 200ms ease, color 150ms ease; }
+  .link-inline:hover { text-decoration-color: currentColor; }
+
+  /* ============ JERSEY EXPLORER (3D) ============ */
+  #jersey-canvas { touch-action: none; cursor: grab; }
+  #jersey-canvas:active { cursor: grabbing; }
+  .hotspot {
+    position: absolute;
+    left: -100px; top: -100px; /* park off-canvas until first projection */
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.95);
+    border: 2px solid #C23946;
+    color: #0A0A0A;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    opacity: 0;
+    transition: transform 250ms cubic-bezier(.2,.7,.2,1), opacity 350ms ease, background 200ms ease;
+    will-change: left, top, opacity, transform;
+    z-index: 5;
+  }
+  .hotspot.ready { opacity: 1; }
+  .hotspot::before {
+    content: '';
+    position: absolute; inset: -8px;
+    border-radius: 50%;
+    border: 2px solid #C23946;
+    opacity: 0.35;
+    animation: hotspotPing 2s cubic-bezier(.2,.7,.2,1) infinite;
+  }
+  .hotspot:hover { background: #C23946; color: #fff; transform: translate(-50%, -50%) scale(1.12); }
+  .hotspot.active { background: #C23946; color: #fff; transform: translate(-50%, -50%) scale(1.18); }
+  .hotspot.facing-away { opacity: 0.15; pointer-events: none; }
+  .hotspot.facing-away::before { display: none; }
+  @keyframes hotspotPing {
+    0%   { transform: scale(1);    opacity: 0.45; }
+    80%  { transform: scale(1.6);  opacity: 0; }
+    100% { transform: scale(1.6);  opacity: 0; }
+  }
+
+  /* ============ WORKFLOW CHART ============ */
+  .wf-node {
+    position: relative;
+    display: flex; flex-direction: column; align-items: center;
+    cursor: pointer;
+    background: transparent; border: none;
+    padding: 0;
+    flex: 1;
+    min-width: 0;
+    z-index: 2;
+  }
+  .wf-node-num {
+    width: 56px; height: 56px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 999px;
+    background: #0A0A0A;
+    border: 1px solid rgba(255,255,255,0.18);
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.5);
+    transition: all 350ms cubic-bezier(.2,.7,.2,1);
+    z-index: 2;
+  }
+  .wf-node.active .wf-node-num {
+    background: #C23946;
+    border-color: #C23946;
+    color: #fff;
+    transform: scale(1.18);
+    box-shadow: 0 0 0 8px rgba(194,57,70,0.16);
+  }
+  .wf-node.completed .wf-node-num {
+    background: #fff; color: #0A0A0A; border-color: #fff;
+  }
+  .wf-node-label {
+    margin-top: 14px;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    font-weight: 600;
+    transition: color 300ms ease;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .wf-node.active .wf-node-label,
+  .wf-node.completed .wf-node-label { color: #fff; }
+
+  /* Mobile rows reuse the wf-node-num element; mirror the active treatment. */
+  .wf-node-mobile.active .wf-node-num {
+    background: #C23946; border-color: #C23946; color: #fff;
+  }
+  .wf-node-mobile.completed .wf-node-num {
+    background: #fff; color: #0A0A0A; border-color: #fff;
+  }
+
+  .wf-track {
+    position: absolute;
+    top: 28px; left: 0; right: 0; height: 1px;
+    background: rgba(255,255,255,0.15);
+    z-index: 1;
+  }
+  .wf-progress {
+    position: absolute;
+    top: 28px; left: 0; height: 2px;
+    background: #C23946;
+    transition: width 700ms cubic-bezier(.4,0,.2,1);
+    z-index: 1;
+  }
+
+  /* ============ BRAND WHEEL (3D) ============ */
+  .brand-stage {
+    perspective: 1600px;
+    perspective-origin: 50% 50%;
+    height: clamp(220px, 32vw, 320px);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .brand-wheel {
+    position: relative;
+    width: clamp(240px, 32vw, 360px);
+    height: clamp(150px, 20vw, 220px);
+    transform-style: preserve-3d;
+    animation: wheelSpin 28s linear infinite;
+    will-change: transform;
+  }
+  .brand-stage:hover .brand-wheel { animation-play-state: paused; }
+  @media (prefers-reduced-motion: reduce) {
+    .brand-wheel { animation: none; }
+  }
+  .brand-card {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: #fff;
+    border: 1px solid #E8E6E4;
+    backface-visibility: hidden;
+    padding: 20px;
+  }
+  /* 5 brands × 72° apart, translated outward on Z. */
+  .brand-card:nth-child(1) { transform: rotateY(  0deg) translateZ(260px); }
+  .brand-card:nth-child(2) { transform: rotateY( 72deg) translateZ(260px); }
+  .brand-card:nth-child(3) { transform: rotateY(144deg) translateZ(260px); }
+  .brand-card:nth-child(4) { transform: rotateY(216deg) translateZ(260px); }
+  .brand-card:nth-child(5) { transform: rotateY(288deg) translateZ(260px); }
+  @media (max-width: 768px) {
+    .brand-card:nth-child(1) { transform: rotateY(  0deg) translateZ(180px); }
+    .brand-card:nth-child(2) { transform: rotateY( 72deg) translateZ(180px); }
+    .brand-card:nth-child(3) { transform: rotateY(144deg) translateZ(180px); }
+    .brand-card:nth-child(4) { transform: rotateY(216deg) translateZ(180px); }
+    .brand-card:nth-child(5) { transform: rotateY(288deg) translateZ(180px); }
+  }
+  @keyframes wheelSpin {
+    from { transform: rotateY(0deg);    }
+    to   { transform: rotateY(-360deg); }
+  }
+
+  /* ============ STAT STRIP ============ */
+  .stat-block {
+    position: relative;
+    padding-top: 32px;
+  }
+  .stat-block::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 40px; height: 2px;
+    background: #C23946;
+  }
+  @media (min-width: 1024px) {
+    .stat-block { padding-left: 28px; }
+    .stat-block::before { left: 28px; }
+    .stat-block:first-child { padding-left: 0; }
+    .stat-block:first-child::before { left: 0; }
+  }
+</style>
+</head>
+<body class="font-body">
+
+<!-- ====================================================================
+     HEADER
+     ==================================================================== -->
+<header class="w-full relative z-30">
+
+  <div class="bg-avb-black text-white text-center text-xs py-2 px-4 tracking-wide">
+    Purchase Orders &amp; Tax-Exempt welcome!
+  </div>
+
+  <div class="bg-white border-b border-avb-divider">
+    <div class="max-w-[1440px] mx-auto px-4 lg:px-6 py-3 flex items-center gap-4">
+
+      <a href="/" class="flex items-center gap-2.5 shrink-0" aria-label="All Volleyball home">
+        <svg viewBox="0 0 50 44" class="w-9 h-8 shrink-0" aria-hidden="true">
+          <path fill="#C23946" fill-rule="evenodd" d="M25 2 L48 42 L2 42 Z M25 16 L37 38 L13 38 Z"/>
+          <rect x="17" y="34" width="16" height="2.5" fill="#C23946"/>
+        </svg>
+        <span class="font-semibold text-avb-black tracking-wide text-base hidden sm:inline">ALL VOLLEYBALL</span>
+      </a>
+
+      <div class="flex-1 max-w-2xl mx-4 hidden md:block">
+        <div class="bg-gray-100 rounded-full flex items-center px-4 py-2.5">
+          <svg class="w-4 h-4 text-gray-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.2-5.2M17 11a6 6 0 1 1-12 0 6 6 0 0 1 12 0Z"/></svg>
+          <input type="text" placeholder="Search shoes, jerseys, brands" aria-label="Search" class="bg-transparent outline-none text-sm flex-1 ml-3 placeholder-gray-500 text-avb-black">
+          <button aria-label="Voice search" class="text-gray-500 hover:text-avb-black transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 0 0 6-6v-1.5M12 18.75a6 6 0 0 1-6-6v-1.5m6 7.5v3m0 0h3.75M12 21.75H8.25M15.75 5.25v6a3.75 3.75 0 0 1-7.5 0v-6a3.75 3.75 0 0 1 7.5 0Z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 shrink-0 ml-auto">
+        <a href="#timeline" class="bg-avb-black hover:bg-black text-white text-sm font-medium px-5 py-2.5 rounded-full transition-colors hidden sm:inline-block">Request a Quote</a>
+        <button aria-label="Account" class="text-avb-black hover:text-avb-red transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.964 0a9 9 0 1 0-11.964 0m11.964 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+        </button>
+        <button aria-label="Cart" class="text-avb-black hover:text-avb-red transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bg-white border-b border-avb-divider">
+    <div class="max-w-[1440px] mx-auto px-4 lg:px-6">
+      <ul class="flex items-center justify-center gap-x-7 lg:gap-x-9 overflow-x-auto py-3 text-sm font-medium text-avb-black no-scrollbar">
+        <li><a href="#" class="whitespace-nowrap hover:text-avb-red transition-colors">Shoes</a></li>
+        <li><a href="#" class="whitespace-nowrap hover:text-avb-red transition-colors">Volleyballs</a></li>
+        <li><a href="#" class="whitespace-nowrap hover:text-avb-red transition-colors">Women</a></li>
+        <li><a href="#" class="whitespace-nowrap hover:text-avb-red transition-colors">Men</a></li>
+        <li><a href="#" class="whitespace-nowrap hover:text-avb-red transition-colors">Accessories</a></li>
+        <li><a href="#" class="whitespace-nowrap hover:text-avb-red transition-colors">Jerseys</a></li>
+        <li><a href="#" class="whitespace-nowrap hover:text-avb-red transition-colors">Teams &amp; Clubs</a></li>
+        <li><a href="#" class="whitespace-nowrap hover:text-avb-red transition-colors">Uniform Packages</a></li>
+        <li><a href="#" class="whitespace-nowrap hover:text-avb-red transition-colors">Equipment</a></li>
+        <li><a href="#" class="whitespace-nowrap hover:text-avb-red transition-colors">Brands</a></li>
+        <li><a href="#" class="whitespace-nowrap hover:text-avb-red transition-colors">Deals</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="bg-avb-promo">
+    <div class="max-w-[1440px] mx-auto px-4 py-2.5 flex items-center justify-center gap-2 text-xs flex-wrap">
+      <span class="font-bold text-avb-black tracking-wide">20% OFF SITEWIDE!</span>
+      <span class="italic text-avb-grey">(Excludes Equipment)</span>
+      <span class="bg-white border border-avb-divider rounded-sm px-2 py-0.5 font-mono font-semibold text-avb-black tracking-wider">SPRING20</span>
+      <button id="copy-code" class="text-avb-black hover:text-avb-red transition-colors text-[10px] font-semibold tracking-wider uppercase">Copy code</button>
+    </div>
+  </div>
+</header>
+
+
+<!-- ====================================================================
+     SECTION 1. HERO
+     ==================================================================== -->
+<section class="relative w-full h-screen min-h-[640px] bg-avb-black overflow-hidden hero-fade">
+  <!-- REPLACE: hero photograph. Volleyball player mid-swing or a stack of folded sublimated jerseys on the design floor. -->
+  <img src="https://picsum.photos/seed/avb-hero-volleyball/2400/1600"
+       alt="" loading="eager"
+       class="absolute inset-0 w-full h-full object-cover opacity-75">
+  <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/30"></div>
+
+  <div class="relative h-full max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col justify-end pb-16 lg:pb-24">
+    <div class="max-w-3xl">
+      <div class="text-[11px] uppercase tracking-[0.3em] text-avb-red font-semibold mb-6">Custom · CustomFuze</div>
+      <h1 class="font-display font-semibold text-white uppercase leading-[0.95] display-tight"
+          style="font-size: clamp(2.5rem, 7vw, 5.75rem);">
+        Custom sublimated<br>jerseys, built for<br>your program.
+      </h1>
+      <p class="mt-6 text-white/85 text-lg md:text-xl max-w-xl">
+        Volleyball-only since 1995. Done correctly. On time. Under budget.
+      </p>
+      <div class="mt-9 flex flex-wrap gap-3">
+        <a href="#timeline" class="group inline-flex items-center gap-2 btn-red text-white font-medium px-7 py-4 text-base">
+          Get a Quote in 24 Hours
+          <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+        </a>
+        <a href="#process" class="inline-flex items-center gap-2 border border-white/80 hover:border-white text-white font-medium px-7 py-4 text-base btn-ghost-light">
+          See the Process
+        </a>
+      </div>
+    </div>
+    <div class="absolute bottom-10 right-6 lg:right-12 text-white/55 text-[11px] uppercase tracking-[0.25em] font-medium hidden md:block">
+      30 years. 2,000+ clubs. One sport.
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 2. THREE-LINE GUARANTEE
+     ==================================================================== -->
+<section class="bg-white py-32 md:py-40 lg:py-44 px-6 lg:px-12">
+  <div class="max-w-[1440px] mx-auto text-center">
+    <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
+        style="font-size: clamp(2.75rem, 9vw, 5rem); line-height: 1.05;">
+      Done correctly.<br>On time.<br>Under budget.
+    </h2>
+    <p class="mt-12 text-avb-grey text-base md:text-lg reveal">
+      Three promises. Thirty years of keeping them.
+    </p>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 3. TIMELINE PICKER
+     ==================================================================== -->
+<section id="timeline" class="bg-avb-offwhite py-24 md:py-32 px-6 lg:px-12">
+  <div class="max-w-[1280px] mx-auto">
+
+    <div class="mb-12 lg:mb-16">
+      <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">01 / Timing</div>
+      <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
+          style="font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1;">
+        Your timeline,<br>not ours.
+      </h2>
+      <p class="mt-5 text-avb-grey text-base md:text-lg max-w-xl reveal">
+        Pick the date your team needs to be on the court. We'll show you when to start.
+      </p>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+
+      <div>
+        <div class="bg-white border border-avb-divider p-6 md:p-8">
+          <div class="flex items-center justify-between mb-6">
+            <button id="cal-prev" class="text-avb-black hover:text-avb-red transition-colors p-1 disabled:text-avb-grey/40 disabled:cursor-not-allowed" aria-label="Previous month">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
+            </button>
+            <div id="cal-label" class="font-display font-semibold uppercase tracking-wide text-avb-black text-lg md:text-xl"></div>
+            <button id="cal-next" class="text-avb-black hover:text-avb-red transition-colors p-1 disabled:text-avb-grey/40 disabled:cursor-not-allowed" aria-label="Next month">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/></svg>
+            </button>
+          </div>
+          <div class="grid grid-cols-7 gap-1 mb-2 text-[10px] uppercase tracking-[0.18em] text-avb-grey font-semibold text-center">
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+          </div>
+          <div id="cal-grid" class="grid grid-cols-7 gap-1"></div>
+          <p class="mt-5 text-xs text-avb-grey">Today is locked at May 4, 2026. Pick any date in the next 12 months.</p>
+        </div>
+
+        <!-- Quick scenario chips -->
+        <div class="mt-5 flex flex-wrap items-center gap-2">
+          <span class="text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold mr-1">Quick pick</span>
+          <button class="scenario-chip" data-weeks="5">Tryouts</button>
+          <button class="scenario-chip" data-weeks="6">Tournament weekend</button>
+          <button class="scenario-chip" data-weeks="12">Season opener</button>
+          <button class="scenario-chip" data-weeks="20">Next club year</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="bg-white border border-avb-divider p-6 md:p-8">
+
+          <div class="flex items-baseline justify-between mb-1">
+            <span class="text-[11px] uppercase tracking-[0.22em] text-avb-grey font-semibold">On the court</span>
+            <span id="tl-target" class="font-display font-semibold text-avb-red text-lg md:text-xl uppercase"></span>
+          </div>
+          <div id="tl-weeks-out" class="text-xs text-avb-grey mb-12"></div>
+
+          <div class="relative h-28" id="tl-track">
+            <div class="absolute top-1/2 left-0 right-0 h-px bg-avb-black/25 -translate-y-1/2"></div>
+          </div>
+
+          <div id="tl-status" class="mt-10 pt-6 border-t border-avb-divider text-base leading-relaxed"></div>
+        </div>
+
+        <a href="mailto:team@allvolleyball.com" class="mt-6 inline-flex items-center gap-2 btn-red text-white font-medium px-7 py-4 text-base">
+          Send Us Your Roster
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 4. WHY SUBLIMATION + STAT STRIP
+     ==================================================================== -->
+<section class="bg-white py-24 md:py-32 px-6 lg:px-12">
+  <div class="max-w-[1280px] mx-auto">
+
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-20 lg:mb-28">
+      <!-- REPLACE: vertical photo. Sublimated jersey detail or designer at work. -->
+      <div class="aspect-[4/5] overflow-hidden bg-avb-offwhite">
+        <img src="https://picsum.photos/seed/avb-jersey-detail/1200/1500"
+             alt="" loading="lazy"
+             class="w-full h-full object-cover">
+      </div>
+
+      <div>
+        <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">02 / The shop</div>
+        <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
+            style="font-size: clamp(2.25rem, 5vw, 3.75rem); line-height: 1.05;">
+          Volleyball is<br>all we do.
+        </h2>
+        <div class="mt-8 space-y-5 text-avb-body text-base md:text-lg leading-relaxed reveal">
+          <p>Our designers have built jerseys for 2,000 plus volleyball clubs. We know how a freshman's jersey should fit different from a senior's. We know which fabrics breathe in a hot gym in July. We know the cut a libero needs and the cut an outside wants.</p>
+          <p>That depth is the whole pitch. Not "we offer custom sublimation." Anyone says that. We just happen to be the shop that's been doing only this, only volleyball, for 30 years.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stat strip: 4 across on desktop, 2x2 on mobile. Editorial, not card-grid. -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-y-12 lg:gap-y-0 lg:divide-x lg:divide-avb-divider reveal">
+      <div class="stat-block">
+        <div class="font-display font-semibold text-avb-black leading-[0.85]" style="font-size: clamp(3rem, 6vw, 5rem);">
+          <span class="stat-num" data-target="30">0</span>
+        </div>
+        <div class="mt-3 text-[11px] uppercase tracking-[0.18em] text-avb-grey font-semibold">Years in the sport</div>
+        <div class="mt-1.5 text-sm text-avb-body">Same shop. Same focus.</div>
+      </div>
+      <div class="stat-block">
+        <div class="font-display font-semibold text-avb-black leading-[0.85]" style="font-size: clamp(3rem, 6vw, 5rem);">
+          <span class="stat-num" data-target="2000">0</span><span class="text-avb-red">+</span>
+        </div>
+        <div class="mt-3 text-[11px] uppercase tracking-[0.18em] text-avb-grey font-semibold">Clubs outfitted</div>
+        <div class="mt-1.5 text-sm text-avb-body">From 6-team rec to national.</div>
+      </div>
+      <div class="stat-block">
+        <div class="font-display font-semibold text-avb-black leading-[0.85]" style="font-size: clamp(3rem, 6vw, 5rem);">
+          <span class="stat-num" data-target="40">0</span><span class="text-avb-red">+</span>
+        </div>
+        <div class="mt-3 text-[11px] uppercase tracking-[0.18em] text-avb-grey font-semibold">Wash cycles tested</div>
+        <div class="mt-1.5 text-sm text-avb-body">Color holds. Print holds.</div>
+      </div>
+      <div class="stat-block">
+        <div class="font-display font-semibold text-avb-black leading-[0.85]" style="font-size: clamp(3rem, 6vw, 5rem);">
+          <span class="stat-num" data-target="24">0</span><span class="text-avb-grey/60 text-3xl ml-1">hrs</span>
+        </div>
+        <div class="mt-3 text-[11px] uppercase tracking-[0.18em] text-avb-grey font-semibold">Quote turnaround</div>
+        <div class="mt-1.5 text-sm text-avb-body">Real number, every time.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 5. JERSEY 3D EXPLORER
+     Three.js scene. Jersey shape extruded from a silhouette path,
+     auto-rotating. Five hotspots projected to DOM, click to focus.
+     ==================================================================== -->
+<section class="bg-avb-offwhite py-24 md:py-32 px-6 lg:px-12 overflow-hidden">
+  <div class="max-w-[1280px] mx-auto">
+
+    <div class="mb-12 lg:mb-16">
+      <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">03 / The build</div>
+      <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
+          style="font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1;">
+        Five details<br>that matter.
+      </h2>
+      <p class="mt-5 text-avb-grey text-base md:text-lg max-w-xl reveal">
+        Drag to rotate. Tap a point to zoom in.
+      </p>
+    </div>
+
+    <div class="grid lg:grid-cols-[1fr_360px] gap-8 lg:gap-12 items-start">
+      <div class="relative bg-white border border-avb-divider overflow-hidden" id="jersey-stage" style="aspect-ratio: 4/5;">
+        <div id="jersey-canvas" class="absolute inset-0"></div>
+        <div id="hotspot-overlay" class="absolute inset-0 pointer-events-none"></div>
+        <div class="absolute bottom-3 left-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey/70 pointer-events-none flex items-center gap-2">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13L21 7.5m0 0L16.5 12M21 7.5H7.5"/></svg>
+          Drag to rotate
+        </div>
+        <div id="jersey-fallback" class="absolute inset-0 hidden flex-col items-center justify-center text-center px-8 bg-white">
+          <p class="font-display uppercase text-avb-grey text-sm tracking-[0.2em]">3D preview unavailable</p>
+          <p class="mt-3 text-sm text-avb-body max-w-xs">Your browser blocked WebGL. The five details below are still here.</p>
+        </div>
+      </div>
+
+      <div id="hotspot-panel" class="bg-white border border-avb-divider p-6 md:p-8 min-h-[300px] flex flex-col">
+        <div id="hotspot-default">
+          <div class="text-[11px] uppercase tracking-[0.22em] text-avb-grey font-semibold mb-3">Five red dots</div>
+          <h3 class="font-display font-semibold text-avb-black text-2xl uppercase mb-3 leading-tight">Click any one. We'll explain what we obsess over.</h3>
+          <p class="text-avb-body leading-relaxed">Print fidelity. Sleeve cap. Side panel. Number placement. Hem stitch. Every spot a club director should ask about, before they ask.</p>
+        </div>
+        <div id="hotspot-active" class="hidden">
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-[11px] uppercase tracking-[0.22em] text-avb-red font-semibold" id="hotspot-num">Detail 01</div>
+            <button id="hotspot-back" class="text-[11px] uppercase tracking-[0.18em] text-avb-grey hover:text-avb-red transition-colors font-semibold">← Back</button>
+          </div>
+          <h3 class="font-display font-semibold text-avb-black text-2xl uppercase mb-3 leading-tight" id="hotspot-title"></h3>
+          <p class="text-avb-body leading-relaxed" id="hotspot-desc"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 6. PROCESS WORKFLOW CHART
+     Auto-advancing horizontal flow. Click any node to jump.
+     ==================================================================== -->
+<section id="process" class="bg-avb-black text-white py-24 md:py-32 px-6 lg:px-12 overflow-hidden">
+  <div class="max-w-[1280px] mx-auto">
+
+    <div class="mb-16 lg:mb-20">
+      <div class="text-[11px] uppercase tracking-[0.25em] text-white/55 font-semibold mb-4 reveal">04 / The process</div>
+      <h2 class="font-display font-semibold uppercase reveal display-tight"
+          style="font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1;">
+        Your design,<br>our process.
+      </h2>
+      <p class="mt-5 text-white/65 text-base md:text-lg max-w-xl reveal">
+        From the roster email to on-court, in six steps. We tell you the date.
+      </p>
+    </div>
+
+    <!-- Desktop: horizontal flow -->
+    <div class="hidden md:block relative" id="workflow-desktop">
+      <div class="wf-track"></div>
+      <div class="wf-progress" id="wf-progress" style="width: 0%"></div>
+      <div class="flex items-start gap-4">
+        <!-- 6 nodes injected via JS for consistency -->
+      </div>
+    </div>
+
+    <!-- Mobile: vertical flow -->
+    <div class="md:hidden flex flex-col gap-3" id="workflow-mobile">
+      <!-- 6 stacked rows injected via JS -->
+    </div>
+
+    <!-- Active step description -->
+    <div id="wf-desc" class="mt-12 md:mt-20 max-w-2xl mx-auto text-center min-h-[140px]">
+      <!-- populated by JS -->
+    </div>
+
+    <!-- Auto-advance hint -->
+    <div class="mt-10 text-center text-[10px] uppercase tracking-[0.25em] text-white/40">
+      Auto-advancing. Click any step to jump.
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 7. BRAND SHOWCASE
+     3D rotating wheel of brand cards using CSS transforms.
+     ==================================================================== -->
+<section class="bg-white py-24 md:py-32 px-6 lg:px-12 overflow-hidden">
+  <div class="max-w-[1280px] mx-auto">
+
+    <div class="mb-12 lg:mb-16 text-center">
+      <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">05 / The lines</div>
+      <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
+          style="font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1;">
+        Every brand<br>worth wearing.
+      </h2>
+      <p class="mt-5 text-avb-grey text-base md:text-lg max-w-xl mx-auto reveal">
+        CustomFuze is our house line. We do full custom on the brands your athletes already trust.
+      </p>
+    </div>
+
+    <div class="brand-stage">
+      <div class="brand-wheel" id="brand-wheel">
+        <!-- Card 1: CustomFuze (recreated as inline SVG with rainbow gradient). -->
+        <div class="brand-card">
+          <svg viewBox="0 0 240 130" class="w-full h-auto max-w-[200px]" aria-label="CustomFuze">
+            <defs>
+              <linearGradient id="cfGrad" x1="0%" y1="50%" x2="100%" y2="50%">
+                <stop offset="0%"   stop-color="#FBBF24"/>
+                <stop offset="22%"  stop-color="#F97316"/>
+                <stop offset="44%"  stop-color="#EF4444"/>
+                <stop offset="62%"  stop-color="#EC4899"/>
+                <stop offset="80%"  stop-color="#A855F7"/>
+                <stop offset="100%" stop-color="#3B82F6"/>
+              </linearGradient>
+            </defs>
+            <text x="120" y="68" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="78" font-style="italic" fill="url(#cfGrad)" letter-spacing="-3">CF</text>
+            <text x="120" y="110" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="600" font-size="18" fill="url(#cfGrad)" letter-spacing="6">CUSTOMFUZE®</text>
+          </svg>
+          <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">House line</div>
+        </div>
+
+        <!-- REPLACE with official Under Armour SVG when available. -->
+        <div class="brand-card">
+          <svg viewBox="0 0 240 80" class="w-full h-auto max-w-[200px]" aria-label="Under Armour">
+            <text x="120" y="50" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="36" fill="#0A0A0A" letter-spacing="3">UNDER ARMOUR</text>
+          </svg>
+          <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
+        </div>
+
+        <!-- REPLACE with official Mizuno SVG when available. -->
+        <div class="brand-card">
+          <svg viewBox="0 0 240 90" class="w-full h-auto max-w-[200px]" aria-label="Mizuno">
+            <text x="120" y="60" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="56" fill="#0A0A0A" letter-spacing="6" font-style="italic">MIZUNO</text>
+          </svg>
+          <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
+        </div>
+
+        <!-- REPLACE with official adidas SVG when available. -->
+        <div class="brand-card">
+          <svg viewBox="0 0 240 90" class="w-full h-auto max-w-[200px]" aria-label="adidas">
+            <text x="120" y="60" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="56" fill="#0A0A0A" letter-spacing="-2" font-style="italic">adidas</text>
+          </svg>
+          <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
+        </div>
+
+        <!-- REPLACE with official ASICS SVG when available. -->
+        <div class="brand-card">
+          <svg viewBox="0 0 240 90" class="w-full h-auto max-w-[200px]" aria-label="ASICS">
+            <text x="120" y="60" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="60" fill="#0A0A0A" letter-spacing="4" font-style="italic">ASICS</text>
+          </svg>
+          <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 text-center text-sm text-avb-grey">
+      Don't see your brand? <a href="mailto:team@allvolleyball.com" class="link-inline text-avb-black font-medium">Ask us.</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 8. PULL QUOTE
+     ==================================================================== -->
+<section class="bg-white py-28 md:py-40 px-6 lg:px-12">
+  <div class="max-w-3xl mx-auto text-center">
+    <p class="font-display text-avb-black leading-[1.2] reveal"
+       style="font-size: clamp(1.5rem, 3.5vw, 2.5rem); font-weight: 500; letter-spacing: -0.005em;">
+      "I own one of the largest clubs in Oklahoma, but also help out with small local teams. We get the same experience regardless of our size. Orders are on time, every time. If there's ever a problem, they fix it fast."
+    </p>
+    <div class="mt-8 text-avb-grey text-sm tracking-wide">
+      Club Director, Oklahoma. CustomFuze customer.
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 9. TEAM-SIDE CLOSE
+     ==================================================================== -->
+<section class="bg-avb-offwhite py-24 md:py-32 px-6 lg:px-12">
+  <div class="max-w-2xl mx-auto text-center">
+    <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
+        style="font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1;">
+      Tryouts coming up?
+    </h2>
+    <p class="mt-6 text-avb-body text-base md:text-lg leading-relaxed reveal">
+      Send the roster. We'll send a quote in 24 hours and a real ship date you can plan around. No fine print, no policy fights, no surprises after.
+    </p>
+    <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+      <a href="mailto:team@allvolleyball.com" class="inline-flex items-center gap-2 btn-red text-white font-medium px-7 py-4 text-base">
+        Email team@allvolleyball.com
+      </a>
+      <!-- TODO: replace href with the real team line phone number -->
+      <a href="tel:" class="inline-flex items-center gap-2 border border-avb-black text-avb-black font-medium px-7 py-4 text-base btn-ghost-dark">
+        Call the Team Line
+      </a>
+    </div>
+    <p class="mt-8 text-sm text-avb-grey leading-relaxed">
+      Or use the uniform builder. Save your mockup, share it with us, and a Team Sales Specialist will be in touch in one business day or less.
+    </p>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     FOOTER
+     ==================================================================== -->
+<footer class="bg-avb-black text-white py-12 px-6 lg:px-12">
+  <div class="max-w-[1280px] mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+    <div class="flex items-center gap-3">
+      <svg viewBox="0 0 50 44" class="w-9 h-8 shrink-0" aria-hidden="true">
+        <path fill="#C23946" fill-rule="evenodd" d="M25 2 L48 42 L2 42 Z M25 16 L37 38 L13 38 Z"/>
+        <rect x="17" y="34" width="16" height="2.5" fill="#C23946"/>
+      </svg>
+      <span class="font-bold tracking-tight">ALL VOLLEYBALL</span>
+      <span class="text-white/55 text-sm hidden sm:inline">Volleyball-only since 1995.</span>
+    </div>
+    <ul class="flex items-center gap-6 text-sm">
+      <li><a href="#" class="hover:text-avb-red transition-colors">Teams &amp; Clubs</a></li>
+      <li><a href="#" class="hover:text-avb-red transition-colors">Uniform Packages</a></li>
+      <li><a href="#" class="hover:text-avb-red transition-colors">Contact</a></li>
+    </ul>
+    <div class="text-white/45 text-xs">© 2026 All Volleyball, Inc.</div>
+  </div>
+</footer>
+
+
+<!-- ====================================================================
+     GSAP for scroll reveals + count-up + workflow animations.
+     ==================================================================== -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+
+<script>
+/* ============================================================
+   DATE LOGIC. Today is anchored to May 4, 2026.
+   ============================================================ */
+const ANCHOR_TODAY = new Date(2026, 4, 4);
+const MIN_DATE = new Date(ANCHOR_TODAY);
+const MAX_DATE = addDays(ANCHOR_TODAY, 365);
+
+function addDays(date, days) {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+function diffDays(a, b) {
+  const x = new Date(a.getFullYear(), a.getMonth(), a.getDate());
+  const y = new Date(b.getFullYear(), b.getMonth(), b.getDate());
+  return Math.round((x - y) / 86400000);
+}
+function isSameDay(a, b) {
+  return a.getFullYear() === b.getFullYear()
+      && a.getMonth() === b.getMonth()
+      && a.getDate() === b.getDate();
+}
+function subBusinessDays(date, n) {
+  const d = new Date(date);
+  let count = 0;
+  while (count < n) {
+    d.setDate(d.getDate() - 1);
+    const dow = d.getDay();
+    if (dow !== 0 && dow !== 6) count++;
+  }
+  return d;
+}
+
+const MONTHS_LONG  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const fmtFull  = d => `${MONTHS_SHORT[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+const fmtShort = d => `${MONTHS_SHORT[d.getMonth()]} ${d.getDate()}`;
+
+
+/* ============================================================
+   CALENDAR
+   ============================================================ */
+let selectedDate = addDays(ANCHOR_TODAY, 42);
+let viewYear  = selectedDate.getFullYear();
+let viewMonth = selectedDate.getMonth();
+
+const calLabel = document.getElementById('cal-label');
+const calGrid  = document.getElementById('cal-grid');
+const calPrev  = document.getElementById('cal-prev');
+const calNext  = document.getElementById('cal-next');
+
+function renderCalendar() {
+  calLabel.textContent = `${MONTHS_LONG[viewMonth]} ${viewYear}`;
+  calGrid.innerHTML = '';
+
+  const firstDay = new Date(viewYear, viewMonth, 1);
+  const lastDay  = new Date(viewYear, viewMonth + 1, 0);
+  const startBlanks = firstDay.getDay();
+  const totalDays = lastDay.getDate();
+
+  for (let i = 0; i < startBlanks; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell';
+    calGrid.appendChild(cell);
+  }
+  for (let day = 1; day <= totalDays; day++) {
+    const date = new Date(viewYear, viewMonth, day);
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell';
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = day;
+
+    const isPast     = (date < MIN_DATE && !isSameDay(date, MIN_DATE));
+    const isFuture   = date > MAX_DATE;
+    const disabled   = isPast || isFuture;
+    const isSelected = isSameDay(date, selectedDate);
+    const isToday    = isSameDay(date, ANCHOR_TODAY);
+
+    btn.className = 'cal-day ' + (
+      disabled   ? 'cal-day--disabled' :
+      isSelected ? 'cal-day--selected' :
+      isToday    ? 'cal-day--today'    :
+                   'cal-day--default'
+    );
+    if (disabled) btn.disabled = true;
+    else btn.addEventListener('click', () => {
+      selectedDate = date;
+      renderCalendar();
+      updateTimeline();
+      syncScenarioChips();
+    });
+
+    cell.appendChild(btn);
+    calGrid.appendChild(cell);
+  }
+
+  const anchorMonthStart = new Date(ANCHOR_TODAY.getFullYear(), ANCHOR_TODAY.getMonth(), 1);
+  const maxMonthStart    = new Date(MAX_DATE.getFullYear(),    MAX_DATE.getMonth(),    1);
+  const viewMonthStart   = new Date(viewYear, viewMonth, 1);
+  calPrev.disabled = viewMonthStart <= anchorMonthStart;
+  calNext.disabled = viewMonthStart >= maxMonthStart;
+}
+
+calPrev.addEventListener('click', () => {
+  if (calPrev.disabled) return;
+  const prev = new Date(viewYear, viewMonth - 1, 1);
+  viewMonth = prev.getMonth();
+  viewYear  = prev.getFullYear();
+  renderCalendar();
+});
+calNext.addEventListener('click', () => {
+  if (calNext.disabled) return;
+  const next = new Date(viewYear, viewMonth + 1, 1);
+  viewMonth = next.getMonth();
+  viewYear  = next.getFullYear();
+  renderCalendar();
+});
+
+
+/* ============================================================
+   SCENARIO QUICK-PICK CHIPS
+   ============================================================ */
+function syncScenarioChips() {
+  const days = diffDays(selectedDate, ANCHOR_TODAY);
+  const weeks = Math.round(days / 7);
+  document.querySelectorAll('.scenario-chip').forEach(chip => {
+    chip.classList.toggle('active', +chip.dataset.weeks === weeks);
+  });
+}
+document.querySelectorAll('.scenario-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const weeks = +chip.dataset.weeks;
+    selectedDate = addDays(ANCHOR_TODAY, weeks * 7);
+    viewYear  = selectedDate.getFullYear();
+    viewMonth = selectedDate.getMonth();
+    renderCalendar();
+    updateTimeline();
+    syncScenarioChips();
+  });
+});
+
+
+/* ============================================================
+   TIMELINE
+   ============================================================ */
+const tlTrack    = document.getElementById('tl-track');
+const tlTarget   = document.getElementById('tl-target');
+const tlWeeksOut = document.getElementById('tl-weeks-out');
+const tlStatus   = document.getElementById('tl-status');
+
+const TL_LABELS = ['Today', 'Design lock', 'Production', 'Ships', 'On court'];
+
+function buildTimelineDots() {
+  TL_LABELS.forEach((label, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'timeline-dot absolute top-1/2 -translate-x-1/2 -translate-y-1/2';
+    if (i === TL_LABELS.length - 1) dot.classList.add('target');
+    dot.dataset.idx = i;
+    dot.innerHTML = `
+      <div class="text-[9px] md:text-[10px] uppercase tracking-[0.16em] text-avb-grey font-semibold absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap">${label}</div>
+      <div class="dot-mark"></div>
+      <div class="font-display font-semibold text-xs text-avb-black absolute top-6 left-1/2 -translate-x-1/2 whitespace-nowrap" data-role="date"></div>
+    `;
+    tlTrack.appendChild(dot);
+  });
+}
+
+function updateTimeline() {
+  const today      = ANCHOR_TODAY;
+  const target     = selectedDate;
+  const designLock = addDays(target, -35);
+  const prodStart  = addDays(target, -28);
+  const ship       = subBusinessDays(target, 5);
+  const dates      = [today, designLock, prodStart, ship, target];
+
+  const totalSpan = Math.max(diffDays(target, today), 1);
+  const dots = tlTrack.querySelectorAll('.timeline-dot');
+
+  dots.forEach((dot, i) => {
+    let pct;
+    if (i === 0)                     pct = 0;
+    else if (i === dates.length - 1) pct = 100;
+    else {
+      const raw = (diffDays(dates[i], today) / totalSpan) * 100;
+      pct = Math.max(0, Math.min(100, raw));
+    }
+    dot.style.left = pct + '%';
+
+    const mark = dot.querySelector('.dot-mark');
+    if (i === 0) {
+      mark.style.cssText = 'width:18px;height:18px;border-radius:9999px;background:#0A0A0A;';
+    } else if (i === dates.length - 1) {
+      mark.style.cssText = 'width:18px;height:18px;border-radius:9999px;background:#C23946;';
+      // re-trigger pulse
+      dot.classList.remove('target'); void dot.offsetWidth; dot.classList.add('target');
+    } else {
+      mark.style.cssText = 'width:13px;height:13px;border-radius:9999px;background:#fff;border:1.5px solid #0A0A0A;';
+    }
+    dot.querySelector('[data-role="date"]').textContent = fmtShort(dates[i]);
+  });
+
+  tlTarget.textContent = fmtFull(target);
+  const days = diffDays(target, today);
+  let weeksDisplay;
+  if (days === 0)      weeksDisplay = 'today';
+  else if (days < 7)   weeksDisplay = days + (days === 1 ? ' day from today' : ' days from today');
+  else {
+    const w = days / 7;
+    if (Math.abs(w - Math.round(w)) < 0.001) {
+      const wr = Math.round(w);
+      weeksDisplay = wr + (wr === 1 ? ' week from today' : ' weeks from today');
+    } else {
+      weeksDisplay = w.toFixed(1) + ' weeks from today';
+    }
+  }
+  tlWeeksOut.textContent = weeksDisplay;
+
+  let html = '';
+  if (days < 28) {
+    html = '<p class="text-avb-red"><span class="font-semibold">Tight window.</span> Possible, but call us at the team line so we can plan it. We\'ve done faster.</p>';
+  } else if (days <= 42) {
+    html = '<p class="text-avb-black"><span class="font-semibold">Standard window.</span> This is our wheelhouse. Lock the design and we hit your date.</p>';
+  } else {
+    html = '<p class="text-avb-black"><span class="font-semibold">Plenty of runway.</span> Lock the design when you\'re ready. We\'ll be here.</p>';
+  }
+  tlStatus.innerHTML = html;
+}
+
+buildTimelineDots();
+renderCalendar();
+updateTimeline();
+syncScenarioChips();
+
+
+/* ============================================================
+   COPY-CODE chip in promo bar
+   ============================================================ */
+document.getElementById('copy-code')?.addEventListener('click', (e) => {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText('SPRING20').catch(() => {});
+    const btn = e.currentTarget;
+    const orig = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+  }
+});
+
+
+/* ============================================================
+   WORKFLOW CHART
+   ============================================================ */
+const STEPS = [
+  { num: '01', label: 'Send the roster',     desc: 'Email team@allvolleyball.com with names, numbers, and what you\'re after.' },
+  { num: '02', label: 'Quote in 24 hours',   desc: 'Real number, no surprises later.' },
+  { num: '03', label: 'Design',              desc: 'Our team builds your mockup. You tweak until it\'s right.' },
+  { num: '04', label: 'Approve before press',desc: 'Nothing hits the press until you sign off.' },
+  { num: '05', label: 'Production',          desc: 'Four weeks for full custom. We tell you the exact ship date when you approve.' },
+  { num: '06', label: 'On the court',        desc: 'Tracking the moment it leaves us.' },
+];
+let activeStep = 0;
+const STEP_INTERVAL = 3800;
+let stepTimer = null;
+
+function buildWorkflowDOM() {
+  const desktop = document.querySelector('#workflow-desktop .flex');
+  STEPS.forEach((s, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'wf-node';
+    btn.dataset.idx = i;
+    btn.innerHTML = `
+      <div class="wf-node-num">${s.num}</div>
+      <div class="wf-node-label">${s.label}</div>
+    `;
+    btn.addEventListener('click', () => setActiveStep(i, true));
+    desktop.appendChild(btn);
+  });
+  const mobile = document.getElementById('workflow-mobile');
+  STEPS.forEach((s, i) => {
+    const row = document.createElement('button');
+    row.type = 'button';
+    row.className = 'wf-node-mobile flex items-center gap-4 text-left p-4 border border-white/10 transition-colors';
+    row.dataset.idx = i;
+    row.innerHTML = `
+      <div class="wf-node-num shrink-0 !static !transform-none"></div>
+      <div>
+        <div class="text-[10px] uppercase tracking-[0.18em] text-white/45 font-semibold mb-1">${s.num}</div>
+        <div class="font-display uppercase font-semibold text-base">${s.label}</div>
+      </div>
+    `;
+    row.querySelector('.wf-node-num').textContent = s.num;
+    row.addEventListener('click', () => setActiveStep(i, true));
+    mobile.appendChild(row);
+  });
+}
+
+function renderWorkflow() {
+  document.querySelectorAll('#workflow-desktop .wf-node').forEach((node, i) => {
+    node.classList.remove('active', 'completed');
+    if (i < activeStep) node.classList.add('completed');
+    if (i === activeStep) node.classList.add('active');
+  });
+  document.querySelectorAll('#workflow-mobile .wf-node-mobile').forEach((row, i) => {
+    row.classList.remove('active', 'completed');
+    if (i < activeStep) row.classList.add('completed');
+    if (i === activeStep) row.classList.add('active');
+    row.style.borderColor = (i === activeStep) ? '#C23946' : 'rgba(255,255,255,0.1)';
+    row.style.background  = (i === activeStep) ? 'rgba(194,57,70,0.08)' : 'transparent';
+  });
+
+  const pct = (activeStep / (STEPS.length - 1)) * 100;
+  const prog = document.getElementById('wf-progress');
+  if (prog) prog.style.width = pct + '%';
+
+  const desc = document.getElementById('wf-desc');
+  if (window.gsap) {
+    gsap.to(desc, { opacity: 0, y: -8, duration: 0.18, onComplete: () => {
+      desc.innerHTML = `
+        <div class="text-[11px] uppercase tracking-[0.22em] text-avb-red font-semibold mb-3">Step ${STEPS[activeStep].num}</div>
+        <div class="font-display font-semibold uppercase text-2xl md:text-3xl mb-3 leading-tight">${STEPS[activeStep].label}.</div>
+        <p class="text-white/75 leading-relaxed">${STEPS[activeStep].desc}</p>
+      `;
+      gsap.fromTo(desc, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' });
+    }});
+  } else {
+    desc.innerHTML = `
+      <div class="text-[11px] uppercase tracking-[0.22em] text-avb-red font-semibold mb-3">Step ${STEPS[activeStep].num}</div>
+      <div class="font-display font-semibold uppercase text-2xl md:text-3xl mb-3 leading-tight">${STEPS[activeStep].label}.</div>
+      <p class="text-white/75 leading-relaxed">${STEPS[activeStep].desc}</p>
+    `;
+  }
+}
+
+function nextStep() {
+  activeStep = (activeStep + 1) % STEPS.length;
+  renderWorkflow();
+}
+function startStepTimer() {
+  clearInterval(stepTimer);
+  stepTimer = setInterval(nextStep, STEP_INTERVAL);
+}
+function stopStepTimer() {
+  clearInterval(stepTimer);
+  stepTimer = null;
+}
+function setActiveStep(i, restart) {
+  activeStep = i;
+  renderWorkflow();
+  if (restart) startStepTimer();
+}
+
+buildWorkflowDOM();
+renderWorkflow();
+
+// Only run the auto-cycle while the section is on screen.
+const wfObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) startStepTimer();
+    else stopStepTimer();
+  });
+}, { threshold: 0.25 });
+wfObserver.observe(document.getElementById('process'));
+
+
+/* ============================================================
+   SCROLL REVEALS + COUNT-UP (GSAP)
+   ============================================================ */
+if (window.gsap && window.ScrollTrigger) {
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.utils.toArray('.reveal').forEach(el => {
+    gsap.set(el, { opacity: 0, y: 20 });
+    gsap.to(el, {
+      opacity: 1, y: 0,
+      duration: 0.8, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+    });
+  });
+
+  document.querySelectorAll('.stat-num').forEach(el => {
+    const target = +el.dataset.target;
+    const obj = { val: 0 };
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 85%',
+      once: true,
+      onEnter: () => {
+        gsap.to(obj, {
+          val: target,
+          duration: 1.5, ease: 'power2.out',
+          onUpdate: () => { el.textContent = Math.floor(obj.val).toLocaleString(); },
+          onComplete: () => { el.textContent = target.toLocaleString(); }
+        });
+      }
+    });
+  });
+} else {
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+  document.querySelectorAll('.stat-num').forEach(el => {
+    el.textContent = (+el.dataset.target).toLocaleString();
+  });
+}
+</script>
+
+
+<!-- ====================================================================
+     JERSEY 3D EXPLORER (Three.js)
+     ==================================================================== -->
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const stage    = document.getElementById('jersey-stage');
+const canvasEl = document.getElementById('jersey-canvas');
+const overlay  = document.getElementById('hotspot-overlay');
+const fallback = document.getElementById('jersey-fallback');
+const panel    = document.getElementById('hotspot-panel');
+const panelDef = document.getElementById('hotspot-default');
+const panelAct = document.getElementById('hotspot-active');
+
+// Hotspot data. Local positions on the jersey (z > 0 = front face).
+const HOTSPOTS = [
+  { id: 1, pos: [ 0.00,  0.55, 0.10], title: 'V-neck binding',     desc: 'Flatlock binding around the collar. No itch on a 3-set night, no curl after 40 washes.' },
+  { id: 2, pos: [ 0.62,  0.10, 0.10], title: 'Sleeve cap',         desc: 'Cut for shoulder rotation. The hitter who swings 200 times a match doesn\'t fight the fit.' },
+  { id: 3, pos: [-0.45, -0.10, 0.10], title: 'Print fidelity',     desc: 'Color is dyed into the fiber, not laid on top. It holds through 40+ wash cycles in a club season.' },
+  { id: 4, pos: [ 0.55, -0.55, 0.10], title: 'Side panel',         desc: 'Two-way stretch knit through the body. Breathes in a hot gym in July.' },
+  { id: 5, pos: [ 0.00, -1.15, 0.10], title: 'Reinforced hem',     desc: 'Holds shape after every wash. No curl, no twist, no drag during a defensive dive.' },
+];
+
+let scene, camera, renderer, controls, jersey, hotspotEls, raf, observer;
+let webglOK = true;
+
+function init() {
+  // Detect WebGL.
+  const canvas = document.createElement('canvas');
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) { showFallback(); return; }
+
+  scene = new THREE.Scene();
+
+  const w = canvasEl.clientWidth, h = canvasEl.clientHeight;
+  camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
+  camera.position.set(0, 0, 4.4);
+
+  try {
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  } catch (e) { showFallback(); return; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+  renderer.setSize(w, h);
+  renderer.setClearColor(0xffffff, 0);
+  canvasEl.appendChild(renderer.domElement);
+
+  // Lighting. Soft ambient + key light from upper-right + fill from below.
+  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+  const key = new THREE.DirectionalLight(0xffffff, 0.95);
+  key.position.set(3, 4, 5);
+  scene.add(key);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.25);
+  fill.position.set(-3, -2, 2);
+  scene.add(fill);
+  const rim = new THREE.DirectionalLight(0xC23946, 0.15);
+  rim.position.set(-4, 1, -2);
+  scene.add(rim);
+
+  // Jersey silhouette (front face). Curves keep edges soft.
+  const shape = new THREE.Shape();
+  shape.moveTo(-0.55, 1.32);
+  shape.lineTo(-0.18, 1.32);
+  shape.bezierCurveTo(-0.10, 0.95, 0.10, 0.95, 0.18, 1.32);
+  shape.lineTo(0.55, 1.32);
+  shape.bezierCurveTo(0.78, 1.30, 1.04, 1.10, 1.05, 0.65);
+  shape.lineTo(0.92, 0.50);
+  shape.lineTo(0.92, -1.45);
+  shape.bezierCurveTo(0.92, -1.55, 0.85, -1.58, 0.78, -1.58);
+  shape.lineTo(-0.78, -1.58);
+  shape.bezierCurveTo(-0.85, -1.58, -0.92, -1.55, -0.92, -1.45);
+  shape.lineTo(-0.92, 0.50);
+  shape.lineTo(-1.05, 0.65);
+  shape.bezierCurveTo(-1.04, 1.10, -0.78, 1.30, -0.55, 1.32);
+
+  const extrude = {
+    depth: 0.16,
+    bevelEnabled: true,
+    bevelThickness: 0.025,
+    bevelSize: 0.025,
+    bevelSegments: 4,
+    curveSegments: 24,
+  };
+  const geom = new THREE.ExtrudeGeometry(shape, extrude);
+  geom.center();
+
+  // Two-tone material via vertex grouping isn't worth the complexity here.
+  // A single deep matte dark gives the cleanest "expensive" feel.
+  const bodyMat = new THREE.MeshStandardMaterial({
+    color: 0x141416,
+    metalness: 0.08,
+    roughness: 0.62,
+  });
+  jersey = new THREE.Mesh(geom, bodyMat);
+  scene.add(jersey);
+
+  // Subtle pinstripe centered on the front face. Dark grey, not red, to
+  // keep the brand red rare and earned (it lives on the hotspots).
+  const stripeShape = new THREE.Shape();
+  stripeShape.moveTo(-0.04, -1.35);
+  stripeShape.lineTo( 0.04, -1.35);
+  stripeShape.lineTo( 0.04,  1.18);
+  stripeShape.lineTo(-0.04,  1.18);
+  const stripe = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(stripeShape, { depth: 0.025, bevelEnabled: false }),
+    new THREE.MeshStandardMaterial({ color: 0x2A2A2D, metalness: 0.08, roughness: 0.55 })
+  );
+  stripe.position.set(0, 0, 0.085);
+  jersey.add(stripe);
+
+  // Number panel: slightly raised dark plate suggesting where the number prints.
+  const numPanel = new THREE.Mesh(
+    new THREE.BoxGeometry(0.62, 0.62, 0.012),
+    new THREE.MeshStandardMaterial({ color: 0x1F1F22, roughness: 0.6 })
+  );
+  numPanel.position.set(0, 0.05, 0.097);
+  jersey.add(numPanel);
+
+  // OrbitControls. No zoom, no pan. Smooth damping.
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.07;
+  controls.enablePan = false;
+  controls.enableZoom = false;
+  controls.minPolarAngle = Math.PI / 2 - 0.55;
+  controls.maxPolarAngle = Math.PI / 2 + 0.55;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.7;
+  controls.addEventListener('start', () => { controls.autoRotate = false; });
+
+  // Build hotspot DOM elements.
+  hotspotEls = HOTSPOTS.map(h => {
+    const el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'hotspot pointer-events-auto';
+    el.textContent = h.id;
+    el.dataset.id = h.id;
+    el.setAttribute('aria-label', `Detail ${h.id}: ${h.title}`);
+    el.addEventListener('click', () => activateHotspot(h.id));
+    overlay.appendChild(el);
+    return { el, world: new THREE.Vector3(...h.pos), data: h };
+  });
+
+  // Resize handling.
+  const ro = new ResizeObserver(resize);
+  ro.observe(stage);
+
+  // Pause renderer when off-screen.
+  observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        if (!raf) loop();
+      } else {
+        cancelAnimationFrame(raf);
+        raf = null;
+      }
+    });
+  }, { threshold: 0.05 });
+  observer.observe(stage);
+
+  resize();
+  loop();
+}
+
+function resize() {
+  if (!renderer) return;
+  const w = stage.clientWidth, h = stage.clientHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+}
+
+let hotspotsReady = false;
+function projectHotspots() {
+  const tmp = new THREE.Vector3();
+  const camDir = new THREE.Vector3();
+  hotspotEls.forEach(({ el, world, data }) => {
+    tmp.copy(world);
+    jersey.localToWorld(tmp);
+
+    // Facing test: vector from jersey center to hotspot world pos vs camera.
+    const offset = tmp.clone().sub(jersey.position).normalize();
+    camDir.subVectors(camera.position, jersey.position).normalize();
+    const facing = offset.dot(camDir) > -0.05;
+
+    const sv = tmp.clone().project(camera);
+    const x = (sv.x * 0.5 + 0.5) * stage.clientWidth;
+    const y = (-sv.y * 0.5 + 0.5) * stage.clientHeight;
+    el.style.left = x + 'px';
+    el.style.top  = y + 'px';
+    el.classList.toggle('facing-away', !facing);
+  });
+  if (!hotspotsReady) {
+    hotspotEls.forEach(({ el }) => el.classList.add('ready'));
+    hotspotsReady = true;
+  }
+}
+
+function loop() {
+  if (controls) controls.update();
+  if (renderer && scene && camera) renderer.render(scene, camera);
+  if (jersey) projectHotspots();
+  raf = requestAnimationFrame(loop);
+}
+
+function showFallback() {
+  webglOK = false;
+  fallback.classList.remove('hidden');
+  fallback.classList.add('flex');
+}
+
+let activeId = null;
+function activateHotspot(id) {
+  activeId = id;
+  const h = HOTSPOTS.find(x => x.id === id);
+  hotspotEls.forEach(({ el, data }) => el.classList.toggle('active', data.id === id));
+
+  panelDef.classList.add('hidden');
+  panelAct.classList.remove('hidden');
+  document.getElementById('hotspot-num').textContent   = `Detail 0${id}`;
+  document.getElementById('hotspot-title').textContent = h.title;
+  document.getElementById('hotspot-desc').textContent  = h.desc;
+
+  // Camera tween toward the hotspot.
+  if (controls) controls.autoRotate = false;
+  const target = new THREE.Vector3(...h.pos);
+  jersey.localToWorld(target);
+  const dir = target.clone().sub(jersey.position).normalize();
+  const camTarget = jersey.position.clone().add(dir.multiplyScalar(3.0));
+  if (window.gsap) {
+    gsap.to(camera.position, { x: camTarget.x, y: camTarget.y, z: camTarget.z, duration: 0.85, ease: 'power2.inOut' });
+    gsap.to(controls.target,  { x: target.x * 0.4, y: target.y * 0.4, z: 0, duration: 0.85, ease: 'power2.inOut' });
+  } else {
+    camera.position.copy(camTarget);
+  }
+}
+
+function deactivateHotspot() {
+  activeId = null;
+  if (!hotspotEls) {
+    panelDef.classList.remove('hidden');
+    panelAct.classList.add('hidden');
+    return;
+  }
+  hotspotEls.forEach(({ el }) => el.classList.remove('active'));
+  panelDef.classList.remove('hidden');
+  panelAct.classList.add('hidden');
+  if (window.gsap && controls) {
+    gsap.to(camera.position, { x: 0, y: 0, z: 4.4, duration: 0.85, ease: 'power2.inOut',
+      onComplete: () => { controls.autoRotate = true; } });
+    gsap.to(controls.target, { x: 0, y: 0, z: 0, duration: 0.85, ease: 'power2.inOut' });
+  }
+}
+
+document.getElementById('hotspot-back').addEventListener('click', deactivateHotspot);
+
+// Init as soon as layout is measurable. window.load waits on images we don't need.
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  requestAnimationFrame(() => init());
+} else {
+  document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(() => init()));
+}
+</script>
+
+</body>
+</html>
