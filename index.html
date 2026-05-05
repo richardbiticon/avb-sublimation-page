@@ -370,11 +370,17 @@
      SECTION 1. HERO
      ==================================================================== -->
 <section class="relative w-full h-screen min-h-[640px] bg-avb-black overflow-hidden hero-fade">
-  <!-- REPLACE: hero photograph. Volleyball player mid-swing or a stack of folded sublimated jerseys on the design floor. -->
-  <img src="https://picsum.photos/seed/avb-hero-volleyball/2400/1600"
-       alt="" loading="eager"
-       class="absolute inset-0 w-full h-full object-cover opacity-75">
-  <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/30"></div>
+  <!-- Premium layered gradient: deep black base with warm crimson glow upper-left and burgundy depth lower-right. -->
+  <div class="absolute inset-0" style="
+       background:
+         radial-gradient(ellipse 75% 55% at 22% 12%, rgba(194,57,70,0.55) 0%, rgba(194,57,70,0) 60%),
+         radial-gradient(ellipse 65% 50% at 82% 88%, rgba(80,16,24,0.75) 0%, rgba(80,16,24,0) 65%),
+         radial-gradient(ellipse 55% 40% at 50% 50%, rgba(30,6,10,0.55) 0%, rgba(30,6,10,0) 70%),
+         linear-gradient(155deg, #050505 0%, #1A0508 45%, #0A0A0A 100%);"></div>
+  <!-- Subtle film grain for an expensive matte feel -->
+  <div class="absolute inset-0 opacity-[0.07] mix-blend-overlay pointer-events-none" style="
+       background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22220%22 height=%22220%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%222%22 stitchTiles=%22stitch%22/><feColorMatrix values=%220 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>');"></div>
+  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10"></div>
 
   <div class="relative h-full max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col justify-end pb-16 lg:pb-24">
     <div class="max-w-3xl">
