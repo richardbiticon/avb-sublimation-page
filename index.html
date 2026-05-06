@@ -993,14 +993,26 @@ function updateTimeline() {
   const totalSpan = Math.max(diffDays(target, today), 1);
   const dots = tlTrack.querySelectorAll('.timeline-dot');
 
+  // Compute raw positions, then enforce a minimum gap so labels stay readable
+  // when the picked date is close to today and milestones would otherwise stack.
+  const MIN_GAP_PCT = 14;
+  const positions = dates.map((d, i) => {
+    if (i === 0) return 0;
+    if (i === dates.length - 1) return 100;
+    const raw = (diffDays(d, today) / totalSpan) * 100;
+    return Math.max(0, Math.min(100, raw));
+  });
+  // Forward pass: push each dot at least MIN_GAP_PCT past the previous one.
+  for (let i = 1; i < positions.length - 1; i++) {
+    positions[i] = Math.max(positions[i], positions[i - 1] + MIN_GAP_PCT);
+  }
+  // Backward pass: pull each dot back so it stays MIN_GAP_PCT before the next.
+  for (let i = positions.length - 2; i >= 1; i--) {
+    positions[i] = Math.min(positions[i], positions[i + 1] - MIN_GAP_PCT);
+  }
+
   dots.forEach((dot, i) => {
-    let pct;
-    if (i === 0)                     pct = 0;
-    else if (i === dates.length - 1) pct = 100;
-    else {
-      const raw = (diffDays(dates[i], today) / totalSpan) * 100;
-      pct = Math.max(0, Math.min(100, raw));
-    }
+    const pct = positions[i];
     dot.style.left = pct + '%';
 
     const mark = dot.querySelector('.dot-mark');
