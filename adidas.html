@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>adidas Custom Volleyball Jerseys | All Volleyball</title>
+<meta name="description" content="Full-custom adidas volleyball jerseys built by All Volleyball. Long sleeve, short sleeve, sleeveless, and arm sleeves. 6–8 week production. Volleyball-first since 1995.">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Tailwind via the official Play CDN. Prototype only; the Shopify port should compile Tailwind from source. -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          'avb-black':    '#0A0A0A',
+          'avb-body':     '#242424',
+          'avb-red':      '#C23946',
+          'avb-red-dark': '#A82F3B',
+          'avb-offwhite': '#FCF8F7',
+          'avb-grey':     '#6B6C6C',
+          'avb-divider':  '#E8E6E4',
+          'avb-promo':    '#F2F2F2',
+        },
+        fontFamily: {
+          display: ['Oswald', 'sans-serif'],
+          body:    ['Inter',  'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  body { font-family: 'Inter', sans-serif; color: #242424; background: #fff; -webkit-font-smoothing: antialiased; }
+  .font-display { font-family: 'Oswald', sans-serif; }
+  .display-tight { letter-spacing: -0.015em; }
+
+  .hero-fade { opacity: 0; animation: heroFade 900ms ease-out 80ms forwards; }
+  @keyframes heroFade { to { opacity: 1; } }
+
+  .reveal { opacity: 0; transform: translateY(20px); }
+  .reveal.is-visible { opacity: 1; transform: translateY(0);
+    transition: opacity 800ms cubic-bezier(.2,.7,.2,1), transform 800ms cubic-bezier(.2,.7,.2,1); }
+
+  .btn-red { background-color: #C23946; transition: background-color 200ms ease, transform 250ms cubic-bezier(.2,.7,.2,1); }
+  .btn-red:hover { background-color: #A82F3B; }
+  .btn-ghost-light { transition: background-color 200ms ease, border-color 200ms ease; }
+  .btn-ghost-light:hover { background-color: rgba(255,255,255,.06); }
+  .btn-ghost-dark { transition: background-color 200ms ease, color 200ms ease; }
+  .btn-ghost-dark:hover { background-color: #0A0A0A; color: #fff; }
+
+  .link-inline { text-decoration: underline; text-decoration-color: transparent;
+    text-underline-offset: 4px; transition: text-decoration-color 200ms ease, color 150ms ease; }
+  .link-inline:hover { text-decoration-color: currentColor; }
+
+  /* Three-stripes motif — used decoratively on hero and section dividers */
+  .three-stripes {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .three-stripes span {
+    display: block;
+    width: 8px;
+    height: 100%;
+    background: #fff;
+    transform: skewX(-18deg);
+  }
+  .three-stripes--dark span { background: #0A0A0A; }
+  .three-stripes--red  span { background: #C23946; }
+
+  /* Diagonal slash divider used between sections */
+  .slash-divider {
+    height: 80px;
+    background: linear-gradient(to bottom right, transparent 49.5%, #0A0A0A 49.5%, #0A0A0A 50.5%, transparent 50.5%);
+  }
+
+  /* Product card — modeled on the screenshot the user shared */
+  .product-card {
+    background: #FCF8F7;
+    transition: transform 350ms cubic-bezier(.2,.7,.2,1), box-shadow 350ms ease;
+  }
+  .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 60px -20px rgba(10,10,10,0.18);
+  }
+  .product-card .athlete-frame {
+    aspect-ratio: 3 / 4;
+    background: #fff;
+    border-bottom: 1px solid #E8E6E4;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .product-card .athlete-frame .placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(ellipse 60% 45% at 50% 80%, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0) 70%),
+      linear-gradient(180deg, #fff 0%, #FCF8F7 100%);
+    color: #6B6C6C;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-weight: 600;
+    text-align: center;
+    padding: 24px;
+  }
+  .product-card .placeholder svg {
+    width: 64px; height: 64px; margin-bottom: 14px; opacity: 0.45;
+  }
+
+  /* Color swatch ring */
+  .swatch {
+    width: 36px; height: 36px; border-radius: 9999px;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px #E8E6E4;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+    cursor: pointer;
+  }
+  .swatch:hover { transform: scale(1.1); box-shadow: 0 0 0 2px #0A0A0A; }
+
+  /* Spec stat */
+  .spec-block { padding-top: 24px; position: relative; }
+  .spec-block::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 32px; height: 2px; background: #0A0A0A;
+  }
+</style>
+</head>
+<body class="font-body">
+
+<!-- ====================================================================
+     SUB-NAV (back to overview)
+     ==================================================================== -->
+<nav class="bg-white border-b border-avb-divider">
+  <div class="max-w-[1280px] mx-auto px-6 lg:px-12 py-4 flex items-center justify-between">
+    <a href="index.html" class="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-avb-grey hover:text-avb-black font-semibold transition-colors">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
+      All Volleyball
+    </a>
+    <div class="text-[11px] uppercase tracking-[0.22em] text-avb-grey font-semibold hidden md:block">
+      Brand · adidas
+    </div>
+  </div>
+</nav>
+
+
+<!-- ====================================================================
+     SECTION 1. HERO — adidas-themed
+     ==================================================================== -->
+<section class="relative w-full aspect-[5/4] md:aspect-[21/9] bg-avb-black overflow-hidden hero-fade">
+  <!-- Layered black with subtle warm shadow + grain -->
+  <div class="absolute inset-0" style="
+       background:
+         radial-gradient(ellipse 70% 50% at 18% 18%, rgba(60,60,65,0.55) 0%, rgba(60,60,65,0) 60%),
+         radial-gradient(ellipse 65% 50% at 85% 85%, rgba(20,20,22,0.85) 0%, rgba(20,20,22,0) 65%),
+         linear-gradient(155deg, #050505 0%, #111113 50%, #050505 100%);"></div>
+
+  <!-- Three-stripes graphic, large, lower-right, white at low opacity -->
+  <div class="absolute -right-12 bottom-0 h-[70%] flex items-end opacity-[0.10] pointer-events-none">
+    <div class="three-stripes" style="height: 100%;">
+      <span style="height: 70%;"></span>
+      <span style="height: 85%;"></span>
+      <span style="height: 100%;"></span>
+    </div>
+  </div>
+
+  <!-- Film grain -->
+  <div class="absolute inset-0 opacity-[0.06] mix-blend-overlay pointer-events-none" style="
+       background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22220%22 height=%22220%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%222%22 stitchTiles=%22stitch%22/><feColorMatrix values=%220 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>');"></div>
+  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10"></div>
+
+  <div class="relative h-full max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col justify-end pb-16 lg:pb-32">
+    <div class="max-w-3xl">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="three-stripes" style="height: 18px;">
+          <span style="height: 60%;"></span>
+          <span style="height: 80%;"></span>
+          <span style="height: 100%;"></span>
+        </div>
+        <div class="text-[11px] uppercase tracking-[0.3em] text-white/70 font-semibold">Brand line · adidas</div>
+      </div>
+      <h1 class="font-display font-semibold text-white uppercase leading-[0.95] display-tight"
+          style="font-size: clamp(2.5rem, 7vw, 5.75rem);">
+        adidas, custom-built<br>for your court.
+      </h1>
+      <p class="mt-6 text-white/85 text-lg md:text-xl max-w-xl">
+        Full-custom adidas volleyball jerseys, sublimated and built to your roster, your colors, your timeline.
+      </p>
+      <div class="mt-9 flex flex-wrap gap-3">
+        <a href="#products" class="group inline-flex items-center gap-2 bg-white text-avb-black font-medium px-7 py-4 text-base hover:bg-avb-offwhite transition-colors">
+          See the line
+          <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+        </a>
+        <a href="mailto:team@allvolleyball.com" class="inline-flex items-center gap-2 border border-white/40 text-white font-medium px-7 py-4 text-base btn-ghost-light">
+          Request a quote
+        </a>
+      </div>
+    </div>
+    <div class="absolute bottom-8 right-6 lg:right-12 text-white/55 text-[11px] uppercase tracking-[0.25em] font-medium hidden md:block">
+      adidas × All Volleyball · Full custom
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 2. INTRO / PARTNERSHIP STORY
+     ==================================================================== -->
+<section class="bg-white py-20 md:py-28 px-6 lg:px-12">
+  <div class="max-w-[1080px] mx-auto">
+    <div class="grid lg:grid-cols-[1fr_2fr] gap-10 lg:gap-20">
+      <div>
+        <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">01 / The line</div>
+        <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
+            style="font-size: clamp(2rem, 4.5vw, 3.25rem); line-height: 1.05;">
+          Brand you<br>already trust.
+        </h2>
+      </div>
+      <div class="space-y-5 text-avb-body text-base md:text-lg leading-relaxed reveal">
+        <p>adidas brings the silhouette and the heritage. We bring the volleyball depth — fit knowledge from 30 years of clubs, fabrics tested for hot July gyms, sublimation that holds through 40+ wash cycles.</p>
+        <p>Every piece on this page is a real adidas garment built to your design from the inside out. No iron-on names. No screen-printed numbers. Color is dyed into the fiber.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 3. PRODUCT GRID
+     ==================================================================== -->
+<section id="products" class="bg-avb-offwhite py-20 md:py-28 px-6 lg:px-12">
+  <div class="max-w-[1280px] mx-auto">
+
+    <div class="mb-12 lg:mb-16 max-w-3xl">
+      <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">02 / The line</div>
+      <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
+          style="font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1;">
+        Four cuts.<br>One signature.
+      </h2>
+      <p class="mt-5 text-avb-grey text-base md:text-lg reveal">
+        Pick the silhouette your program needs. Every option is fully sublimated and fully customizable.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
+
+      <!-- LONG SLEEVE -->
+      <div class="product-card">
+        <div class="athlete-frame">
+          <div class="placeholder">
+            <svg viewBox="0 0 64 80" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 14 L8 22 L8 60 L18 64 L18 76 L46 76 L46 64 L56 60 L56 22 L48 14 L40 12 C40 18 24 18 24 12 Z"/>
+            </svg>
+            <span>Athlete photo</span>
+          </div>
+        </div>
+        <div class="p-6 text-center">
+          <h3 class="font-display font-semibold uppercase text-avb-black text-xl tracking-wide mb-3">Long Sleeve</h3>
+          <p class="text-sm text-avb-body leading-relaxed mb-2">91% Polyester / 9% Lycra Flatlock,<br>with Climacool®</p>
+          <p class="text-sm text-avb-grey">6–8 week production time</p>
+        </div>
+      </div>
+
+      <!-- SHORT SLEEVE -->
+      <div class="product-card">
+        <div class="athlete-frame">
+          <div class="placeholder">
+            <svg viewBox="0 0 64 80" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 14 L4 24 L8 36 L16 32 L16 76 L48 76 L48 32 L56 36 L60 24 L48 14 L40 12 C40 18 24 18 24 12 Z"/>
+            </svg>
+            <span>Athlete photo</span>
+          </div>
+        </div>
+        <div class="p-6 text-center">
+          <h3 class="font-display font-semibold uppercase text-avb-black text-xl tracking-wide mb-3">Short Sleeve</h3>
+          <p class="text-sm text-avb-body leading-relaxed mb-2">91% Polyester / 9% Lycra Flatlock,<br>with Climacool®</p>
+          <p class="text-sm text-avb-grey">6–8 week production time</p>
+        </div>
+      </div>
+
+      <!-- SLEEVELESS -->
+      <div class="product-card">
+        <div class="athlete-frame">
+          <div class="placeholder">
+            <svg viewBox="0 0 64 80" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12 L14 18 L18 30 L18 76 L46 76 L46 30 L50 18 L42 12 C42 20 22 20 22 12 Z"/>
+            </svg>
+            <span>Athlete photo</span>
+          </div>
+        </div>
+        <div class="p-6 text-center">
+          <h3 class="font-display font-semibold uppercase text-avb-black text-xl tracking-wide mb-3">Sleeveless</h3>
+          <p class="text-sm text-avb-body leading-relaxed mb-2">91% Polyester / 9% Lycra Flatlock,<br>with Climacool®</p>
+          <p class="text-sm text-avb-grey">6–8 week production time</p>
+        </div>
+      </div>
+
+      <!-- ARM SLEEVE -->
+      <div class="product-card">
+        <div class="athlete-frame">
+          <div class="placeholder">
+            <svg viewBox="0 0 64 80" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M28 6 L36 6 L40 16 L42 70 L38 76 L26 76 L22 70 L24 16 Z"/>
+            </svg>
+            <span>Product photo</span>
+          </div>
+        </div>
+        <div class="p-6 text-center">
+          <h3 class="font-display font-semibold uppercase text-avb-black text-xl tracking-wide mb-3">Arm Sleeve</h3>
+          <p class="text-sm text-avb-body leading-relaxed mb-2">Available in youth and adult<br>Sold as a single sleeve</p>
+          <p class="text-sm text-avb-grey">Stretch poly material</p>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="mt-10 text-center text-sm text-avb-grey reveal">
+      Need libero contrast, captain bands, or alternate colorways? <a href="mailto:team@allvolleyball.com" class="link-inline text-avb-black font-medium">We do all of it.</a>
+    </p>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 4. WHAT'S IN THE BUILD
+     ==================================================================== -->
+<section class="bg-white py-20 md:py-28 px-6 lg:px-12">
+  <div class="max-w-[1280px] mx-auto">
+
+    <div class="mb-14 lg:mb-20 max-w-3xl">
+      <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">03 / The build</div>
+      <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
+          style="font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1;">
+        Every detail<br>handled.
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 reveal">
+
+      <div>
+        <div class="three-stripes three-stripes--red mb-5" style="height: 22px;">
+          <span style="height: 55%;"></span>
+          <span style="height: 78%;"></span>
+          <span style="height: 100%;"></span>
+        </div>
+        <h3 class="font-display font-semibold uppercase text-avb-black text-lg mb-3 tracking-wide">Climacool® fabric</h3>
+        <p class="text-sm text-avb-body leading-relaxed">91/9 polyester-lycra flatlock. Two-way stretch. Breathes through a hot July gym, holds shape through a 6-tournament weekend.</p>
+      </div>
+
+      <div>
+        <div class="three-stripes three-stripes--red mb-5" style="height: 22px;">
+          <span style="height: 55%;"></span>
+          <span style="height: 78%;"></span>
+          <span style="height: 100%;"></span>
+        </div>
+        <h3 class="font-display font-semibold uppercase text-avb-black text-lg mb-3 tracking-wide">True sublimation</h3>
+        <p class="text-sm text-avb-body leading-relaxed">Color is dyed into the fiber, not laid on top. No cracking, no peeling, no fade through 40+ wash cycles in a club season.</p>
+      </div>
+
+      <div>
+        <div class="three-stripes three-stripes--red mb-5" style="height: 22px;">
+          <span style="height: 55%;"></span>
+          <span style="height: 78%;"></span>
+          <span style="height: 100%;"></span>
+        </div>
+        <h3 class="font-display font-semibold uppercase text-avb-black text-lg mb-3 tracking-wide">Volleyball-cut fit</h3>
+        <p class="text-sm text-avb-body leading-relaxed">Sleeve cap built for the swing. Side panel built for the dive. Hem built for the tuck. Liberos and outsides get the cut they actually need.</p>
+      </div>
+
+      <div>
+        <div class="three-stripes three-stripes--red mb-5" style="height: 22px;">
+          <span style="height: 55%;"></span>
+          <span style="height: 78%;"></span>
+          <span style="height: 100%;"></span>
+        </div>
+        <h3 class="font-display font-semibold uppercase text-avb-black text-lg mb-3 tracking-wide">Names + numbers</h3>
+        <p class="text-sm text-avb-body leading-relaxed">Sublimated into the jersey, not stitched on or ironed on. Roster size, position, captain, libero — handled before the press runs.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 5. CUSTOMIZATION CALLOUT (color, fit, art)
+     ==================================================================== -->
+<section class="bg-avb-black py-20 md:py-28 px-6 lg:px-12 relative overflow-hidden">
+  <!-- Subtle stripes accent in background -->
+  <div class="absolute -left-20 top-1/2 -translate-y-1/2 h-[60%] flex items-center opacity-[0.08]">
+    <div class="three-stripes" style="height: 100%;">
+      <span style="height: 60%;"></span>
+      <span style="height: 80%;"></span>
+      <span style="height: 100%;"></span>
+    </div>
+  </div>
+
+  <div class="max-w-[1280px] mx-auto relative">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div>
+        <div class="text-[11px] uppercase tracking-[0.25em] text-white/55 font-semibold mb-4 reveal">04 / Customize</div>
+        <h2 class="font-display font-semibold text-white uppercase reveal display-tight"
+            style="font-size: clamp(2.25rem, 5vw, 3.75rem); line-height: 1.05;">
+          Your colors.<br>Your call.
+        </h2>
+        <div class="mt-8 space-y-4 text-white/80 text-base md:text-lg leading-relaxed reveal">
+          <p>Send us a Pantone, a hex code, or a screenshot from your team page. We match it. Side panels, shoulder accents, captain bars, libero contrast — every layer is yours to design.</p>
+          <p>If you don't have a designer, we have ours. Same team that's built for 2,000+ clubs.</p>
+        </div>
+
+        <!-- Sample swatch row — purely decorative -->
+        <div class="mt-10 reveal">
+          <div class="text-[11px] uppercase tracking-[0.22em] text-white/55 font-semibold mb-4">Common club palettes</div>
+          <div class="flex flex-wrap gap-3">
+            <div class="swatch" style="background:#0A0A0A;" title="Black"></div>
+            <div class="swatch" style="background:#FFFFFF;" title="White"></div>
+            <div class="swatch" style="background:#C23946;" title="Crimson"></div>
+            <div class="swatch" style="background:#0E2B5C;" title="Navy"></div>
+            <div class="swatch" style="background:#1B4D2E;" title="Forest"></div>
+            <div class="swatch" style="background:#A37B2C;" title="Vegas Gold"></div>
+            <div class="swatch" style="background:#7A1F2B;" title="Maroon"></div>
+            <div class="swatch" style="background:#4B2E83;" title="Royal Purple"></div>
+          </div>
+          <p class="mt-3 text-xs text-white/45">Pantone match available on every order.</p>
+        </div>
+      </div>
+
+      <!-- Spec strip on the dark side -->
+      <div class="grid grid-cols-2 gap-x-8 gap-y-10 reveal">
+        <div class="spec-block">
+          <div class="font-display font-semibold text-white leading-[0.85]" style="font-size: clamp(2.5rem, 5vw, 4rem);">91/9</div>
+          <div class="mt-2 text-[11px] uppercase tracking-[0.18em] text-white/55 font-semibold">Poly / Lycra blend</div>
+        </div>
+        <div class="spec-block">
+          <div class="font-display font-semibold text-white leading-[0.85]" style="font-size: clamp(2.5rem, 5vw, 4rem);">6<span class="text-avb-red">–</span>8</div>
+          <div class="mt-2 text-[11px] uppercase tracking-[0.18em] text-white/55 font-semibold">Week production</div>
+        </div>
+        <div class="spec-block">
+          <div class="font-display font-semibold text-white leading-[0.85]" style="font-size: clamp(2.5rem, 5vw, 4rem);">YS<span class="text-avb-red">–</span>3XL</div>
+          <div class="mt-2 text-[11px] uppercase tracking-[0.18em] text-white/55 font-semibold">Size range</div>
+        </div>
+        <div class="spec-block">
+          <div class="font-display font-semibold text-white leading-[0.85]" style="font-size: clamp(2.5rem, 5vw, 4rem);">∞</div>
+          <div class="mt-2 text-[11px] uppercase tracking-[0.18em] text-white/55 font-semibold">Color combinations</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 6. PROCESS RIBBON
+     ==================================================================== -->
+<section class="bg-avb-offwhite py-20 md:py-28 px-6 lg:px-12">
+  <div class="max-w-[1080px] mx-auto">
+
+    <div class="mb-12 lg:mb-16">
+      <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">05 / Order</div>
+      <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
+          style="font-size: clamp(2.25rem, 5vw, 3.5rem); line-height: 1.05;">
+        From roster<br>to court.
+      </h2>
+    </div>
+
+    <ol class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
+      <li class="bg-white border border-avb-divider p-6">
+        <div class="font-display text-avb-red font-semibold text-3xl mb-3">01</div>
+        <div class="font-semibold uppercase tracking-wide text-avb-black text-sm mb-2">Send roster</div>
+        <p class="text-sm text-avb-body leading-relaxed">Names, numbers, sizes. Logo file if you have it. Or just a screenshot of your team page — we'll work from that.</p>
+      </li>
+      <li class="bg-white border border-avb-divider p-6">
+        <div class="font-display text-avb-red font-semibold text-3xl mb-3">02</div>
+        <div class="font-semibold uppercase tracking-wide text-avb-black text-sm mb-2">Mockup in 24h</div>
+        <p class="text-sm text-avb-body leading-relaxed">Front, back, and sleeve views. Real Pantone match. Rounds of revisions are included — no surprise design fees.</p>
+      </li>
+      <li class="bg-white border border-avb-divider p-6">
+        <div class="font-display text-avb-red font-semibold text-3xl mb-3">03</div>
+        <div class="font-semibold uppercase tracking-wide text-avb-black text-sm mb-2">Approve + lock</div>
+        <p class="text-sm text-avb-body leading-relaxed">Sign off on the mockup. We lock the design and pull adidas blanks for your roster.</p>
+      </li>
+      <li class="bg-white border border-avb-divider p-6">
+        <div class="font-display text-avb-red font-semibold text-3xl mb-3">04</div>
+        <div class="font-semibold uppercase tracking-wide text-avb-black text-sm mb-2">Production + ship</div>
+        <p class="text-sm text-avb-body leading-relaxed">Sublimation press, cut, sew, QC, ship. You get a real ship date — no "soft" estimates that slide.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 7. CLOSE / CTA
+     ==================================================================== -->
+<section class="bg-avb-black py-20 md:py-28 px-6 lg:px-12 relative overflow-hidden">
+  <!-- Three-stripes corner accent -->
+  <div class="absolute right-0 top-0 h-full flex items-center opacity-[0.08] pr-12">
+    <div class="three-stripes" style="height: 60%;">
+      <span style="height: 60%;"></span>
+      <span style="height: 80%;"></span>
+      <span style="height: 100%;"></span>
+    </div>
+  </div>
+
+  <div class="max-w-2xl mx-auto text-center relative">
+    <h2 class="font-display font-semibold text-white uppercase reveal display-tight"
+        style="font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1;">
+      Ready to design?
+    </h2>
+    <p class="mt-6 text-white/80 text-base md:text-lg leading-relaxed reveal">
+      Send the roster. We'll send a quote in 24 hours and a real ship date you can plan around. No fine print, no policy fights, no surprises after.
+    </p>
+    <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+      <a href="mailto:team@allvolleyball.com" class="inline-flex items-center gap-2 btn-red text-white font-medium px-7 py-4 text-base">
+        Email team@allvolleyball.com
+      </a>
+      <a href="tel:" class="inline-flex items-center gap-2 border border-white/40 text-white font-medium px-7 py-4 text-base btn-ghost-light">
+        Call the Team Line
+      </a>
+    </div>
+    <p class="mt-8 text-sm text-white/50 leading-relaxed">
+      Looking for another brand? <a href="index.html#brands" class="link-inline text-white font-medium">Back to the lineup</a>.
+    </p>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     GSAP for scroll reveals.
+     ==================================================================== -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+if (window.gsap && window.ScrollTrigger) {
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.utils.toArray('.reveal').forEach(el => {
+    gsap.set(el, { opacity: 0, y: 20 });
+    gsap.to(el, {
+      opacity: 1, y: 0,
+      duration: 0.8, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+    });
+  });
+} else {
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+}
+</script>
+
+</body>
+</html>
