@@ -47,9 +47,11 @@
 </script>
 
 <style>
+  html { scroll-behavior: smooth; }
   body { font-family: 'Inter', sans-serif; color: #242424; background: #fff; -webkit-font-smoothing: antialiased; }
   .font-display { font-family: 'Oswald', sans-serif; }
-  .display-tight { letter-spacing: -0.015em; }
+  .display-tight { letter-spacing: 0; }
+  #timeline, #build { scroll-margin-top: 32px; }
 
   /* Hero loads with a single slow fade. No looping. */
   .hero-fade { opacity: 0; animation: heroFade 900ms ease-out 80ms forwards; }
@@ -61,12 +63,70 @@
   .reveal.is-visible { opacity: 1; transform: translateY(0);
     transition: opacity 800ms cubic-bezier(.2,.7,.2,1), transform 800ms cubic-bezier(.2,.7,.2,1); }
 
-  /* Timeline dots transition position when the date changes. */
-  .timeline-dot { transition: left 500ms cubic-bezier(.4,0,.2,1); }
-  .timeline-dot.target .dot-mark { animation: pulseRed 1.2s ease-out; }
-  @keyframes pulseRed {
-    0%   { box-shadow: 0 0 0 0 rgba(194,57,70,.55); }
-    100% { box-shadow: 0 0 0 14px rgba(194,57,70,0); }
+  /* Timeline rows stay readable when dates are close together. */
+  .tl-step {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    padding: 13px 0;
+    border-top: 1px solid #E8E6E4;
+  }
+  .tl-step:first-child { border-top: 0; padding-top: 0; }
+  .tl-step-marker {
+    width: 28px; height: 28px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1.5px solid #0A0A0A;
+    color: #0A0A0A;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+  .tl-step-kicker {
+    color: #6B6C6C;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+  .tl-step-title {
+    color: #0A0A0A;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+  .tl-step-date {
+    color: #0A0A0A;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .tl-step--target .tl-step-marker {
+    background: #C23946;
+    border-color: #C23946;
+    color: #fff;
+    box-shadow: 0 0 0 6px rgba(194,57,70,0.12);
+  }
+  .tl-step--critical .tl-step-marker {
+    border-color: rgba(194,57,70,0.8);
+    color: #C23946;
+  }
+  .tl-step--critical.tl-step--target .tl-step-marker {
+    background: #C23946;
+    color: #fff;
+  }
+  .tl-step--past .tl-step-date,
+  .tl-step--past .tl-step-kicker { color: #C23946; }
+  @media (max-width: 640px) {
+    .tl-step { grid-template-columns: 32px minmax(0, 1fr); gap: 10px 12px; }
+    .tl-step-date { grid-column: 2; justify-self: start; font-size: 1rem; margin-top: -4px; }
   }
 
   /* Calendar */
@@ -83,6 +143,19 @@
   .cal-day--today    { color: #0A0A0A; font-weight: 600; box-shadow: inset 0 0 0 1px #0A0A0A; }
   .cal-day--today:hover    { background-color: #0A0A0A; color: #fff; }
   .cal-day--selected { background-color: #C23946; color: #fff; font-weight: 600; }
+  .cal-day--critical {
+    color: #C23946;
+    background-color: rgba(194,57,70,0.12);
+    box-shadow: inset 0 0 0 1px rgba(194,57,70,0.42);
+    font-weight: 600;
+  }
+  .cal-day--critical:hover { background-color: rgba(194,57,70,0.8); color: #fff; }
+  .cal-day--selected-critical {
+    background-color: rgba(194,57,70,0.88);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: inset 0 0 0 2px #0A0A0A;
+  }
   .cal-day--disabled { color: rgba(107,108,108,0.32); cursor: not-allowed; }
 
   /* Quick-pick scenario chips under the calendar */
@@ -101,6 +174,24 @@
   }
   .scenario-chip:hover { border-color: #0A0A0A; background: #0A0A0A; color: #fff; }
   .scenario-chip.active { background: #0A0A0A; color: #fff; border-color: #0A0A0A; }
+  .scenario-chip.critical {
+    color: #C23946;
+    background: rgba(194,57,70,0.08);
+    border-color: rgba(194,57,70,0.42);
+  }
+  .scenario-chip.critical:hover { background: rgba(194,57,70,0.8); color: #fff; border-color: rgba(194,57,70,0.8); }
+  .scenario-chip.active.critical { background: #C23946; color: #fff; border-color: #C23946; }
+  .scenario-chip:disabled {
+    color: rgba(107,108,108,0.38);
+    background: #F2F2F2;
+    border-color: #E8E6E4;
+    cursor: not-allowed;
+  }
+  .scenario-chip:disabled:hover {
+    color: rgba(107,108,108,0.38);
+    background: #F2F2F2;
+    border-color: #E8E6E4;
+  }
 
   /* Hide scrollbar on the nav row when it overflows. */
   .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -119,15 +210,138 @@
   .link-inline:hover { text-decoration-color: currentColor; }
 
   /* ============ JERSEY EXPLORER (3D) ============ */
+  #build {
+    --brand-accent: #C23946;
+    --brand-soft: rgba(194,57,70,0.12);
+    --brand-ink: #0A0A0A;
+  }
+  #build *,
+  #jersey-stage,
+  #hotspot-panel,
+  #hotspot-default,
+  #hotspot-active,
+  #hotspot-list {
+    min-width: 0;
+  }
+  #brand-panel-copy,
+  #hotspot-desc,
+  .hotspot-list-title,
+  .hotspot-list-desc {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+  .build-brand-tabs {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(132px, 1fr));
+    gap: 8px;
+    overflow-x: auto;
+    max-width: 100%;
+    padding-bottom: 4px;
+  }
+  .build-brand-tab {
+    min-height: 74px;
+    border: 1px solid #E8E6E4;
+    background: #fff;
+    color: #0A0A0A;
+    padding: 13px 14px;
+    text-align: left;
+    position: relative;
+    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  }
+  .build-brand-tab::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--tab-accent, #C23946);
+    opacity: 0;
+    transition: opacity 180ms ease;
+  }
+  .build-brand-tab:hover {
+    border-color: #0A0A0A;
+    transform: translateY(-1px);
+  }
+  .build-brand-tab[aria-selected="true"] {
+    border-color: var(--tab-accent, #C23946);
+    box-shadow: inset 0 0 0 1px var(--tab-accent, #C23946);
+  }
+  .build-brand-tab[aria-selected="true"]::before { opacity: 1; }
+  .build-brand-tab-name {
+    display: block;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .build-brand-tab-label {
+    display: block;
+    margin-top: 8px;
+    color: #6B6C6C;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    line-height: 1.35;
+    text-transform: uppercase;
+  }
+  #jersey-stage {
+    --stage-badge-room: 118px;
+    background:
+      radial-gradient(circle at 20% 16%, var(--brand-soft), transparent 34%),
+      linear-gradient(135deg, #fff 0%, #fff 58%, rgba(10,10,10,0.035) 100%);
+    transition: background 240ms ease;
+  }
+  #jersey-stage::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(115deg, transparent 0 56%, var(--brand-soft) 56% 63%, transparent 63%),
+      repeating-linear-gradient(90deg, rgba(10,10,10,0.03) 0 1px, transparent 1px 42px);
+    pointer-events: none;
+    z-index: 1;
+  }
   #jersey-canvas { touch-action: none; cursor: grab; }
+  #jersey-canvas,
+  #hotspot-overlay { z-index: 2; }
   #jersey-canvas:active { cursor: grabbing; }
+  .build-stage-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 10;
+    max-width: calc(100% - var(--stage-badge-room));
+    display: inline-flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.94);
+    border: 1px solid #E8E6E4;
+    color: #0A0A0A;
+    pointer-events: none;
+  }
+  .build-stage-badge-kicker {
+    color: #6B6C6C;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+  .build-stage-badge-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
   .hotspot {
     position: absolute;
     left: -100px; top: -100px; /* park off-canvas until first projection */
     width: 28px; height: 28px;
     border-radius: 50%;
     background: rgba(255,255,255,0.95);
-    border: 2px solid #C23946;
+    border: 2px solid var(--brand-accent, #C23946);
     color: #0A0A0A;
     font-family: 'Oswald', sans-serif;
     font-weight: 600;
@@ -145,14 +359,134 @@
     content: '';
     position: absolute; inset: -8px;
     border-radius: 50%;
-    border: 2px solid #C23946;
+    border: 2px solid var(--brand-accent, #C23946);
     opacity: 0.35;
     animation: hotspotPing 2s cubic-bezier(.2,.7,.2,1) infinite;
   }
-  .hotspot:hover { background: #C23946; color: #fff; transform: translate(-50%, -50%) scale(1.12); }
-  .hotspot.active { background: #C23946; color: #fff; transform: translate(-50%, -50%) scale(1.18); }
+  .hotspot:hover { background: var(--brand-accent, #C23946); color: #fff; transform: translate(-50%, -50%) scale(1.12); }
+  .hotspot.active { background: var(--brand-accent, #C23946); color: #fff; transform: translate(-50%, -50%) scale(1.18); }
   .hotspot.facing-away { opacity: 0.15; pointer-events: none; }
   .hotspot.facing-away::before { display: none; }
+  .hotspot-reset {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 13px;
+    background: rgba(255,255,255,0.94);
+    border: 1px solid #E8E6E4;
+    color: #0A0A0A;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity 180ms ease, transform 180ms ease, background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+  }
+  .hotspot-reset:hover {
+    background: #0A0A0A;
+    border-color: #0A0A0A;
+    color: #fff;
+  }
+  .hotspot-reset.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  .hotspot-list-item {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+    padding: 10px 0;
+    border-top: 1px solid #E8E6E4;
+    text-align: left;
+    transition: color 180ms ease;
+  }
+  .hotspot-list-dot {
+    width: 24px; height: 24px;
+    border-radius: 999px;
+    background: var(--brand-accent, #C23946);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .hotspot-list-item:hover .hotspot-list-title,
+  .hotspot-list-item.active .hotspot-list-title { color: var(--brand-accent, #C23946); }
+  .build-proof-row {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 14px;
+    padding: 12px 0;
+    border-top: 1px solid #E8E6E4;
+  }
+  .build-proof-label {
+    color: #6B6C6C;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    line-height: 1.35;
+    text-transform: uppercase;
+  }
+  .build-proof-value {
+    color: #0A0A0A;
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .build-brand-cta {
+    border-color: var(--brand-accent, #C23946);
+    color: var(--brand-accent, #C23946);
+  }
+  .build-brand-cta:hover {
+    background: var(--brand-accent, #C23946);
+    color: #fff;
+  }
+  .hotspot-detail-num { color: var(--brand-accent, #C23946); }
+  @media (max-width: 720px) {
+    #build > div,
+    #jersey-stage,
+    #hotspot-panel,
+    .build-brand-tabs {
+      width: 100%;
+      max-width: calc(100vw - 48px);
+    }
+    .build-brand-tabs {
+      display: flex;
+      margin-left: 0;
+      margin-right: 0;
+      padding-left: 0;
+      padding-right: 0;
+      scroll-snap-type: x proximity;
+    }
+    .build-brand-tab {
+      flex: 0 0 154px;
+      scroll-snap-align: start;
+    }
+    #build p { max-width: 20rem; }
+    #jersey-fallback p { max-width: 16rem; }
+    #brand-panel-copy,
+    #hotspot-desc { max-width: 18rem; }
+    .hotspot-list-item {
+      grid-template-columns: 28px minmax(0, 14rem);
+    }
+    .hotspot-list-item > span,
+    .hotspot-list-title,
+    .hotspot-list-desc {
+      max-width: 14rem;
+    }
+    .build-stage-badge-name { font-size: 1.12rem; }
+    .build-proof-row { grid-template-columns: 1fr; gap: 4px; }
+  }
   @keyframes hotspotPing {
     0%   { transform: scale(1);    opacity: 0.45; }
     80%  { transform: scale(1.6);  opacity: 0; }
@@ -228,19 +562,20 @@
     z-index: 1;
   }
 
-  /* ============ BRAND WHEEL (3D) ============ */
+  /* ============ BRAND LOGO RAIL ============ */
   .brand-stage {
-    perspective: 1600px;
-    perspective-origin: 50% 50%;
-    height: clamp(220px, 32vw, 320px);
-    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    border-top: 1px solid #E8E6E4;
+    border-bottom: 1px solid #E8E6E4;
+    padding: 18px 0;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
   }
   .brand-wheel {
-    position: relative;
-    width: clamp(240px, 32vw, 360px);
-    height: clamp(150px, 20vw, 220px);
-    transform-style: preserve-3d;
-    animation: wheelSpin 28s linear infinite;
+    display: flex;
+    gap: 16px;
+    width: max-content;
+    animation: brandMarquee 32s linear infinite;
     will-change: transform;
   }
   .brand-stage:hover .brand-wheel { animation-play-state: paused; }
@@ -248,30 +583,45 @@
     .brand-wheel { animation: none; }
   }
   .brand-card {
-    position: absolute; inset: 0;
+    flex: 0 0 clamp(190px, 22vw, 260px);
+    min-height: 136px;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     background: #fff;
     border: 1px solid #E8E6E4;
-    backface-visibility: hidden;
-    padding: 20px;
+    padding: 22px;
   }
-  /* 5 brands × 72° apart, translated outward on Z. */
-  .brand-card:nth-child(1) { transform: rotateY(  0deg) translateZ(260px); }
-  .brand-card:nth-child(2) { transform: rotateY( 72deg) translateZ(260px); }
-  .brand-card:nth-child(3) { transform: rotateY(144deg) translateZ(260px); }
-  .brand-card:nth-child(4) { transform: rotateY(216deg) translateZ(260px); }
-  .brand-card:nth-child(5) { transform: rotateY(288deg) translateZ(260px); }
-  @media (max-width: 768px) {
-    .brand-card:nth-child(1) { transform: rotateY(  0deg) translateZ(180px); }
-    .brand-card:nth-child(2) { transform: rotateY( 72deg) translateZ(180px); }
-    .brand-card:nth-child(3) { transform: rotateY(144deg) translateZ(180px); }
-    .brand-card:nth-child(4) { transform: rotateY(216deg) translateZ(180px); }
-    .brand-card:nth-child(5) { transform: rotateY(288deg) translateZ(180px); }
+  .brand-logo {
+    width: 100%;
+    max-width: 180px;
+    max-height: 66px;
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: 0.82;
+    transition: filter 200ms ease, opacity 200ms ease, transform 250ms cubic-bezier(.2,.7,.2,1);
   }
-  @keyframes wheelSpin {
-    from { transform: rotateY(0deg);    }
-    to   { transform: rotateY(-360deg); }
+  .brand-wordmark {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.3rem;
+    font-weight: 600;
+    line-height: 1;
+    text-transform: lowercase;
+    color: #0A0A0A;
+    opacity: 0.82;
+    transition: opacity 200ms ease, transform 250ms cubic-bezier(.2,.7,.2,1);
+  }
+  .brand-card:hover .brand-logo {
+    filter: none;
+    opacity: 1;
+    transform: scale(1.04);
+  }
+  .brand-card:hover .brand-wordmark {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+  @keyframes brandMarquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
   }
 
   /* ============ STAT STRIP ============ */
@@ -298,7 +648,7 @@
 <!-- ====================================================================
      SECTION 1. HERO
      ==================================================================== -->
-<section class="relative w-full aspect-[5/4] md:aspect-[21/9] bg-avb-black overflow-hidden hero-fade">
+<section class="relative w-full h-[100svh] max-h-[640px] md:h-[480px] xl:h-[500px] md:max-h-none bg-avb-black overflow-hidden hero-fade">
   <!-- Premium layered gradient: deep black base with warm crimson glow upper-left and burgundy depth lower-right. -->
   <div class="absolute inset-0" style="
        background:
@@ -311,24 +661,26 @@
        background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22220%22 height=%22220%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%222%22 stitchTiles=%22stitch%22/><feColorMatrix values=%220 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>');"></div>
   <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10"></div>
 
-  <div class="relative h-full max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col justify-end pb-24 lg:pb-40">
+  <div class="relative h-full max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col justify-center py-8 md:py-16 xl:py-20">
     <div class="max-w-3xl">
-      <div class="text-[11px] uppercase tracking-[0.3em] text-avb-red font-semibold mb-6">Custom · CustomFuze</div>
-      <h1 class="font-display font-semibold text-white uppercase leading-[0.95] display-tight"
-          style="font-size: clamp(2.5rem, 7vw, 5.75rem);">
+      <div class="text-[0.7rem] uppercase tracking-[0.3em] text-avb-red font-semibold mb-4 md:mb-5">Custom · CustomFuze</div>
+      <h1 class="font-display font-semibold text-white uppercase leading-[0.95] display-tight text-[2.4rem] md:text-[4rem] lg:text-[4.8rem]">
         Custom sublimated<br>jerseys, built for<br>your program.
       </h1>
-      <p class="mt-6 text-white/85 text-lg md:text-xl max-w-xl">
+      <p class="mt-4 md:mt-5 text-white/85 text-[1rem] md:text-[1.2rem] max-w-xl">
         Volleyball-first since 1995. Done correctly. On time. Under budget.
       </p>
-      <div class="mt-9 flex flex-wrap gap-3">
-        <a href="#timeline" class="group inline-flex items-center gap-2 btn-red text-white font-medium px-7 py-4 text-base">
+      <div class="mt-6 md:mt-7 flex flex-col sm:flex-row gap-3">
+        <a href="#timeline" class="group inline-flex items-center justify-center gap-2 btn-red text-white font-medium px-6 py-3.5 text-[1rem]">
           Get a Quote in 24 Hours
           <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
         </a>
+        <a href="#build" class="inline-flex items-center justify-center gap-2 border border-white/45 text-white font-medium px-6 py-3.5 text-[1rem] btn-ghost-light">
+          See the Build Details
+        </a>
       </div>
     </div>
-    <div class="absolute bottom-10 right-6 lg:right-12 text-white/55 text-[11px] uppercase tracking-[0.25em] font-medium hidden md:block">
+    <div class="absolute bottom-6 right-6 lg:right-12 text-white/55 text-[0.7rem] uppercase tracking-[0.25em] font-medium hidden md:block">
       30 years. 2,000+ clubs. One sport.
     </div>
   </div>
@@ -352,10 +704,10 @@
       </p>
     </div>
 
-    <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+    <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-stretch">
 
-      <div>
-        <div class="bg-white border border-avb-divider p-6 md:p-8">
+      <div class="flex flex-col">
+        <div class="bg-white border border-avb-divider p-6 md:p-8 h-full w-full">
           <div class="flex items-center justify-between mb-6">
             <button id="cal-prev" class="text-avb-black hover:text-avb-red transition-colors p-1 disabled:text-avb-grey/40 disabled:cursor-not-allowed" aria-label="Previous month">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
@@ -369,11 +721,15 @@
             <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
           </div>
           <div id="cal-grid" class="grid grid-cols-7 gap-1"></div>
-          <p class="mt-5 text-xs text-avb-grey">Today is locked at May 4, 2026. Pick any date in the next 12 months.</p>
+          <div class="mt-5 space-y-2 text-xs text-avb-grey">
+            <p id="cal-availability-note"></p>
+            <p><span class="font-semibold text-avb-red">Red dates</span> are rush requests: <span id="cal-rush-note"></span></p>
+            <p id="cal-ideal-note"></p>
+          </div>
         </div>
 
         <!-- Quick scenario chips -->
-        <div class="mt-5 flex flex-wrap items-center gap-2">
+        <div class="hidden mt-5 flex-wrap items-center gap-2">
           <span class="text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold mr-1">Quick pick</span>
           <button class="scenario-chip" data-weeks="5">Tryouts</button>
           <button class="scenario-chip" data-weeks="6">Tournament weekend</button>
@@ -382,26 +738,26 @@
         </div>
       </div>
 
-      <div>
-        <div class="bg-white border border-avb-divider p-6 md:p-8">
+      <div class="flex">
+        <div class="bg-white border border-avb-divider p-6 md:p-8 h-full w-full flex flex-col">
 
-          <div class="flex items-baseline justify-between mb-1">
-            <span class="text-[11px] uppercase tracking-[0.22em] text-avb-grey font-semibold">On the court</span>
-            <span id="tl-target" class="font-display font-semibold text-avb-red text-lg md:text-xl uppercase"></span>
+          <div class="mb-6">
+            <span class="text-[11px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Timeline check</span>
+            <h3 id="tl-summary" class="mt-2 font-display font-semibold text-avb-black uppercase leading-tight text-[1.6rem]"></h3>
+            <p id="tl-helper" class="mt-2 text-sm text-avb-grey leading-relaxed"></p>
           </div>
-          <div id="tl-weeks-out" class="text-xs text-avb-grey mb-12"></div>
 
-          <div class="relative h-28" id="tl-track">
-            <div class="absolute top-1/2 left-0 right-0 h-px bg-avb-black/25 -translate-y-1/2"></div>
-          </div>
+          <div id="tl-track"></div>
 
           <div id="tl-status" class="mt-10 pt-6 border-t border-avb-divider text-base leading-relaxed"></div>
-        </div>
 
-        <a href="mailto:team@allvolleyball.com" class="mt-6 inline-flex items-center gap-2 btn-red text-white font-medium px-7 py-4 text-base">
-          Send Us Your Roster
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
-        </a>
+          <div class="mt-auto pt-8">
+            <a href="mailto:team@allvolleyball.com" class="inline-flex w-full items-center justify-center gap-2 btn-red text-white font-medium px-7 py-4 text-base">
+              Send Us Your Roster
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -470,10 +826,10 @@
 
 <!-- ====================================================================
      SECTION 5. JERSEY 3D EXPLORER
-     Three.js scene. Jersey shape extruded from a silhouette path,
-     auto-rotating. Five hotspots projected to DOM, click to focus.
+     Three.js scene. GLB jersey model auto-rotating.
+     Five hotspots projected to DOM, click to focus.
      ==================================================================== -->
-<section class="bg-avb-offwhite py-24 md:py-32 px-6 lg:px-12 overflow-hidden">
+<section id="build" class="bg-avb-offwhite py-24 md:py-32 px-6 lg:px-12 overflow-hidden">
   <div class="max-w-[1280px] mx-auto">
 
     <div class="mb-12 lg:mb-16">
@@ -483,38 +839,54 @@
         Five details<br>that matter.
       </h2>
       <p class="mt-5 text-avb-grey text-base md:text-lg max-w-xl reveal">
-        Drag to rotate. Tap a point to zoom in.
+        Choose a brand, then compare the build details before the order goes in.
       </p>
+      <div id="build-brand-tabs" class="build-brand-tabs no-scrollbar mt-8 reveal" role="tablist" aria-label="Choose a uniform brand"></div>
     </div>
 
-    <div class="grid lg:grid-cols-[1fr_360px] gap-8 lg:gap-12 items-start">
-      <div class="relative bg-white border border-avb-divider overflow-hidden" id="jersey-stage" style="aspect-ratio: 4/5;">
+    <div class="grid lg:grid-cols-[minmax(0,1fr)_360px] gap-8 lg:gap-12 items-start lg:items-stretch">
+      <div class="relative bg-white border border-avb-divider overflow-hidden w-full h-[430px] sm:h-[500px] md:h-[560px] lg:h-auto lg:min-h-0 lg:self-stretch" id="jersey-stage">
+        <div class="build-stage-badge">
+          <span class="build-stage-badge-kicker" id="build-brand-kicker">House line</span>
+          <span class="build-stage-badge-name" id="build-brand-name">CustomFuze</span>
+        </div>
         <div id="jersey-canvas" class="absolute inset-0"></div>
         <div id="hotspot-overlay" class="absolute inset-0 pointer-events-none"></div>
-        <div class="absolute bottom-3 left-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey/70 pointer-events-none flex items-center gap-2">
+        <button id="hotspot-reset" type="button" class="hotspot-reset" aria-label="Return to full 3D view">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 3H3v6m0-6 7 7m5 11h6v-6m0 6-7-7"/></svg>
+          Full view
+        </button>
+        <div class="absolute bottom-3 left-3 z-10 text-[10px] uppercase tracking-[0.22em] text-avb-grey/70 pointer-events-none flex items-center gap-2">
           <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13L21 7.5m0 0L16.5 12M21 7.5H7.5"/></svg>
           Drag to rotate
         </div>
-        <div id="jersey-fallback" class="absolute inset-0 hidden flex-col items-center justify-center text-center px-8 bg-white">
+        <div id="jersey-fallback" class="absolute inset-0 z-20 hidden flex-col items-center justify-center text-center px-8 bg-white">
           <p class="font-display uppercase text-avb-grey text-sm tracking-[0.2em]">3D preview unavailable</p>
-          <p class="mt-3 text-sm text-avb-body max-w-xs">Your browser blocked WebGL. The five details below are still here.</p>
+          <p class="mt-3 text-sm text-avb-body max-w-xs">Your browser blocked WebGL or the jersey model. The five details below are still here.</p>
         </div>
       </div>
 
-      <div id="hotspot-panel" class="bg-white border border-avb-divider p-6 md:p-8 min-h-[300px] flex flex-col">
+      <div id="hotspot-panel" class="bg-white border border-avb-divider p-6 md:p-8 flex flex-col self-start lg:self-stretch">
         <div id="hotspot-default">
-          <div class="text-[11px] uppercase tracking-[0.22em] text-avb-grey font-semibold mb-3">Five red dots</div>
-          <h3 class="font-display font-semibold text-avb-black text-2xl uppercase mb-3 leading-tight">Click any one. We'll explain what we obsess over.</h3>
-          <p class="text-avb-body leading-relaxed">Print fidelity. Sleeve cap. Side panel. Number placement. Hem stitch. Every spot a club director should ask about, before they ask.</p>
+          <div class="text-[11px] uppercase tracking-[0.22em] text-avb-grey font-semibold mb-3" id="brand-panel-kicker">House line</div>
+          <h3 class="font-display font-semibold text-avb-black text-2xl uppercase mb-3 leading-tight" id="brand-panel-title">CustomFuze house kit</h3>
+          <p class="text-avb-body leading-relaxed" id="brand-panel-copy">Built for programs that want the most control over color, roster changes, and budget.</p>
+          <div class="mt-6" id="brand-proof-list"></div>
         </div>
         <div id="hotspot-active" class="hidden">
           <div class="flex items-center justify-between mb-3">
-            <div class="text-[11px] uppercase tracking-[0.22em] text-avb-red font-semibold" id="hotspot-num">Detail 01</div>
+            <div class="text-[11px] uppercase tracking-[0.22em] hotspot-detail-num font-semibold" id="hotspot-num">Detail 01</div>
             <button id="hotspot-back" class="text-[11px] uppercase tracking-[0.18em] text-avb-grey hover:text-avb-red transition-colors font-semibold">← Back</button>
           </div>
           <h3 class="font-display font-semibold text-avb-black text-2xl uppercase mb-3 leading-tight" id="hotspot-title"></h3>
           <p class="text-avb-body leading-relaxed" id="hotspot-desc"></p>
         </div>
+        <div class="mt-6" id="hotspot-list">
+          <div class="text-[11px] uppercase tracking-[0.22em] text-avb-grey font-semibold mb-1" id="hotspot-list-heading">CustomFuze highlights</div>
+        </div>
+        <a id="brand-panel-cta" href="mailto:team@allvolleyball.com?subject=CustomFuze%20sublimation%20quote" class="build-brand-cta mt-6 inline-flex items-center justify-center border px-5 py-3 text-[11px] uppercase tracking-[0.18em] font-semibold transition-colors">
+          Ask about CustomFuze
+        </a>
       </div>
     </div>
   </div>
@@ -523,7 +895,7 @@
 
 <!-- ====================================================================
      SECTION 7. BRAND SHOWCASE
-     3D rotating wheel of brand cards using CSS transforms.
+     Scrolling rail of approved brand logos.
      ==================================================================== -->
 <section class="bg-white py-24 md:py-32 px-6 lg:px-12 overflow-hidden">
   <div class="max-w-[1280px] mx-auto">
@@ -541,54 +913,53 @@
 
     <div class="brand-stage">
       <div class="brand-wheel" id="brand-wheel">
-        <!-- Card 1: CustomFuze (recreated as inline SVG with rainbow gradient). -->
-        <div class="brand-card">
-          <svg viewBox="0 0 240 130" class="w-full h-auto max-w-[200px]" aria-label="CustomFuze">
-            <defs>
-              <linearGradient id="cfGrad" x1="0%" y1="50%" x2="100%" y2="50%">
-                <stop offset="0%"   stop-color="#FBBF24"/>
-                <stop offset="22%"  stop-color="#F97316"/>
-                <stop offset="44%"  stop-color="#EF4444"/>
-                <stop offset="62%"  stop-color="#EC4899"/>
-                <stop offset="80%"  stop-color="#A855F7"/>
-                <stop offset="100%" stop-color="#3B82F6"/>
-              </linearGradient>
-            </defs>
-            <text x="120" y="68" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="78" font-style="italic" fill="url(#cfGrad)" letter-spacing="-3">CF</text>
-            <text x="120" y="110" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="600" font-size="18" fill="url(#cfGrad)" letter-spacing="6">CUSTOMFUZE®</text>
-          </svg>
+        <div class="brand-card" aria-hidden="true">
+          <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/customfuze_logo_1.png?v=1756144449" alt="" loading="lazy" decoding="async">
           <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">House line</div>
         </div>
 
-        <!-- REPLACE with official Under Armour SVG when available. -->
-        <div class="brand-card">
-          <svg viewBox="0 0 240 80" class="w-full h-auto max-w-[200px]" aria-label="Under Armour">
-            <text x="120" y="50" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="36" fill="#0A0A0A" letter-spacing="3">UNDER ARMOUR</text>
-          </svg>
+        <div class="brand-card" aria-hidden="true">
+          <div class="brand-wordmark">adidas</div>
           <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
         </div>
 
-        <!-- REPLACE with official Mizuno SVG when available. -->
-        <div class="brand-card">
-          <svg viewBox="0 0 240 90" class="w-full h-auto max-w-[200px]" aria-label="Mizuno">
-            <text x="120" y="60" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="56" fill="#0A0A0A" letter-spacing="6" font-style="italic">MIZUNO</text>
-          </svg>
+        <div class="brand-card" aria-hidden="true">
+          <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/under_armour_logo.png?v=1726495605" alt="" loading="lazy" decoding="async">
           <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
         </div>
 
-        <!-- REPLACE with official adidas SVG when available. -->
-        <a href="adidas.html" class="brand-card hover:bg-avb-offwhite transition-colors">
-          <svg viewBox="0 0 240 90" class="w-full h-auto max-w-[200px]" aria-label="adidas">
-            <text x="120" y="60" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="56" fill="#0A0A0A" letter-spacing="-2" font-style="italic">adidas</text>
-          </svg>
-          <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-red font-semibold">Full custom · View →</div>
-        </a>
+        <div class="brand-card" aria-hidden="true">
+          <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/Mizuno.svg?v=1778155832" alt="" loading="lazy" decoding="async">
+          <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
+        </div>
 
-        <!-- REPLACE with official ASICS SVG when available. -->
+        <div class="brand-card" aria-hidden="true">
+          <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/asics_logo.png?v=1726495605" alt="" loading="lazy" decoding="async">
+          <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
+        </div>
+
         <div class="brand-card">
-          <svg viewBox="0 0 240 90" class="w-full h-auto max-w-[200px]" aria-label="ASICS">
-            <text x="120" y="60" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="60" fill="#0A0A0A" letter-spacing="4" font-style="italic">ASICS</text>
-          </svg>
+          <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/customfuze_logo_1.png?v=1756144449" alt="CustomFuze" loading="lazy" decoding="async">
+          <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">House line</div>
+        </div>
+
+        <div class="brand-card">
+          <div class="brand-wordmark" aria-label="Adidas">adidas</div>
+          <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
+        </div>
+
+        <div class="brand-card">
+          <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/under_armour_logo.png?v=1726495605" alt="Under Armour" loading="lazy" decoding="async">
+          <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
+        </div>
+
+        <div class="brand-card">
+          <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/Mizuno.svg?v=1778155832" alt="Mizuno" loading="lazy" decoding="async">
+          <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
+        </div>
+
+        <div class="brand-card">
+          <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/asics_logo.png?v=1726495605" alt="ASICS" loading="lazy" decoding="async">
           <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
         </div>
       </div>
@@ -638,15 +1009,32 @@
 
 <script>
 /* ============================================================
-   DATE LOGIC. Today is anchored to May 4, 2026.
+   DATE LOGIC. Today follows the customer's local date.
    ============================================================ */
-const ANCHOR_TODAY = new Date(2026, 4, 4);
-const MIN_DATE = new Date(ANCHOR_TODAY);
+const ANCHOR_TODAY = startOfDay(new Date());
+const DESIGN_LOCK_LEAD_DAYS = 2;
+const PRODUCTION_OFFSET_DAYS = 7;
+const SHIP_OFFSET_DAYS = 30;
+const ON_COURT_EXTRA_DAYS = 7;
+const RUSH_WINDOW_DAYS = 7;
+const MIN_IDEAL_DATE = getOnCourtDate(addDays(ANCHOR_TODAY, DESIGN_LOCK_LEAD_DAYS));
+const MIN_DATE = addDays(MIN_IDEAL_DATE, -RUSH_WINDOW_DAYS);
 const MAX_DATE = addDays(ANCHOR_TODAY, 365);
 
+function startOfDay(date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
 function addDays(date, days) {
   const d = new Date(date);
   d.setDate(d.getDate() + days);
+  return d;
+}
+function addMonths(date, months) {
+  const d = new Date(date);
+  const day = d.getDate();
+  d.setDate(1);
+  d.setMonth(d.getMonth() + months);
+  d.setDate(Math.min(day, new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate()));
   return d;
 }
 function diffDays(a, b) {
@@ -659,15 +1047,26 @@ function isSameDay(a, b) {
       && a.getMonth() === b.getMonth()
       && a.getDate() === b.getDate();
 }
-function subBusinessDays(date, n) {
-  const d = new Date(date);
-  let count = 0;
-  while (count < n) {
-    d.setDate(d.getDate() - 1);
-    const dow = d.getDay();
-    if (dow !== 0 && dow !== 6) count++;
-  }
-  return d;
+function getDesignLockDate(onCourtDate) {
+  return addMonths(addDays(onCourtDate, -ON_COURT_EXTRA_DAYS), -1);
+}
+function getOnCourtDate(designLockDate) {
+  return addDays(addMonths(designLockDate, 1), ON_COURT_EXTRA_DAYS);
+}
+function getTimelineDates(onCourtDate) {
+  const designLock = getDesignLockDate(onCourtDate);
+  return [
+    addDays(designLock, -DESIGN_LOCK_LEAD_DAYS),
+    designLock,
+    addDays(designLock, PRODUCTION_OFFSET_DAYS),
+    addDays(designLock, SHIP_OFFSET_DAYS),
+    onCourtDate
+  ];
+}
+function getDateState(date) {
+  if (date < MIN_DATE || date > MAX_DATE) return 'disabled';
+  if (date < MIN_IDEAL_DATE) return 'critical';
+  return 'ideal';
 }
 
 const MONTHS_LONG  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -687,6 +1086,16 @@ const calLabel = document.getElementById('cal-label');
 const calGrid  = document.getElementById('cal-grid');
 const calPrev  = document.getElementById('cal-prev');
 const calNext  = document.getElementById('cal-next');
+const calAvailabilityNote = document.getElementById('cal-availability-note');
+const calRushNote = document.getElementById('cal-rush-note');
+const calIdealNote = document.getElementById('cal-ideal-note');
+
+function updateCalendarNotes() {
+  const rushEnd = addDays(MIN_IDEAL_DATE, -1);
+  calAvailabilityNote.textContent = `Today is ${fmtFull(ANCHOR_TODAY)}. Dates before ${fmtFull(MIN_DATE)} are unavailable.`;
+  calRushNote.textContent = `${fmtFull(MIN_DATE)} through ${fmtFull(rushEnd)} are no longer ideal, but we'll try to make them work.`;
+  calIdealNote.textContent = `For the cleanest path, choose ${fmtFull(MIN_IDEAL_DATE)} or later so artwork approval, production, shipping, and team handoff all have room to breathe.`;
+}
 
 function renderCalendar() {
   calLabel.textContent = `${MONTHS_LONG[viewMonth]} ${viewYear}`;
@@ -711,18 +1120,21 @@ function renderCalendar() {
     btn.type = 'button';
     btn.textContent = day;
 
-    const isPast     = (date < MIN_DATE && !isSameDay(date, MIN_DATE));
-    const isFuture   = date > MAX_DATE;
-    const disabled   = isPast || isFuture;
+    const dateState  = getDateState(date);
+    const disabled   = dateState === 'disabled';
+    const isCritical = dateState === 'critical';
     const isSelected = isSameDay(date, selectedDate);
     const isToday    = isSameDay(date, ANCHOR_TODAY);
 
     btn.className = 'cal-day ' + (
       disabled   ? 'cal-day--disabled' :
+      isSelected && isCritical ? 'cal-day--selected-critical' :
       isSelected ? 'cal-day--selected' :
+      isCritical ? 'cal-day--critical' :
       isToday    ? 'cal-day--today'    :
                    'cal-day--default'
     );
+    if (isCritical) btn.setAttribute('aria-label', `${fmtFull(date)} rush request window`);
     if (disabled) btn.disabled = true;
     else btn.addEventListener('click', () => {
       selectedDate = date;
@@ -735,10 +1147,10 @@ function renderCalendar() {
     calGrid.appendChild(cell);
   }
 
-  const anchorMonthStart = new Date(ANCHOR_TODAY.getFullYear(), ANCHOR_TODAY.getMonth(), 1);
+  const minMonthStart    = new Date(MIN_DATE.getFullYear(),      MIN_DATE.getMonth(),      1);
   const maxMonthStart    = new Date(MAX_DATE.getFullYear(),    MAX_DATE.getMonth(),    1);
   const viewMonthStart   = new Date(viewYear, viewMonth, 1);
-  calPrev.disabled = viewMonthStart <= anchorMonthStart;
+  calPrev.disabled = viewMonthStart <= minMonthStart;
   calNext.disabled = viewMonthStart >= maxMonthStart;
 }
 
@@ -765,11 +1177,17 @@ function syncScenarioChips() {
   const days = diffDays(selectedDate, ANCHOR_TODAY);
   const weeks = Math.round(days / 7);
   document.querySelectorAll('.scenario-chip').forEach(chip => {
-    chip.classList.toggle('active', +chip.dataset.weeks === weeks);
+    const chipDate = addDays(ANCHOR_TODAY, +chip.dataset.weeks * 7);
+    const chipState = getDateState(chipDate);
+    const disabled = chipState === 'disabled';
+    chip.disabled = disabled;
+    chip.classList.toggle('critical', !disabled && chipState === 'critical');
+    chip.classList.toggle('active', !disabled && +chip.dataset.weeks === weeks);
   });
 }
 document.querySelectorAll('.scenario-chip').forEach(chip => {
   chip.addEventListener('click', () => {
+    if (chip.disabled) return;
     const weeks = +chip.dataset.weeks;
     selectedDate = addDays(ANCHOR_TODAY, weeks * 7);
     viewYear  = selectedDate.getFullYear();
@@ -785,101 +1203,78 @@ document.querySelectorAll('.scenario-chip').forEach(chip => {
    TIMELINE
    ============================================================ */
 const tlTrack    = document.getElementById('tl-track');
-const tlTarget   = document.getElementById('tl-target');
-const tlWeeksOut = document.getElementById('tl-weeks-out');
+const tlSummary  = document.getElementById('tl-summary');
+const tlHelper   = document.getElementById('tl-helper');
 const tlStatus   = document.getElementById('tl-status');
 
-const TL_LABELS = ['Today', 'Design lock', 'Production', 'Ships', 'On court'];
+const TL_STEPS = [
+  { label: 'Start request', note: '2 days before Design Lock' },
+  { label: 'Design Lock',   note: 'Roster, sizes, artwork approved' },
+  { label: 'Production',    note: '7 days from Design Lock' },
+  { label: 'Ships',         note: '30 days from Design Lock' },
+  { label: 'On Court',      note: 'Target date' }
+];
 
-function buildTimelineDots() {
-  TL_LABELS.forEach((label, i) => {
-    const dot = document.createElement('div');
-    dot.className = 'timeline-dot absolute top-1/2 -translate-x-1/2 -translate-y-1/2';
-    if (i === TL_LABELS.length - 1) dot.classList.add('target');
-    dot.dataset.idx = i;
-    dot.innerHTML = `
-      <div class="text-[9px] md:text-[10px] uppercase tracking-[0.16em] text-avb-grey font-semibold absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap">${label}</div>
-      <div class="dot-mark"></div>
-      <div class="font-display font-semibold text-xs text-avb-black absolute top-6 left-1/2 -translate-x-1/2 whitespace-nowrap" data-role="date"></div>
+function buildTimelineSteps() {
+  tlTrack.innerHTML = '';
+  TL_STEPS.forEach((step, i) => {
+    const row = document.createElement('div');
+    row.className = 'tl-step';
+    row.dataset.idx = i;
+    row.innerHTML = `
+      <div class="tl-step-marker">${i + 1}</div>
+      <div>
+        <div class="tl-step-kicker">${step.note}</div>
+        <div class="tl-step-title">${step.label}</div>
+      </div>
+      <div class="tl-step-date" data-role="date"></div>
     `;
-    tlTrack.appendChild(dot);
+    tlTrack.appendChild(row);
   });
 }
 
 function updateTimeline() {
   const today      = ANCHOR_TODAY;
   const target     = selectedDate;
-  const designLock = addDays(target, -35);
-  const prodStart  = addDays(target, -28);
-  const ship       = subBusinessDays(target, 5);
-  const dates      = [today, designLock, prodStart, ship, target];
+  const dates      = getTimelineDates(target);
+  const dateState  = getDateState(target);
+  const rows = tlTrack.querySelectorAll('.tl-step');
 
-  const totalSpan = Math.max(diffDays(target, today), 1);
-  const dots = tlTrack.querySelectorAll('.timeline-dot');
-
-  // Compute raw positions, then enforce a minimum gap so labels stay readable
-  // when the picked date is close to today and milestones would otherwise stack.
-  const MIN_GAP_PCT = 14;
-  const positions = dates.map((d, i) => {
-    if (i === 0) return 0;
-    if (i === dates.length - 1) return 100;
-    const raw = (diffDays(d, today) / totalSpan) * 100;
-    return Math.max(0, Math.min(100, raw));
-  });
-  // Forward pass: push each dot at least MIN_GAP_PCT past the previous one.
-  for (let i = 1; i < positions.length - 1; i++) {
-    positions[i] = Math.max(positions[i], positions[i - 1] + MIN_GAP_PCT);
-  }
-  // Backward pass: pull each dot back so it stays MIN_GAP_PCT before the next.
-  for (let i = positions.length - 2; i >= 1; i--) {
-    positions[i] = Math.min(positions[i], positions[i + 1] - MIN_GAP_PCT);
-  }
-
-  dots.forEach((dot, i) => {
-    const pct = positions[i];
-    dot.style.left = pct + '%';
-
-    const mark = dot.querySelector('.dot-mark');
-    if (i === 0) {
-      mark.style.cssText = 'width:18px;height:18px;border-radius:9999px;background:#0A0A0A;';
-    } else if (i === dates.length - 1) {
-      mark.style.cssText = 'width:18px;height:18px;border-radius:9999px;background:#C23946;';
-      // re-trigger pulse
-      dot.classList.remove('target'); void dot.offsetWidth; dot.classList.add('target');
-    } else {
-      mark.style.cssText = 'width:13px;height:13px;border-radius:9999px;background:#fff;border:1.5px solid #0A0A0A;';
-    }
-    dot.querySelector('[data-role="date"]').textContent = fmtShort(dates[i]);
+  rows.forEach((row, i) => {
+    const isTarget = i === dates.length - 1;
+    const isPast = dates[i] < today && !isSameDay(dates[i], today);
+    row.classList.toggle('tl-step--target', isTarget);
+    row.classList.toggle('tl-step--critical', dateState === 'critical');
+    row.classList.toggle('tl-step--past', isPast);
+    row.querySelector('[data-role="date"]').textContent = fmtShort(dates[i]);
   });
 
-  tlTarget.textContent = fmtFull(target);
   const days = diffDays(target, today);
-  let weeksDisplay;
-  if (days === 0)      weeksDisplay = 'today';
-  else if (days < 7)   weeksDisplay = days + (days === 1 ? ' day from today' : ' days from today');
-  else {
-    const w = days / 7;
-    if (Math.abs(w - Math.round(w)) < 0.001) {
-      const wr = Math.round(w);
-      weeksDisplay = wr + (wr === 1 ? ' week from today' : ' weeks from today');
-    } else {
-      weeksDisplay = w.toFixed(1) + ' weeks from today';
-    }
-  }
-  tlWeeksOut.textContent = weeksDisplay;
+  const dayLabel = days === 1 ? 'day' : 'days';
 
   let html = '';
-  if (days < 28) {
-    html = '<p class="text-avb-red"><span class="font-semibold">Tight window.</span> Possible, but call us at the team line so we can plan it. We\'ve done faster.</p>';
-  } else if (days <= 42) {
-    html = '<p class="text-avb-black"><span class="font-semibold">Standard window.</span> This is our wheelhouse. Lock the design and we hit your date.</p>';
+  if (dateState === 'critical') {
+    tlSummary.textContent = 'Rush review needed';
+    tlHelper.textContent = `Selected on-court date: ${fmtFull(target)}. This is ${days} ${dayLabel} from today and needs a team review before we can promise delivery.`;
+    html = `<p class="text-avb-red"><span class="font-semibold">Rush request.</span> ${fmtFull(target)} is before the ideal window. The normal start point was ${fmtFull(dates[0])} and Design Lock was ${fmtFull(dates[1])}; we will review it and confirm what is possible.</p>`;
+  } else if (days <= diffDays(MIN_IDEAL_DATE, today) + 3) {
+    tlSummary.textContent = 'Earliest ideal schedule';
+    tlHelper.textContent = `Selected on-court date: ${fmtFull(target)}. The milestones below keep the order inside our standard delivery window.`;
+    html = `<p class="text-avb-black"><span class="font-semibold">Earliest ideal window.</span> Start by ${fmtFull(dates[0])}; lock the design by ${fmtFull(dates[1])}, production starts ${fmtFull(dates[2])}, ships ${fmtFull(dates[3])}, and lands on court ${fmtFull(target)}.</p>`;
+  } else if (days <= 56) {
+    tlSummary.textContent = 'Standard schedule';
+    tlHelper.textContent = `Selected on-court date: ${fmtFull(target)}. Use these dates as the latest safe checkpoints for the order.`;
+    html = `<p class="text-avb-black"><span class="font-semibold">Standard window.</span> Start by ${fmtFull(dates[0])} and lock the design by ${fmtFull(dates[1])} to keep the full production schedule intact.</p>`;
   } else {
-    html = '<p class="text-avb-black"><span class="font-semibold">Plenty of runway.</span> Lock the design when you\'re ready. We\'ll be here.</p>';
+    tlSummary.textContent = 'Plenty of runway';
+    tlHelper.textContent = `Selected on-court date: ${fmtFull(target)}. You have room to plan before the production clock starts.`;
+    html = `<p class="text-avb-black"><span class="font-semibold">Plenty of runway.</span> Your start target is ${fmtFull(dates[0])}, with room to plan before Design Lock.</p>`;
   }
   tlStatus.innerHTML = html;
 }
 
-buildTimelineDots();
+buildTimelineSteps();
+updateCalendarNotes();
 renderCalendar();
 updateTimeline();
 syncScenarioChips();
@@ -932,6 +1327,7 @@ if (window.gsap && window.ScrollTrigger) {
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const stage    = document.getElementById('jersey-stage');
 const canvasEl = document.getElementById('jersey-canvas');
@@ -940,17 +1336,196 @@ const fallback = document.getElementById('jersey-fallback');
 const panel    = document.getElementById('hotspot-panel');
 const panelDef = document.getElementById('hotspot-default');
 const panelAct = document.getElementById('hotspot-active');
+const hotspotList = document.getElementById('hotspot-list');
+const hotspotReset = document.getElementById('hotspot-reset');
+const buildSection = document.getElementById('build');
+const brandTabs = document.getElementById('build-brand-tabs');
+const stageBrandKicker = document.getElementById('build-brand-kicker');
+const stageBrandName = document.getElementById('build-brand-name');
+const brandPanelKicker = document.getElementById('brand-panel-kicker');
+const brandPanelTitle = document.getElementById('brand-panel-title');
+const brandPanelCopy = document.getElementById('brand-panel-copy');
+const brandProofList = document.getElementById('brand-proof-list');
+const brandPanelCta = document.getElementById('brand-panel-cta');
+const hotspotListHeading = document.getElementById('hotspot-list-heading');
 
-// Hotspot data. Local positions on the jersey (z > 0 = front face).
-const HOTSPOTS = [
-  { id: 1, pos: [ 0.00,  0.55, 0.10], title: 'V-neck binding',     desc: 'Flatlock binding around the collar. No itch on a 3-set night, no curl after 40 washes.' },
-  { id: 2, pos: [ 0.62,  0.10, 0.10], title: 'Sleeve cap',         desc: 'Cut for shoulder rotation. The hitter who swings 200 times a match doesn\'t fight the fit.' },
-  { id: 3, pos: [-0.45, -0.10, 0.10], title: 'Print fidelity',     desc: 'Color is dyed into the fiber, not laid on top. It holds through 40+ wash cycles in a club season.' },
-  { id: 4, pos: [ 0.55, -0.55, 0.10], title: 'Side panel',         desc: 'Two-way stretch knit through the body. Breathes in a hot gym in July.' },
-  { id: 5, pos: [ 0.00, -1.15, 0.10], title: 'Reinforced hem',     desc: 'Holds shape after every wash. No curl, no twist, no drag during a defensive dive.' },
+const JERSEY_MODEL_URL = 'https://cdn.shopify.com/3d/models/350482a298e3bb83/3d-model.glb';
+const JERSEY_MODEL_HEIGHT = 3.05;
+const JERSEY_MATERIAL_OPACITY = 0.84;
+const HOTSPOT_SURFACE_OFFSET = 0.025;
+const HOTSPOT_DEFAULT_FRONT_Z = 0.73;
+const HOTSPOT_DEFAULT_BACK_Z = -0.73;
+
+const BRANDS = [
+  {
+    slug: 'customfuze',
+    name: 'CustomFuze',
+    tabLabel: 'House line',
+    stageLabel: 'House line',
+    modelUrl: JERSEY_MODEL_URL,
+    colors: {
+      accent: '#C23946',
+      soft: 'rgba(194,57,70,0.13)',
+      fabric: '#F6F1EF',
+      trim: '#C23946',
+      ink: '#0A0A0A'
+    },
+    panelTitle: 'CustomFuze house kit',
+    panelCopy: 'Built for programs that want the most control over color, roster changes, and budget without giving up a polished custom look.',
+    proofs: [
+      ['Best for', 'Original club looks'],
+      ['Control', 'Flexible colors, names, and numbers']
+    ],
+    marks: [
+      { side: 'front', x: -0.18, y: 0.25, w: 1.18, h: 0.18, rotation: -0.44, color: 'accent', opacity: 0.42 },
+      { side: 'front', x: 0.48, y: -0.48, w: 0.18, h: 1.1, rotation: -0.08, color: 'ink', opacity: 0.2 },
+      { side: 'back',  x: 0.0,  y: -0.9,  w: 0.9,  h: 0.13, rotation: 0,     color: 'accent', opacity: 0.32 }
+    ],
+    hotspots: [
+      { side: 'front', anchor: [ 0.00,  0.55], title: 'Club-color fidelity', desc: 'A good house line earns its keep by matching the club palette closely and repeating it across every reorder.' },
+      { side: 'front', anchor: [ 0.62,  0.10], title: 'Sleeve freedom',      desc: 'The cut stays out of the shoulder path, so outside hitters are not fighting the uniform late in a match.' },
+      { side: 'back',  anchor: [-0.45, -0.10], title: 'Roster flexibility',  desc: 'Names and numbers can be handled cleanly across split teams, late adds, and postseason call-ups.' },
+      { side: 'front', anchor: [ 0.55, -0.55], title: 'Budget-smart panels', desc: 'Strategic paneling keeps the look custom without adding decoration where athletes will never notice it.' },
+      { side: 'back',  anchor: [ 0.00, -1.15], title: 'Reorder confidence',  desc: 'The build is meant for multi-season programs that need a consistent look for replacement pieces.' }
+    ]
+  },
+  {
+    slug: 'adidas',
+    name: 'Adidas',
+    tabLabel: 'Icon line',
+    stageLabel: 'Icon line',
+    modelUrl: JERSEY_MODEL_URL,
+    colors: {
+      accent: '#111111',
+      soft: 'rgba(17,17,17,0.09)',
+      fabric: '#F7F7F4',
+      trim: '#111111',
+      ink: '#D7D2C8'
+    },
+    panelTitle: 'Adidas team look',
+    panelCopy: 'For programs that want a recognizable athletic brand presentation, with AVB helping keep the decoration, fit, and order details clean.',
+    proofs: [
+      ['Best for', 'School-standard programs'],
+      ['Priority', 'Brand-forward consistency']
+    ],
+    marks: [
+      { side: 'front', x: -0.55, y: 0.52, w: 0.055, h: 0.66, rotation: -0.2, color: 'accent', opacity: 0.5 },
+      { side: 'front', x: -0.43, y: 0.50, w: 0.055, h: 0.66, rotation: -0.2, color: 'accent', opacity: 0.5 },
+      { side: 'front', x: -0.31, y: 0.48, w: 0.055, h: 0.66, rotation: -0.2, color: 'accent', opacity: 0.5 },
+      { side: 'back',  x: 0.0,   y: 0.22, w: 0.82,  h: 0.12, rotation: 0,    color: 'accent', opacity: 0.24 }
+    ],
+    hotspots: [
+      { side: 'front', anchor: [-0.46,  0.55], title: 'Shoulder identity',   desc: 'The shoulder area needs to stay crisp because it carries the brand read in warmups, photos, and broadcasts.' },
+      { side: 'front', anchor: [ 0.46,  0.18], title: 'Match-ready fit',     desc: 'A cleaner athletic silhouette helps the jersey feel intentional without making sizing harder for mixed rosters.' },
+      { side: 'back',  anchor: [ 0.00,  0.05], title: 'Number contrast',     desc: 'Adidas builds work best when the number block is high-contrast and easy to read from the stands.' },
+      { side: 'front', anchor: [ 0.48, -0.52], title: 'Program consistency', desc: 'The design should line up with shorts, warmups, and spirit wear so the whole team shop feels coordinated.' },
+      { side: 'back',  anchor: [ 0.00, -1.05], title: 'Reorder standards',   desc: 'We keep the details documented so a replacement jersey does not feel like a different generation of the kit.' }
+    ]
+  },
+  {
+    slug: 'asics',
+    name: 'ASICS',
+    tabLabel: 'Court line',
+    stageLabel: 'Court line',
+    modelUrl: JERSEY_MODEL_URL,
+    colors: {
+      accent: '#0057A8',
+      soft: 'rgba(0,87,168,0.12)',
+      fabric: '#F4F8FC',
+      trim: '#D71920',
+      ink: '#0A0A0A'
+    },
+    panelTitle: 'ASICS court build',
+    panelCopy: 'A good option when the priority is a sharp court look with motion-friendly details and strong sponsor or school-mark placement.',
+    proofs: [
+      ['Best for', 'Fast, court-first teams'],
+      ['Priority', 'Movement and mark clarity']
+    ],
+    marks: [
+      { side: 'front', x: -0.18, y: 0.02, w: 1.18, h: 0.12, rotation: 0.28, color: 'accent', opacity: 0.38 },
+      { side: 'front', x: 0.22,  y: -0.2, w: 1.0,  h: 0.08, rotation: 0.28, color: 'trim',   opacity: 0.34 },
+      { side: 'back',  x: 0.0,   y: -0.9, w: 0.84, h: 0.1,  rotation: 0,    color: 'accent', opacity: 0.3 }
+    ],
+    hotspots: [
+      { side: 'front', anchor: [ 0.00,  0.55], title: 'Collar comfort',      desc: 'Neckline finish matters on long tournament days, especially when athletes are wearing the same kit for hours.' },
+      { side: 'front', anchor: [ 0.58,  0.08], title: 'Arm-swing clearance', desc: 'The sleeve and upper-body pattern should support serving and attacking without bunching under the arm.' },
+      { side: 'back',  anchor: [-0.32,  0.02], title: 'Sponsor clarity',     desc: 'ASICS layouts often need clean sponsor placement, so the back and chest marks must read without crowding numbers.' },
+      { side: 'front', anchor: [ 0.55, -0.55], title: 'Breathable body',     desc: 'Panel placement should work for hot gyms and quick turnarounds between matches.' },
+      { side: 'back',  anchor: [ 0.00, -1.12], title: 'Season continuity',   desc: 'The design needs enough structure to handle libero alternates and midseason adds without looking patched together.' }
+    ]
+  },
+  {
+    slug: 'mizuno',
+    name: 'Mizuno',
+    tabLabel: 'Volleyball line',
+    stageLabel: 'Volleyball line',
+    modelUrl: JERSEY_MODEL_URL,
+    colors: {
+      accent: '#174EA6',
+      soft: 'rgba(23,78,166,0.12)',
+      fabric: '#F6F8FF',
+      trim: '#0A0A0A',
+      ink: '#C23946'
+    },
+    panelTitle: 'Mizuno volleyball kit',
+    panelCopy: 'Strong for teams that want volleyball-specific credibility, a lightweight look, and careful planning for libero contrast.',
+    proofs: [
+      ['Best for', 'Volleyball-led programs'],
+      ['Priority', 'Fit and libero planning']
+    ],
+    marks: [
+      { side: 'front', x: -0.23, y: 0.1,  w: 0.95, h: 0.12, rotation: -0.58, color: 'accent', opacity: 0.36 },
+      { side: 'front', x: 0.23,  y: 0.1,  w: 0.95, h: 0.12, rotation: 0.58,  color: 'accent', opacity: 0.36 },
+      { side: 'front', x: 0.0,   y: -0.5, w: 0.86, h: 0.1,  rotation: 0,     color: 'ink',    opacity: 0.25 }
+    ],
+    hotspots: [
+      { side: 'front', anchor: [ 0.00,  0.56], title: 'Volleyball neckline', desc: 'The neckline should feel secure without sitting high or distracting athletes at serve receive.' },
+      { side: 'front', anchor: [ 0.60,  0.12], title: 'Range-ready shoulder', desc: 'Mizuno-style builds need room through the upper body so athletes can swing naturally.' },
+      { side: 'back',  anchor: [-0.42, -0.08], title: 'Libero contrast',     desc: 'The libero version should look like the same system, not a last-minute alternate from another catalog.' },
+      { side: 'front', anchor: [ 0.52, -0.55], title: 'Lightweight feel',    desc: 'Color blocking should support the design without adding visual weight through the torso.' },
+      { side: 'back',  anchor: [ 0.00, -1.12], title: 'Hem stability',       desc: 'The bottom finish should keep its shape after repeat wash cycles and long tournament weekends.' }
+    ]
+  },
+  {
+    slug: 'under-armour',
+    name: 'Under Armour',
+    tabLabel: 'Performance line',
+    stageLabel: 'Performance line',
+    modelUrl: JERSEY_MODEL_URL,
+    colors: {
+      accent: '#C23946',
+      soft: 'rgba(194,57,70,0.12)',
+      fabric: '#F5F5F5',
+      trim: '#111111',
+      ink: '#111111'
+    },
+    panelTitle: 'Under Armour performance kit',
+    panelCopy: 'For teams that want a bold performance read, strong contrast, and a kit that looks durable before the first serve.',
+    proofs: [
+      ['Best for', 'High-contrast team looks'],
+      ['Priority', 'Durability and performance']
+    ],
+    marks: [
+      { side: 'front', x: 0.0,  y: 0.12, w: 1.2,  h: 0.18, rotation: 0,     color: 'ink',    opacity: 0.28 },
+      { side: 'front', x: 0.5,  y: -0.4, w: 0.2,  h: 1.1,  rotation: -0.2,  color: 'accent', opacity: 0.42 },
+      { side: 'back',  x: 0.0,  y: -0.94,w: 0.95, h: 0.12, rotation: 0,     color: 'accent', opacity: 0.32 }
+    ],
+    hotspots: [
+      { side: 'front', anchor: [ 0.00,  0.55], title: 'Locked-in collar',    desc: 'The top block should feel structured and athletic without being stiff around the neck.' },
+      { side: 'front', anchor: [ 0.62,  0.10], title: 'Power shoulder',      desc: 'Under Armour looks work best when the shoulder reads strong but still gives hitters full range.' },
+      { side: 'back',  anchor: [-0.36, -0.06], title: 'Readable numbers',    desc: 'High-contrast numbers keep the kit compliant, easy to score, and easy to follow from the bleachers.' },
+      { side: 'front', anchor: [ 0.55, -0.55], title: 'Heat management',     desc: 'Side-body planning matters for athletes who play back-to-back matches in warm gyms.' },
+      { side: 'back',  anchor: [ 0.00, -1.12], title: 'Durable finish',      desc: 'The hem and side seams should look fresh deep into the season, not just at pickup.' }
+    ]
+  }
 ];
 
-let scene, camera, renderer, controls, jersey, hotspotEls, raf, observer;
+let currentBrandIndex = 0;
+let currentBrand = BRANDS[currentBrandIndex];
+let currentSurfaceZ = HOTSPOT_DEFAULT_FRONT_Z;
+let activeHotspots = [];
+let scene, camera, renderer, controls, jersey, modelRoot, accentGroup, hotspotEls, raf, observer;
+let activeModelUrl = null;
 let webglOK = true;
 
 function init() {
@@ -963,7 +1538,7 @@ function init() {
 
   const w = canvasEl.clientWidth, h = canvasEl.clientHeight;
   camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
-  camera.position.set(0, 0, 4.4);
+  camera.position.set(0, 0, 5.1);
 
   try {
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -974,75 +1549,20 @@ function init() {
   canvasEl.appendChild(renderer.domElement);
 
   // Lighting. Soft ambient + key light from upper-right + fill from below.
-  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-  const key = new THREE.DirectionalLight(0xffffff, 0.95);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.72));
+  const key = new THREE.DirectionalLight(0xffffff, 0.82);
   key.position.set(3, 4, 5);
   scene.add(key);
-  const fill = new THREE.DirectionalLight(0xffffff, 0.25);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.46);
   fill.position.set(-3, -2, 2);
   scene.add(fill);
   const rim = new THREE.DirectionalLight(0xC23946, 0.15);
   rim.position.set(-4, 1, -2);
   scene.add(rim);
 
-  // Jersey silhouette (front face). Curves keep edges soft.
-  const shape = new THREE.Shape();
-  shape.moveTo(-0.55, 1.32);
-  shape.lineTo(-0.18, 1.32);
-  shape.bezierCurveTo(-0.10, 0.95, 0.10, 0.95, 0.18, 1.32);
-  shape.lineTo(0.55, 1.32);
-  shape.bezierCurveTo(0.78, 1.30, 1.04, 1.10, 1.05, 0.65);
-  shape.lineTo(0.92, 0.50);
-  shape.lineTo(0.92, -1.45);
-  shape.bezierCurveTo(0.92, -1.55, 0.85, -1.58, 0.78, -1.58);
-  shape.lineTo(-0.78, -1.58);
-  shape.bezierCurveTo(-0.85, -1.58, -0.92, -1.55, -0.92, -1.45);
-  shape.lineTo(-0.92, 0.50);
-  shape.lineTo(-1.05, 0.65);
-  shape.bezierCurveTo(-1.04, 1.10, -0.78, 1.30, -0.55, 1.32);
-
-  const extrude = {
-    depth: 0.16,
-    bevelEnabled: true,
-    bevelThickness: 0.025,
-    bevelSize: 0.025,
-    bevelSegments: 4,
-    curveSegments: 24,
-  };
-  const geom = new THREE.ExtrudeGeometry(shape, extrude);
-  geom.center();
-
-  // Two-tone material via vertex grouping isn't worth the complexity here.
-  // A single deep matte dark gives the cleanest "expensive" feel.
-  const bodyMat = new THREE.MeshStandardMaterial({
-    color: 0x141416,
-    metalness: 0.08,
-    roughness: 0.62,
-  });
-  jersey = new THREE.Mesh(geom, bodyMat);
+  jersey = new THREE.Group();
   scene.add(jersey);
-
-  // Subtle pinstripe centered on the front face. Dark grey, not red, to
-  // keep the brand red rare and earned (it lives on the hotspots).
-  const stripeShape = new THREE.Shape();
-  stripeShape.moveTo(-0.04, -1.35);
-  stripeShape.lineTo( 0.04, -1.35);
-  stripeShape.lineTo( 0.04,  1.18);
-  stripeShape.lineTo(-0.04,  1.18);
-  const stripe = new THREE.Mesh(
-    new THREE.ExtrudeGeometry(stripeShape, { depth: 0.025, bevelEnabled: false }),
-    new THREE.MeshStandardMaterial({ color: 0x2A2A2D, metalness: 0.08, roughness: 0.55 })
-  );
-  stripe.position.set(0, 0, 0.085);
-  jersey.add(stripe);
-
-  // Number panel: slightly raised dark plate suggesting where the number prints.
-  const numPanel = new THREE.Mesh(
-    new THREE.BoxGeometry(0.62, 0.62, 0.012),
-    new THREE.MeshStandardMaterial({ color: 0x1F1F22, roughness: 0.6 })
-  );
-  numPanel.position.set(0, 0.05, 0.097);
-  jersey.add(numPanel);
+  loadJerseyModel(currentBrand.modelUrl);
 
   // OrbitControls. No zoom, no pan. Smooth damping.
   controls = new OrbitControls(camera, renderer.domElement);
@@ -1056,18 +1576,7 @@ function init() {
   controls.autoRotateSpeed = 0.7;
   controls.addEventListener('start', () => { controls.autoRotate = false; });
 
-  // Build hotspot DOM elements.
-  hotspotEls = HOTSPOTS.map(h => {
-    const el = document.createElement('button');
-    el.type = 'button';
-    el.className = 'hotspot pointer-events-auto';
-    el.textContent = h.id;
-    el.dataset.id = h.id;
-    el.setAttribute('aria-label', `Detail ${h.id}: ${h.title}`);
-    el.addEventListener('click', () => activateHotspot(h.id));
-    overlay.appendChild(el);
-    return { el, world: new THREE.Vector3(...h.pos), data: h };
-  });
+  buildHotspotButtons();
 
   // Resize handling.
   const ro = new ResizeObserver(resize);
@@ -1088,6 +1597,259 @@ function init() {
 
   resize();
   loop();
+}
+
+function loadJerseyModel(modelUrl) {
+  const loader = new GLTFLoader();
+  loader.load(
+    modelUrl,
+    gltf => {
+      const model = gltf.scene;
+      const box = new THREE.Box3().setFromObject(model);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      const scale = JERSEY_MODEL_HEIGHT / Math.max(size.y, 0.001);
+
+      model.scale.setScalar(scale);
+      model.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
+
+      model.traverse(obj => {
+        if (!obj.isMesh) return;
+        const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
+        materials.filter(Boolean).forEach(mat => {
+          if (mat.color && !mat.userData.avbBaseColor) mat.userData.avbBaseColor = mat.color.clone();
+          if (mat.map) mat.map.colorSpace = THREE.SRGBColorSpace;
+          if (mat.emissive) {
+            mat.emissive.set(0xffffff);
+            mat.emissiveIntensity = 0.035;
+          }
+          mat.side = THREE.DoubleSide;
+          mat.transparent = true;
+          mat.opacity = JERSEY_MATERIAL_OPACITY;
+          mat.needsUpdate = true;
+        });
+      });
+
+      jersey.clear();
+      modelRoot = model;
+      activeModelUrl = modelUrl;
+      jersey.add(model);
+      syncHotspotSurfaceDepth((size.z * scale * 0.5) + HOTSPOT_SURFACE_OFFSET);
+      applyBrandVisuals();
+      resize();
+    },
+    undefined,
+    error => {
+      console.error('Could not load jersey model:', error);
+      showFallback();
+    }
+  );
+}
+
+function syncHotspotSurfaceDepth(surfaceZ) {
+  currentSurfaceZ = surfaceZ;
+  refreshActiveHotspots();
+  if (!hotspotEls) return;
+  hotspotEls.forEach((item, index) => {
+    const data = activeHotspots[index];
+    if (!data) return;
+    item.data = data;
+    item.world.set(data.pos[0], data.pos[1], data.pos[2]);
+    item.el.setAttribute('aria-label', `${currentBrand.name} detail ${data.id}: ${data.title}`);
+  });
+  projectHotspots();
+}
+
+function refreshActiveHotspots() {
+  activeHotspots = currentBrand.hotspots.map((h, index) => ({
+    ...h,
+    id: index + 1,
+    pos: [
+      h.anchor[0],
+      h.anchor[1],
+      h.side === 'back' ? -currentSurfaceZ : currentSurfaceZ
+    ]
+  }));
+}
+
+function buildBrandTabs() {
+  if (!brandTabs) return;
+  brandTabs.innerHTML = '';
+  BRANDS.forEach((brand, index) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'build-brand-tab';
+    btn.id = `build-brand-tab-${brand.slug}`;
+    btn.setAttribute('role', 'tab');
+    btn.setAttribute('aria-selected', index === currentBrandIndex ? 'true' : 'false');
+    btn.setAttribute('aria-controls', 'jersey-stage');
+    btn.style.setProperty('--tab-accent', brand.colors.accent);
+    btn.innerHTML = `
+      <span class="build-brand-tab-name">${brand.name}</span>
+      <span class="build-brand-tab-label">${brand.tabLabel}</span>
+    `;
+    btn.addEventListener('click', () => selectBrand(index));
+    btn.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      const dir = e.key === 'ArrowRight' ? 1 : -1;
+      const next = (index + dir + BRANDS.length) % BRANDS.length;
+      selectBrand(next);
+      const nextTab = brandTabs.querySelectorAll('.build-brand-tab')[next];
+      if (nextTab) nextTab.focus();
+    });
+    brandTabs.appendChild(btn);
+  });
+}
+
+function updateBrandTabs() {
+  if (!brandTabs) return;
+  brandTabs.querySelectorAll('.build-brand-tab').forEach((btn, index) => {
+    btn.setAttribute('aria-selected', index === currentBrandIndex ? 'true' : 'false');
+  });
+}
+
+function setBuildBrandVars(brand) {
+  if (!buildSection) return;
+  buildSection.style.setProperty('--brand-accent', brand.colors.accent);
+  buildSection.style.setProperty('--brand-soft', brand.colors.soft);
+  buildSection.style.setProperty('--brand-ink', brand.colors.ink);
+}
+
+function updateBrandContent() {
+  setBuildBrandVars(currentBrand);
+  if (stageBrandKicker) stageBrandKicker.textContent = currentBrand.stageLabel;
+  if (stageBrandName) stageBrandName.textContent = currentBrand.name;
+  if (brandPanelKicker) brandPanelKicker.textContent = currentBrand.stageLabel;
+  if (brandPanelTitle) brandPanelTitle.textContent = currentBrand.panelTitle;
+  if (brandPanelCopy) brandPanelCopy.textContent = currentBrand.panelCopy;
+  if (hotspotListHeading) hotspotListHeading.textContent = `${currentBrand.name} highlights`;
+  if (brandProofList) {
+    brandProofList.innerHTML = currentBrand.proofs.map(([label, value]) => `
+      <div class="build-proof-row">
+        <span class="build-proof-label">${label}</span>
+        <span class="build-proof-value">${value}</span>
+      </div>
+    `).join('');
+  }
+  if (brandPanelCta) {
+    brandPanelCta.textContent = `Ask about ${currentBrand.name}`;
+    brandPanelCta.href = `mailto:team@allvolleyball.com?subject=${encodeURIComponent(currentBrand.name + ' sublimation quote')}`;
+  }
+  updateBrandTabs();
+}
+
+function buildHotspotButtons() {
+  if (!overlay) return;
+  overlay.innerHTML = '';
+  hotspotsReady = false;
+  hotspotEls = activeHotspots.map(h => {
+    const el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'hotspot pointer-events-auto';
+    el.textContent = h.id;
+    el.dataset.id = h.id;
+    el.setAttribute('aria-label', `${currentBrand.name} detail ${h.id}: ${h.title}`);
+    el.addEventListener('click', () => activateHotspot(h.id));
+    overlay.appendChild(el);
+    return { el, world: new THREE.Vector3(...h.pos), data: h };
+  });
+}
+
+function disposeBrandAccents(group) {
+  group.traverse(obj => {
+    if (!obj.isMesh) return;
+    if (obj.geometry) obj.geometry.dispose();
+    if (obj.material) obj.material.dispose();
+  });
+}
+
+function getBrandColor(brand, key) {
+  return brand.colors[key] || key || brand.colors.accent;
+}
+
+function rebuildBrandAccents(brand) {
+  if (!jersey) return;
+  if (accentGroup) {
+    jersey.remove(accentGroup);
+    disposeBrandAccents(accentGroup);
+  }
+  accentGroup = new THREE.Group();
+  brand.marks.forEach(mark => {
+    const material = new THREE.MeshBasicMaterial({
+      color: new THREE.Color(getBrandColor(brand, mark.color)),
+      transparent: true,
+      opacity: mark.opacity,
+      side: THREE.DoubleSide,
+      depthWrite: false
+    });
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(mark.w, mark.h), material);
+    const surfaceZ = mark.side === 'back' ? -currentSurfaceZ - 0.028 : currentSurfaceZ + 0.028;
+    mesh.position.set(mark.x, mark.y, surfaceZ);
+    mesh.rotation.z = mark.rotation || 0;
+    if (mark.side === 'back') mesh.rotation.y = Math.PI;
+    accentGroup.add(mesh);
+  });
+  jersey.add(accentGroup);
+}
+
+function applyBrandMaterial(brand) {
+  if (!modelRoot) return;
+  const fabric = new THREE.Color(brand.colors.fabric);
+  const trim = new THREE.Color(brand.colors.trim);
+  let meshIndex = 0;
+  modelRoot.traverse(obj => {
+    if (!obj.isMesh) return;
+    const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
+    materials.filter(Boolean).forEach(mat => {
+      if (mat.color) mat.color.copy(meshIndex % 4 === 0 ? trim : fabric);
+      mat.opacity = JERSEY_MATERIAL_OPACITY;
+      mat.needsUpdate = true;
+    });
+    meshIndex += 1;
+  });
+}
+
+function applyBrandVisuals() {
+  applyBrandMaterial(currentBrand);
+  rebuildBrandAccents(currentBrand);
+}
+
+function buildHotspotList() {
+  hotspotList.querySelectorAll('.hotspot-list-item').forEach(el => el.remove());
+  activeHotspots.forEach(h => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'hotspot-list-item';
+    btn.dataset.hotspotId = h.id;
+    btn.innerHTML = `
+      <span class="hotspot-list-dot">${h.id}</span>
+      <span>
+        <span class="hotspot-list-title block font-display uppercase text-avb-black font-semibold leading-tight">${h.title}</span>
+        <span class="hotspot-list-desc block mt-1 text-xs text-avb-grey leading-snug">${h.desc}</span>
+      </span>
+    `;
+    btn.addEventListener('click', () => activateHotspot(h.id));
+    hotspotList.appendChild(btn);
+  });
+}
+
+function selectBrand(index) {
+  if (index < 0 || index >= BRANDS.length) return;
+  currentBrandIndex = index;
+  currentBrand = BRANDS[currentBrandIndex];
+  refreshActiveHotspots();
+  updateBrandContent();
+  buildHotspotList();
+  if (overlay) buildHotspotButtons();
+  deactivateHotspot();
+
+  if (jersey && webglOK && currentBrand.modelUrl !== activeModelUrl) {
+    loadJerseyModel(currentBrand.modelUrl);
+  } else {
+    applyBrandVisuals();
+  }
+  if (controls) controls.autoRotate = true;
 }
 
 function resize() {
@@ -1140,14 +1902,21 @@ function showFallback() {
 let activeId = null;
 function activateHotspot(id) {
   activeId = id;
-  const h = HOTSPOTS.find(x => x.id === id);
-  hotspotEls.forEach(({ el, data }) => el.classList.toggle('active', data.id === id));
+  const h = activeHotspots.find(x => x.id === id);
+  if (!h) return;
+  if (hotspotEls) hotspotEls.forEach(({ el, data }) => el.classList.toggle('active', data.id === id));
+  hotspotList.querySelectorAll('.hotspot-list-item').forEach(el => {
+    el.classList.toggle('active', +el.dataset.hotspotId === id);
+  });
 
   panelDef.classList.add('hidden');
   panelAct.classList.remove('hidden');
+  hotspotReset.classList.add('is-visible');
   document.getElementById('hotspot-num').textContent   = `Detail 0${id}`;
   document.getElementById('hotspot-title').textContent = h.title;
   document.getElementById('hotspot-desc').textContent  = h.desc;
+
+  if (!jersey || !camera) return;
 
   // Camera tween toward the hotspot.
   if (controls) controls.autoRotate = false;
@@ -1165,22 +1934,37 @@ function activateHotspot(id) {
 
 function deactivateHotspot() {
   activeId = null;
+  hotspotReset.classList.remove('is-visible');
   if (!hotspotEls) {
     panelDef.classList.remove('hidden');
     panelAct.classList.add('hidden');
+    hotspotList.querySelectorAll('.hotspot-list-item').forEach(el => el.classList.remove('active'));
     return;
   }
   hotspotEls.forEach(({ el }) => el.classList.remove('active'));
+  hotspotList.querySelectorAll('.hotspot-list-item').forEach(el => el.classList.remove('active'));
   panelDef.classList.remove('hidden');
   panelAct.classList.add('hidden');
   if (window.gsap && controls) {
-    gsap.to(camera.position, { x: 0, y: 0, z: 4.4, duration: 0.85, ease: 'power2.inOut',
+    gsap.to(camera.position, { x: 0, y: 0, z: 5.1, duration: 0.85, ease: 'power2.inOut',
       onComplete: () => { controls.autoRotate = true; } });
     gsap.to(controls.target, { x: 0, y: 0, z: 0, duration: 0.85, ease: 'power2.inOut' });
+  } else if (camera && controls) {
+    camera.position.set(0, 0, 5.1);
+    controls.target.set(0, 0, 0);
+    controls.autoRotate = true;
   }
 }
 
+buildBrandTabs();
+refreshActiveHotspots();
+updateBrandContent();
+buildHotspotList();
 document.getElementById('hotspot-back').addEventListener('click', deactivateHotspot);
+hotspotReset.addEventListener('click', deactivateHotspot);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && activeId !== null) deactivateHotspot();
+});
 
 // Init as soon as layout is measurable. window.load waits on images we don't need.
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
