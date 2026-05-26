@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Why Custom Sublimated Jerseys | All Volleyball</title>
-<meta name="description" content="Custom sublimated jerseys built for your program. Volleyball-first since 1995. Done correctly. On time. Under budget.">
+<title>Custom Sublimated Jerseys | All Volleyball</title>
+<meta name="description" content="Custom sublimated jerseys built for your program. Volleyball-first since 1995. 30-day guaranteed delivery on CustomFuze. Real people, every step.">
 
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,22 +36,12 @@
   };
 </script>
 
-<!-- Three.js as ES modules. Used only by the jersey explorer. -->
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
-    "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
-  }
-}
-</script>
-
 <style>
   html { scroll-behavior: smooth; }
   body { font-family: 'Inter', sans-serif; color: #242424; background: #fff; -webkit-font-smoothing: antialiased; }
   .font-display { font-family: 'Oswald', sans-serif; }
   .display-tight { letter-spacing: 0; }
-  #timeline, #build { scroll-margin-top: 32px; }
+  #deadline, #build, #service { scroll-margin-top: 32px; }
 
   /* Hero loads with a single slow fade. No looping. */
   .hero-fade { opacity: 0; animation: heroFade 900ms ease-out 80ms forwards; }
@@ -63,137 +53,6 @@
   .reveal.is-visible { opacity: 1; transform: translateY(0);
     transition: opacity 800ms cubic-bezier(.2,.7,.2,1), transform 800ms cubic-bezier(.2,.7,.2,1); }
 
-  /* Timeline rows stay readable when dates are close together. */
-  .tl-step {
-    display: grid;
-    grid-template-columns: 34px minmax(0, 1fr) auto;
-    gap: 12px;
-    align-items: center;
-    padding: 13px 0;
-    border-top: 1px solid #E8E6E4;
-  }
-  .tl-step:first-child { border-top: 0; padding-top: 0; }
-  .tl-step-marker {
-    width: 28px; height: 28px;
-    border-radius: 999px;
-    background: #fff;
-    border: 1.5px solid #0A0A0A;
-    color: #0A0A0A;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 600;
-    font-size: 0.8rem;
-  }
-  .tl-step-kicker {
-    color: #6B6C6C;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    line-height: 1.25;
-    text-transform: uppercase;
-  }
-  .tl-step-title {
-    color: #0A0A0A;
-    font-family: 'Oswald', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 600;
-    line-height: 1.05;
-    text-transform: uppercase;
-  }
-  .tl-step-date {
-    color: #0A0A0A;
-    font-family: 'Oswald', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-  .tl-step--target .tl-step-marker {
-    background: #C23946;
-    border-color: #C23946;
-    color: #fff;
-    box-shadow: 0 0 0 6px rgba(194,57,70,0.12);
-  }
-  .tl-step--critical .tl-step-marker {
-    border-color: rgba(194,57,70,0.8);
-    color: #C23946;
-  }
-  .tl-step--critical.tl-step--target .tl-step-marker {
-    background: #C23946;
-    color: #fff;
-  }
-  .tl-step--past .tl-step-date,
-  .tl-step--past .tl-step-kicker { color: #C23946; }
-  @media (max-width: 640px) {
-    .tl-step { grid-template-columns: 32px minmax(0, 1fr); gap: 10px 12px; }
-    .tl-step-date { grid-column: 2; justify-self: start; font-size: 1rem; margin-top: -4px; }
-  }
-
-  /* Calendar */
-  .cal-cell { aspect-ratio: 1 / 1; }
-  .cal-day {
-    width: 100%; height: 100%;
-    display: flex; align-items: center; justify-content: center;
-    font-feature-settings: 'tnum';
-    font-size: 0.9rem;
-    transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
-  }
-  .cal-day--default  { color: #0A0A0A; }
-  .cal-day--default:hover  { background-color: #FCF8F7; }
-  .cal-day--today    { color: #0A0A0A; font-weight: 600; box-shadow: inset 0 0 0 1px #0A0A0A; }
-  .cal-day--today:hover    { background-color: #0A0A0A; color: #fff; }
-  .cal-day--selected { background-color: #C23946; color: #fff; font-weight: 600; }
-  .cal-day--critical {
-    color: #C23946;
-    background-color: rgba(194,57,70,0.12);
-    box-shadow: inset 0 0 0 1px rgba(194,57,70,0.42);
-    font-weight: 600;
-  }
-  .cal-day--critical:hover { background-color: rgba(194,57,70,0.8); color: #fff; }
-  .cal-day--selected-critical {
-    background-color: rgba(194,57,70,0.88);
-    color: #fff;
-    font-weight: 600;
-    box-shadow: inset 0 0 0 2px #0A0A0A;
-  }
-  .cal-day--disabled { color: rgba(107,108,108,0.32); cursor: not-allowed; }
-
-  /* Quick-pick scenario chips under the calendar */
-  .scenario-chip {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    padding: 7px 14px;
-    border: 1px solid #E8E6E4;
-    background: #fff;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-    font-weight: 600;
-    color: #0A0A0A;
-    transition: all 200ms ease;
-    cursor: pointer;
-  }
-  .scenario-chip:hover { border-color: #0A0A0A; background: #0A0A0A; color: #fff; }
-  .scenario-chip.active { background: #0A0A0A; color: #fff; border-color: #0A0A0A; }
-  .scenario-chip.critical {
-    color: #C23946;
-    background: rgba(194,57,70,0.08);
-    border-color: rgba(194,57,70,0.42);
-  }
-  .scenario-chip.critical:hover { background: rgba(194,57,70,0.8); color: #fff; border-color: rgba(194,57,70,0.8); }
-  .scenario-chip.active.critical { background: #C23946; color: #fff; border-color: #C23946; }
-  .scenario-chip:disabled {
-    color: rgba(107,108,108,0.38);
-    background: #F2F2F2;
-    border-color: #E8E6E4;
-    cursor: not-allowed;
-  }
-  .scenario-chip:disabled:hover {
-    color: rgba(107,108,108,0.38);
-    background: #F2F2F2;
-    border-color: #E8E6E4;
-  }
-
-  /* Hide scrollbar on the nav row when it overflows. */
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { scrollbar-width: none; }
 
@@ -209,27 +68,94 @@
     text-underline-offset: 4px; transition: text-decoration-color 200ms ease, color 150ms ease; }
   .link-inline:hover { text-decoration-color: currentColor; }
 
-  /* ============ JERSEY EXPLORER (3D) ============ */
-  #build {
-    --brand-accent: #C23946;
-    --brand-soft: rgba(194,57,70,0.12);
-    --brand-ink: #0A0A0A;
+  /* ============ DEADLINE CARDS ============ */
+  .deadline-card {
+    position: relative;
+    padding: 36px 32px;
+    overflow: hidden;
   }
-  #build *,
-  #jersey-stage,
-  #hotspot-panel,
-  #hotspot-default,
-  #hotspot-active,
-  #hotspot-list {
-    min-width: 0;
+  @media (min-width: 768px) {
+    .deadline-card { padding: 48px 44px; }
   }
-  #brand-panel-copy,
-  #hotspot-desc,
-  .hotspot-list-title,
-  .hotspot-list-desc {
-    max-width: 100%;
-    overflow-wrap: anywhere;
+  .deadline-card--guaranteed { background: #0A0A0A; color: #fff; }
+  .deadline-card--guaranteed::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 4px;
+    background: #C23946;
   }
+  .deadline-card--estimated { background: #fff; border: 1px solid #E8E6E4; color: #0A0A0A; }
+  .deadline-kicker {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .deadline-stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    background: rgba(194,57,70,0.16);
+    color: #C23946;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    border: 1px solid rgba(194,57,70,0.32);
+  }
+  .deadline-card--estimated .deadline-stamp {
+    background: #F2F2F2;
+    color: #6B6C6C;
+    border-color: #E8E6E4;
+  }
+  .deadline-number {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    line-height: 0.9;
+    text-transform: uppercase;
+    font-size: clamp(3.2rem, 7vw, 5.2rem);
+  }
+  .deadline-copy {
+    margin-top: 22px;
+    max-width: 28rem;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+  @media (min-width: 768px) {
+    .deadline-copy { font-size: 1.05rem; }
+  }
+  .deadline-grid {
+    margin-top: 32px;
+    padding-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .deadline-card--guaranteed .deadline-grid { border-top: 1px solid rgba(255,255,255,0.15); }
+  .deadline-card--estimated .deadline-grid { border-top: 1px solid #E8E6E4; }
+  .deadline-grid-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .deadline-card--guaranteed .deadline-grid-label { color: rgba(255,255,255,0.55); }
+  .deadline-card--estimated .deadline-grid-label { color: #6B6C6C; }
+  .deadline-grid-value {
+    margin-top: 6px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  /* ============ BUILD / BRAND TABS (no 3D) ============ */
   .build-brand-tabs {
     display: grid;
     grid-template-columns: repeat(5, minmax(132px, 1fr));
@@ -237,6 +163,10 @@
     overflow-x: auto;
     max-width: 100%;
     padding-bottom: 4px;
+  }
+  @media (max-width: 720px) {
+    .build-brand-tabs { display: flex; }
+    .build-brand-tab { flex: 0 0 154px; }
   }
   .build-brand-tab {
     min-height: 74px;
@@ -247,6 +177,7 @@
     text-align: left;
     position: relative;
     transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+    cursor: pointer;
   }
   .build-brand-tab::before {
     content: '';
@@ -284,283 +215,107 @@
     line-height: 1.35;
     text-transform: uppercase;
   }
-  #jersey-stage {
-    --stage-badge-room: 118px;
-    background:
-      radial-gradient(circle at 20% 16%, var(--brand-soft), transparent 34%),
-      linear-gradient(135deg, #fff 0%, #fff 58%, rgba(10,10,10,0.035) 100%);
-    transition: background 240ms ease;
-  }
-  #jersey-stage::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(115deg, transparent 0 56%, var(--brand-soft) 56% 63%, transparent 63%),
-      repeating-linear-gradient(90deg, rgba(10,10,10,0.03) 0 1px, transparent 1px 42px);
-    pointer-events: none;
-    z-index: 1;
-  }
-  #jersey-canvas { touch-action: none; cursor: grab; }
-  #jersey-canvas,
-  #hotspot-overlay { z-index: 2; }
-  #jersey-canvas:active { cursor: grabbing; }
-  .build-stage-badge {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    z-index: 10;
-    max-width: calc(100% - var(--stage-badge-room));
-    display: inline-flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 10px 12px;
-    background: rgba(255,255,255,0.94);
-    border: 1px solid #E8E6E4;
-    color: #0A0A0A;
-    pointer-events: none;
-  }
-  .build-stage-badge-kicker {
-    color: #6B6C6C;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    line-height: 1.2;
-    text-transform: uppercase;
-  }
-  .build-stage-badge-name {
-    font-family: 'Oswald', sans-serif;
-    font-size: 1.35rem;
-    font-weight: 600;
-    line-height: 0.95;
-    text-transform: uppercase;
-  }
-  .hotspot {
-    position: absolute;
-    left: -100px; top: -100px; /* park off-canvas until first projection */
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.95);
-    border: 2px solid var(--brand-accent, #C23946);
-    color: #0A0A0A;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 600;
-    font-size: 12px;
-    display: flex; align-items: center; justify-content: center;
-    transform: translate(-50%, -50%);
-    cursor: pointer;
-    opacity: 0;
-    transition: transform 250ms cubic-bezier(.2,.7,.2,1), opacity 350ms ease, background 200ms ease;
-    will-change: left, top, opacity, transform;
-    z-index: 5;
-  }
-  .hotspot.ready { opacity: 1; }
-  .hotspot::before {
-    content: '';
-    position: absolute; inset: -8px;
-    border-radius: 50%;
-    border: 2px solid var(--brand-accent, #C23946);
-    opacity: 0.35;
-    animation: hotspotPing 2s cubic-bezier(.2,.7,.2,1) infinite;
-  }
-  .hotspot:hover { background: var(--brand-accent, #C23946); color: #fff; transform: translate(-50%, -50%) scale(1.12); }
-  .hotspot.active { background: var(--brand-accent, #C23946); color: #fff; transform: translate(-50%, -50%) scale(1.18); }
-  .hotspot.facing-away { opacity: 0.15; pointer-events: none; }
-  .hotspot.facing-away::before { display: none; }
-  .hotspot-reset {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    z-index: 10;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 13px;
-    background: rgba(255,255,255,0.94);
-    border: 1px solid #E8E6E4;
-    color: #0A0A0A;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-4px);
-    transition: opacity 180ms ease, transform 180ms ease, background-color 180ms ease, color 180ms ease, border-color 180ms ease;
-  }
-  .hotspot-reset:hover {
-    background: #0A0A0A;
-    border-color: #0A0A0A;
-    color: #fff;
-  }
-  .hotspot-reset.is-visible {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-  }
-  .hotspot-list-item {
-    width: 100%;
+
+  .detail-row {
     display: grid;
-    grid-template-columns: 28px minmax(0, 1fr);
-    gap: 12px;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 18px;
+    padding: 22px 0;
+    border-top: 1px solid #E8E6E4;
     align-items: start;
-    padding: 10px 0;
-    border-top: 1px solid #E8E6E4;
-    text-align: left;
-    transition: color 180ms ease;
   }
-  .hotspot-list-dot {
-    width: 24px; height: 24px;
+  .detail-row:first-child { border-top: 0; padding-top: 4px; }
+  .detail-num {
+    width: 34px; height: 34px;
     border-radius: 999px;
-    background: var(--brand-accent, #C23946);
-    color: #fff;
+    background: #FCF8F7;
+    border: 1px solid #E8E6E4;
+    color: #0A0A0A;
     display: flex; align-items: center; justify-content: center;
     font-family: 'Oswald', sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 600;
-    line-height: 1;
   }
-  .hotspot-list-item:hover .hotspot-list-title,
-  .hotspot-list-item.active .hotspot-list-title { color: var(--brand-accent, #C23946); }
-  .build-proof-row {
+  .detail-row[data-brand-accent] .detail-num {
+    color: var(--brand-accent, #C23946);
+    border-color: var(--brand-accent, #C23946);
+    background: rgba(255,255,255,0.6);
+  }
+  .detail-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #0A0A0A;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .detail-desc {
+    color: #242424;
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .build-side-proof {
     display: grid;
-    grid-template-columns: 92px minmax(0, 1fr);
+    grid-template-columns: 110px minmax(0, 1fr);
     gap: 14px;
-    padding: 12px 0;
-    border-top: 1px solid #E8E6E4;
+    padding: 11px 0;
+    border-top: 1px solid rgba(255,255,255,0.12);
   }
-  .build-proof-label {
-    color: #6B6C6C;
+  .build-side-proof:first-child { border-top: 0; padding-top: 0; }
+  .build-side-proof-label {
+    color: rgba(255,255,255,0.5);
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.16em;
-    line-height: 1.35;
     text-transform: uppercase;
+    line-height: 1.35;
   }
-  .build-proof-value {
-    color: #0A0A0A;
+  .build-side-proof-value {
+    color: #fff;
     font-size: 0.92rem;
     font-weight: 600;
-    line-height: 1.35;
-  }
-  .build-brand-cta {
-    border-color: var(--brand-accent, #C23946);
-    color: var(--brand-accent, #C23946);
-  }
-  .build-brand-cta:hover {
-    background: var(--brand-accent, #C23946);
-    color: #fff;
-  }
-  .hotspot-detail-num { color: var(--brand-accent, #C23946); }
-  @media (max-width: 720px) {
-    #build > div,
-    #jersey-stage,
-    #hotspot-panel,
-    .build-brand-tabs {
-      width: 100%;
-      max-width: calc(100vw - 48px);
-    }
-    .build-brand-tabs {
-      display: flex;
-      margin-left: 0;
-      margin-right: 0;
-      padding-left: 0;
-      padding-right: 0;
-      scroll-snap-type: x proximity;
-    }
-    .build-brand-tab {
-      flex: 0 0 154px;
-      scroll-snap-align: start;
-    }
-    #build p { max-width: 20rem; }
-    #jersey-fallback p { max-width: 16rem; }
-    #brand-panel-copy,
-    #hotspot-desc { max-width: 18rem; }
-    .hotspot-list-item {
-      grid-template-columns: 28px minmax(0, 14rem);
-    }
-    .hotspot-list-item > span,
-    .hotspot-list-title,
-    .hotspot-list-desc {
-      max-width: 14rem;
-    }
-    .build-stage-badge-name { font-size: 1.12rem; }
-    .build-proof-row { grid-template-columns: 1fr; gap: 4px; }
-  }
-  @keyframes hotspotPing {
-    0%   { transform: scale(1);    opacity: 0.45; }
-    80%  { transform: scale(1.6);  opacity: 0; }
-    100% { transform: scale(1.6);  opacity: 0; }
-  }
-
-  /* ============ WORKFLOW CHART ============ */
-  .wf-node {
-    position: relative;
-    display: flex; flex-direction: column; align-items: center;
-    cursor: pointer;
-    background: transparent; border: none;
-    padding: 0;
-    flex: 1;
-    min-width: 0;
-    z-index: 2;
-  }
-  .wf-node-num {
-    width: 56px; height: 56px;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 999px;
-    background: #0A0A0A;
-    border: 1px solid rgba(255,255,255,0.18);
-    font-family: 'Oswald', sans-serif; font-weight: 600;
-    font-size: 1.15rem;
-    color: rgba(255,255,255,0.5);
-    transition: all 350ms cubic-bezier(.2,.7,.2,1);
-    z-index: 2;
-  }
-  .wf-node.active .wf-node-num {
-    background: #C23946;
-    border-color: #C23946;
-    color: #fff;
-    transform: scale(1.18);
-    box-shadow: 0 0 0 8px rgba(194,57,70,0.16);
-  }
-  .wf-node.completed .wf-node-num {
-    background: #fff; color: #0A0A0A; border-color: #fff;
-  }
-  .wf-node-label {
-    margin-top: 14px;
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.45);
-    font-weight: 600;
-    transition: color 300ms ease;
-    text-align: center;
     line-height: 1.4;
   }
-  .wf-node.active .wf-node-label,
-  .wf-node.completed .wf-node-label { color: #fff; }
 
-  /* Mobile rows reuse the wf-node-num element; mirror the active treatment. */
-  .wf-node-mobile.active .wf-node-num {
-    background: #C23946; border-color: #C23946; color: #fff;
+  /* ============ SERVICE GRID ============ */
+  .svc-cell {
+    background: #fff;
+    padding: 32px 28px;
   }
-  .wf-node-mobile.completed .wf-node-num {
-    background: #fff; color: #0A0A0A; border-color: #fff;
+  .svc-cell-num {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    color: #C23946;
+    font-size: 1.6rem;
+    line-height: 1;
+    margin-bottom: 14px;
+  }
+  .svc-cell-title {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #0A0A0A;
+    font-size: 1.05rem;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .svc-cell-desc {
+    color: #242424;
+    font-size: 0.92rem;
+    line-height: 1.55;
   }
 
-  .wf-track {
-    position: absolute;
-    top: 28px; left: 0; right: 0; height: 1px;
-    background: rgba(255,255,255,0.15);
-    z-index: 1;
+  /* ============ COMPARE GRID ============ */
+  .compare-row {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
   }
-  .wf-progress {
-    position: absolute;
-    top: 28px; left: 0; height: 2px;
-    background: #C23946;
-    transition: width 700ms cubic-bezier(.4,0,.2,1);
-    z-index: 1;
-  }
+  .compare-mark { flex: 0 0 22px; margin-top: 2px; line-height: 1; }
+  .compare-typical .compare-mark { color: rgba(255,255,255,0.3); font-size: 1.3rem; }
+  .compare-us .compare-mark { color: #C23946; }
 
   /* ============ BRAND LOGO RAIL ============ */
   .brand-stage {
@@ -610,15 +365,8 @@
     opacity: 0.82;
     transition: opacity 200ms ease, transform 250ms cubic-bezier(.2,.7,.2,1);
   }
-  .brand-card:hover .brand-logo {
-    filter: none;
-    opacity: 1;
-    transform: scale(1.04);
-  }
-  .brand-card:hover .brand-wordmark {
-    opacity: 1;
-    transform: scale(1.04);
-  }
+  .brand-card:hover .brand-logo { filter: none; opacity: 1; transform: scale(1.04); }
+  .brand-card:hover .brand-wordmark { opacity: 1; transform: scale(1.04); }
   @keyframes brandMarquee {
     from { transform: translateX(0); }
     to   { transform: translateX(-50%); }
@@ -649,147 +397,151 @@
      SECTION 1. HERO
      ==================================================================== -->
 <section class="relative w-full h-[100svh] max-h-[640px] md:h-[480px] xl:h-[500px] md:max-h-none bg-avb-black overflow-hidden hero-fade">
-  <!-- Premium layered gradient: deep black base with warm crimson glow upper-left and burgundy depth lower-right. -->
   <div class="absolute inset-0" style="
        background:
          radial-gradient(ellipse 75% 55% at 22% 12%, rgba(194,57,70,0.55) 0%, rgba(194,57,70,0) 60%),
          radial-gradient(ellipse 65% 50% at 82% 88%, rgba(80,16,24,0.75) 0%, rgba(80,16,24,0) 65%),
          radial-gradient(ellipse 55% 40% at 50% 50%, rgba(30,6,10,0.55) 0%, rgba(30,6,10,0) 70%),
          linear-gradient(155deg, #050505 0%, #1A0508 45%, #0A0A0A 100%);"></div>
-  <!-- Subtle film grain for an expensive matte feel -->
   <div class="absolute inset-0 opacity-[0.07] mix-blend-overlay pointer-events-none" style="
        background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22220%22 height=%22220%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%222%22 stitchTiles=%22stitch%22/><feColorMatrix values=%220 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>');"></div>
   <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10"></div>
 
   <div class="relative h-full max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col justify-center py-8 md:py-16 xl:py-20">
     <div class="max-w-3xl">
-      <div class="text-[0.7rem] uppercase tracking-[0.3em] text-avb-red font-semibold mb-4 md:mb-5">Custom · CustomFuze</div>
+      <div class="text-[0.7rem] uppercase tracking-[0.3em] text-avb-red font-semibold mb-4 md:mb-5">Custom · CustomFuze · Branded</div>
       <h1 class="font-display font-semibold text-white uppercase leading-[0.95] display-tight text-[2.4rem] md:text-[4rem] lg:text-[4.8rem]">
-        Custom sublimated<br>jerseys, built for<br>your program.
+        The volleyball<br>shop programs<br>actually trust.
       </h1>
       <p class="mt-4 md:mt-5 text-white/85 text-[1rem] md:text-[1.2rem] max-w-xl">
-        Volleyball-first since 1995. Done correctly. On time. Under budget.
+        30 years. 2,000+ clubs. One sport. CustomFuze ships in 30 days, guaranteed — or we cover the freight.
       </p>
       <div class="mt-6 md:mt-7 flex flex-col sm:flex-row gap-3">
-        <a href="#timeline" class="group inline-flex items-center justify-center gap-2 btn-red text-white font-medium px-6 py-3.5 text-[1rem]">
-          Get a Quote in 24 Hours
+        <a href="#deadline" class="group inline-flex items-center justify-center gap-2 btn-red text-white font-medium px-6 py-3.5 text-[1rem]">
+          See the timing
           <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
         </a>
-        <a href="#build" class="inline-flex items-center justify-center gap-2 border border-white/45 text-white font-medium px-6 py-3.5 text-[1rem] btn-ghost-light">
-          See the Build Details
+        <a href="#service" class="inline-flex items-center justify-center gap-2 border border-white/45 text-white font-medium px-6 py-3.5 text-[1rem] btn-ghost-light">
+          How we show up
         </a>
       </div>
     </div>
     <div class="absolute bottom-6 right-6 lg:right-12 text-white/55 text-[0.7rem] uppercase tracking-[0.25em] font-medium hidden md:block">
-      30 years. 2,000+ clubs. One sport.
+      Volleyball-first since 1995.
     </div>
   </div>
 </section>
 
 
 <!-- ====================================================================
-     SECTION 2. TIMELINE PICKER
+     SECTION 2. DEADLINE — Two paths, one promise
+     Guaranteed (CustomFuze) vs. Estimated range (all branded)
      ==================================================================== -->
-<section id="timeline" class="bg-avb-offwhite py-24 md:py-32 px-6 lg:px-12">
+<section id="deadline" class="bg-avb-offwhite py-24 md:py-32 px-6 lg:px-12">
   <div class="max-w-[1280px] mx-auto">
 
     <div class="mb-12 lg:mb-16">
-      <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">01 / Timing</div>
+      <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">01 / Delivery</div>
       <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
           style="font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1;">
-        Your timeline,<br>not ours.
+        Two paths.<br>One straight answer.
       </h2>
       <p class="mt-5 text-avb-grey text-base md:text-lg max-w-xl reveal">
-        Pick the date your team needs to be on the court. We'll show you when to start.
+        We tell you up front what we can guarantee, and what we estimate. No "4 to 8 weeks" with no commitment. No surprises at week six.
       </p>
     </div>
 
-    <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-stretch">
+    <div class="grid lg:grid-cols-2 gap-6 lg:gap-8">
 
-      <div class="flex flex-col">
-        <div class="bg-white border border-avb-divider p-6 md:p-8 h-full w-full">
-          <div class="flex items-center justify-between mb-6">
-            <button id="cal-prev" class="text-avb-black hover:text-avb-red transition-colors p-1 disabled:text-avb-grey/40 disabled:cursor-not-allowed" aria-label="Previous month">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
-            </button>
-            <div id="cal-label" class="font-display font-semibold uppercase tracking-wide text-avb-black text-lg md:text-xl"></div>
-            <button id="cal-next" class="text-avb-black hover:text-avb-red transition-colors p-1 disabled:text-avb-grey/40 disabled:cursor-not-allowed" aria-label="Next month">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/></svg>
-            </button>
+      <!-- CustomFuze: guaranteed -->
+      <article class="deadline-card deadline-card--guaranteed reveal">
+        <div class="deadline-kicker text-avb-red">
+          <span>CustomFuze · House line</span>
+          <span class="deadline-stamp">Guaranteed</span>
+        </div>
+        <div class="deadline-number">30 days.<br>In writing.</div>
+        <p class="deadline-copy text-white/85">
+          Lock the design today, your team is on the court in 30 days from Design Lock. We sign the date on your quote. If we miss it, we cover the freight — no fine print, no policy fights.
+        </p>
+        <div class="deadline-grid">
+          <div>
+            <div class="deadline-grid-label">Quote in</div>
+            <div class="deadline-grid-value">24 hrs</div>
           </div>
-          <div class="grid grid-cols-7 gap-1 mb-2 text-[10px] uppercase tracking-[0.18em] text-avb-grey font-semibold text-center">
-            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+          <div>
+            <div class="deadline-grid-label">Design lock</div>
+            <div class="deadline-grid-value">Day 1</div>
           </div>
-          <div id="cal-grid" class="grid grid-cols-7 gap-1"></div>
-          <div class="mt-5 space-y-2 text-xs text-avb-grey">
-            <p id="cal-availability-note"></p>
-            <p><span class="font-semibold text-avb-red">Red dates</span> are rush requests: <span id="cal-rush-note"></span></p>
-            <p id="cal-ideal-note"></p>
+          <div>
+            <div class="deadline-grid-label">On court</div>
+            <div class="deadline-grid-value">Day 30</div>
           </div>
         </div>
+        <a href="mailto:team@allvolleyball.com?subject=CustomFuze%20sublimation%20quote" class="mt-8 inline-flex items-center gap-2 btn-red text-white font-medium px-6 py-3.5 text-base">
+          Start a CustomFuze quote
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+        </a>
+      </article>
 
-        <!-- Quick scenario chips -->
-        <div class="hidden mt-5 flex-wrap items-center gap-2">
-          <span class="text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold mr-1">Quick pick</span>
-          <button class="scenario-chip" data-weeks="5">Tryouts</button>
-          <button class="scenario-chip" data-weeks="6">Tournament weekend</button>
-          <button class="scenario-chip" data-weeks="12">Season opener</button>
-          <button class="scenario-chip" data-weeks="20">Next club year</button>
+      <!-- Branded lines: estimated -->
+      <article class="deadline-card deadline-card--estimated reveal">
+        <div class="deadline-kicker text-avb-grey">
+          <span>Adidas · Mizuno · ASICS · Under Armour</span>
+          <span class="deadline-stamp">Estimated</span>
         </div>
-      </div>
-
-      <div class="flex">
-        <div class="bg-white border border-avb-divider p-6 md:p-8 h-full w-full flex flex-col">
-
-          <div class="mb-6">
-            <span class="text-[11px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Timeline check</span>
-            <h3 id="tl-summary" class="mt-2 font-display font-semibold text-avb-black uppercase leading-tight text-[1.6rem]"></h3>
-            <p id="tl-helper" class="mt-2 text-sm text-avb-grey leading-relaxed"></p>
+        <div class="deadline-number">6 – 10 weeks.</div>
+        <p class="deadline-copy text-avb-body">
+          Branded lines run on the manufacturer's calendar, not ours. We share a real range up front, lock a confirmed ship date as soon as the brand clears stock and slotting, and stay on top of it the whole way.
+        </p>
+        <div class="deadline-grid">
+          <div>
+            <div class="deadline-grid-label">Best case</div>
+            <div class="deadline-grid-value text-avb-black">6 wks</div>
           </div>
-
-          <div id="tl-track"></div>
-
-          <div id="tl-status" class="mt-10 pt-6 border-t border-avb-divider text-base leading-relaxed"></div>
-
-          <div class="mt-auto pt-8">
-            <a href="mailto:team@allvolleyball.com" class="inline-flex w-full items-center justify-center gap-2 btn-red text-white font-medium px-7 py-4 text-base">
-              Send Us Your Roster
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
-            </a>
+          <div>
+            <div class="deadline-grid-label">Typical</div>
+            <div class="deadline-grid-value text-avb-black">8 wks</div>
+          </div>
+          <div>
+            <div class="deadline-grid-label">Outer edge</div>
+            <div class="deadline-grid-value text-avb-black">10 wks</div>
           </div>
         </div>
-      </div>
+        <a href="mailto:team@allvolleyball.com?subject=Branded%20sublimation%20quote" class="mt-8 inline-flex items-center gap-2 border border-avb-black text-avb-black font-medium px-6 py-3.5 text-base btn-ghost-dark">
+          Ask about a branded line
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+        </a>
+      </article>
     </div>
+
+    <p class="mt-8 text-sm text-avb-grey reveal">
+      Tournament weekend coming up fast? <a href="mailto:team@allvolleyball.com" class="link-inline text-avb-black font-medium">Send the date.</a> We do rush windows on CustomFuze when the calendar allows.
+    </p>
   </div>
 </section>
 
 
 <!-- ====================================================================
-     SECTION 4. WHY SUBLIMATION + STAT STRIP
+     SECTION 3. WE ARE THE GO-TO — Volleyball-first
      ==================================================================== -->
 <section class="bg-white py-24 md:py-32 px-6 lg:px-12">
   <div class="max-w-[1280px] mx-auto">
 
-    <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-20 lg:mb-28">
-      <!-- Image placeholder — drop in a real photo when ready. -->
-      <div class="aspect-[4/5] overflow-hidden bg-avb-offwhite border border-dashed border-avb-divider flex items-center justify-center">
-        <span class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold">Need image</span>
-      </div>
-
-      <div>
-        <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">02 / The shop</div>
+    <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start mb-20 lg:mb-24">
+      <div class="lg:col-span-5">
+        <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">02 / The go-to</div>
         <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
-            style="font-size: clamp(2.25rem, 5vw, 3.75rem); line-height: 1.05;">
-          Volleyball-first.
+            style="font-size: clamp(2.25rem, 5vw, 3.75rem); line-height: 1.02;">
+          One sport.<br>Thirty years.<br>No detours.
         </h2>
-        <div class="mt-8 space-y-5 text-avb-body text-base md:text-lg leading-relaxed reveal">
-          <p>Our designers have built jerseys for 2,000 plus volleyball clubs. We know how a freshman's jersey should fit different from a senior's. We know which fabrics breathe in a hot gym in July. We know the cut a libero needs and the cut an outside wants.</p>
-          <p>That depth is the whole pitch. Not "we offer custom sublimation." Anyone says that. We just happen to be the shop that's been volleyball-first for 30 years — the sport leads every decision we make.</p>
-        </div>
+      </div>
+      <div class="lg:col-span-7 lg:pt-4 space-y-5 text-avb-body text-base md:text-lg leading-relaxed reveal">
+        <p>Most promo shops handle twelve sports. We've handled one — and we've handled it since 1995. That's the whole pitch. When a director calls us about a libero contrast issue, a school compliance rule, a late roster add the week before nationals, we've already solved it.</p>
+        <p>The result is a service team that doesn't need a learning curve on your program. We know how clubs run, how schools approve, how directors plan, and how athletes wear the kit when nobody's watching.</p>
       </div>
     </div>
 
-    <!-- Stat strip: 4 across on desktop, 2x2 on mobile. Editorial, not card-grid. -->
+    <!-- Stat strip -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-y-12 lg:gap-y-0 lg:divide-x lg:divide-avb-divider reveal">
       <div class="stat-block">
         <div class="font-display font-semibold text-avb-black leading-[0.85]" style="font-size: clamp(3rem, 6vw, 5rem);">
@@ -807,17 +559,17 @@
       </div>
       <div class="stat-block">
         <div class="font-display font-semibold text-avb-black leading-[0.85]" style="font-size: clamp(3rem, 6vw, 5rem);">
-          <span class="stat-num" data-target="40">0</span><span class="text-avb-red">+</span>
-        </div>
-        <div class="mt-3 text-[11px] uppercase tracking-[0.18em] text-avb-grey font-semibold">Wash cycles tested</div>
-        <div class="mt-1.5 text-sm text-avb-body">Color holds. Print holds.</div>
-      </div>
-      <div class="stat-block">
-        <div class="font-display font-semibold text-avb-black leading-[0.85]" style="font-size: clamp(3rem, 6vw, 5rem);">
           <span class="stat-num" data-target="24">0</span><span class="text-avb-grey/60 text-3xl ml-1">hrs</span>
         </div>
         <div class="mt-3 text-[11px] uppercase tracking-[0.18em] text-avb-grey font-semibold">Quote turnaround</div>
         <div class="mt-1.5 text-sm text-avb-body">Real number, every time.</div>
+      </div>
+      <div class="stat-block">
+        <div class="font-display font-semibold text-avb-black leading-[0.85]" style="font-size: clamp(3rem, 6vw, 5rem);">
+          <span class="stat-num" data-target="1">0</span>
+        </div>
+        <div class="mt-3 text-[11px] uppercase tracking-[0.18em] text-avb-grey font-semibold">Sport we cover</div>
+        <div class="mt-1.5 text-sm text-avb-body">That's the difference.</div>
       </div>
     </div>
   </div>
@@ -825,68 +577,162 @@
 
 
 <!-- ====================================================================
-     SECTION 5. JERSEY 3D EXPLORER
-     Three.js scene. GLB jersey model auto-rotating.
-     Five hotspots projected to DOM, click to focus.
+     SECTION 4. BUILD DETAILS — text-only, brand-tabbed
+     Service-level promises per line, no fabric / material talk.
      ==================================================================== -->
-<section id="build" class="bg-avb-offwhite py-24 md:py-32 px-6 lg:px-12 overflow-hidden">
+<section id="build" class="bg-avb-offwhite py-24 md:py-32 px-6 lg:px-12">
   <div class="max-w-[1280px] mx-auto">
 
     <div class="mb-12 lg:mb-16">
-      <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">03 / The build</div>
+      <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">03 / Per-line promises</div>
       <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
           style="font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1;">
-        Five details<br>that matter.
+        What we promise,<br>line by line.
       </h2>
       <p class="mt-5 text-avb-grey text-base md:text-lg max-w-xl reveal">
-        Choose a brand, then compare the build details before the order goes in.
+        Pick a brand. These are the things we put in writing before the order goes in — no fabric jargon, no sales spin.
       </p>
       <div id="build-brand-tabs" class="build-brand-tabs no-scrollbar mt-8 reveal" role="tablist" aria-label="Choose a uniform brand"></div>
     </div>
 
-    <div class="grid lg:grid-cols-[minmax(0,1fr)_360px] gap-8 lg:gap-12 items-start lg:items-stretch">
-      <div class="relative bg-white border border-avb-divider overflow-hidden w-full h-[430px] sm:h-[500px] md:h-[560px] lg:h-auto lg:min-h-0 lg:self-stretch" id="jersey-stage">
-        <div class="build-stage-badge">
-          <span class="build-stage-badge-kicker" id="build-brand-kicker">House line</span>
-          <span class="build-stage-badge-name" id="build-brand-name">CustomFuze</span>
-        </div>
-        <div id="jersey-canvas" class="absolute inset-0"></div>
-        <div id="hotspot-overlay" class="absolute inset-0 pointer-events-none"></div>
-        <button id="hotspot-reset" type="button" class="hotspot-reset" aria-label="Return to full 3D view">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 3H3v6m0-6 7 7m5 11h6v-6m0 6-7-7"/></svg>
-          Full view
-        </button>
-        <div class="absolute bottom-3 left-3 z-10 text-[10px] uppercase tracking-[0.22em] text-avb-grey/70 pointer-events-none flex items-center gap-2">
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13L21 7.5m0 0L16.5 12M21 7.5H7.5"/></svg>
-          Drag to rotate
-        </div>
-        <div id="jersey-fallback" class="absolute inset-0 z-20 hidden flex-col items-center justify-center text-center px-8 bg-white">
-          <p class="font-display uppercase text-avb-grey text-sm tracking-[0.2em]">3D preview unavailable</p>
-          <p class="mt-3 text-sm text-avb-body max-w-xs">Your browser blocked WebGL or the jersey model. The five details below are still here.</p>
-        </div>
+    <div class="grid lg:grid-cols-[minmax(0,1fr)_360px] gap-8 lg:gap-12 items-stretch">
+
+      <!-- Main details panel -->
+      <div class="bg-white border border-avb-divider p-8 md:p-10">
+        <div class="text-[11px] uppercase tracking-[0.22em] text-avb-grey font-semibold mb-2" id="build-brand-kicker">House line</div>
+        <h3 id="build-brand-name" class="font-display font-semibold text-avb-black uppercase text-3xl md:text-4xl mb-4">CustomFuze</h3>
+        <p id="build-brand-copy" class="text-avb-body leading-relaxed max-w-2xl mb-8 text-base md:text-lg"></p>
+        <div id="build-details"></div>
       </div>
 
-      <div id="hotspot-panel" class="bg-white border border-avb-divider p-6 md:p-8 flex flex-col self-start lg:self-stretch">
-        <div id="hotspot-default">
-          <div class="text-[11px] uppercase tracking-[0.22em] text-avb-grey font-semibold mb-3" id="brand-panel-kicker">House line</div>
-          <h3 class="font-display font-semibold text-avb-black text-2xl uppercase mb-3 leading-tight" id="brand-panel-title">CustomFuze house kit</h3>
-          <p class="text-avb-body leading-relaxed" id="brand-panel-copy">Built for programs that want the most control over color, roster changes, and budget.</p>
-          <div class="mt-6" id="brand-proof-list"></div>
-        </div>
-        <div id="hotspot-active" class="hidden">
-          <div class="flex items-center justify-between mb-3">
-            <div class="text-[11px] uppercase tracking-[0.22em] hotspot-detail-num font-semibold" id="hotspot-num">Detail 01</div>
-            <button id="hotspot-back" class="text-[11px] uppercase tracking-[0.18em] text-avb-grey hover:text-avb-red transition-colors font-semibold">← Back</button>
-          </div>
-          <h3 class="font-display font-semibold text-avb-black text-2xl uppercase mb-3 leading-tight" id="hotspot-title"></h3>
-          <p class="text-avb-body leading-relaxed" id="hotspot-desc"></p>
-        </div>
-        <div class="mt-6" id="hotspot-list">
-          <div class="text-[11px] uppercase tracking-[0.22em] text-avb-grey font-semibold mb-1" id="hotspot-list-heading">CustomFuze highlights</div>
-        </div>
-        <a id="brand-panel-cta" href="mailto:team@allvolleyball.com?subject=CustomFuze%20sublimation%20quote" class="build-brand-cta mt-6 inline-flex items-center justify-center border px-5 py-3 text-[11px] uppercase tracking-[0.18em] font-semibold transition-colors">
-          Ask about CustomFuze
+      <!-- Side panel: brand-level guarantees + CTA -->
+      <aside class="bg-avb-black text-white p-8 md:p-10 flex flex-col">
+        <div class="text-[11px] uppercase tracking-[0.22em] text-avb-red font-semibold mb-3">Provider promise</div>
+        <h4 class="font-display font-semibold uppercase text-2xl mb-4 leading-tight" id="build-side-title">House line guarantee</h4>
+        <p class="text-white/85 leading-relaxed text-base mb-6" id="build-side-copy"></p>
+        <div class="space-y-0 pt-4 border-t border-white/15" id="build-side-proofs"></div>
+        <a id="build-side-cta" href="mailto:team@allvolleyball.com" class="mt-auto pt-10 inline-flex items-center gap-2 text-avb-red font-semibold text-xs uppercase tracking-[0.18em] hover:text-white transition-colors">
+          Ask about CustomFuze →
         </a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 5. SERVICE — How we show up
+     ==================================================================== -->
+<section id="service" class="bg-white py-24 md:py-32 px-6 lg:px-12">
+  <div class="max-w-[1280px] mx-auto">
+
+    <div class="grid lg:grid-cols-12 gap-12 mb-16">
+      <div class="lg:col-span-5">
+        <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">04 / How we show up</div>
+        <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
+            style="font-size: clamp(2.25rem, 5vw, 3.75rem); line-height: 1.02;">
+          You won't<br>be passed<br>around.
+        </h2>
+      </div>
+      <div class="lg:col-span-7 lg:pt-6 space-y-5 text-avb-body text-base md:text-lg leading-relaxed reveal">
+        <p>One Team Sales Specialist owns your order from the first email to the last box on the doorstep. Same name, same direct line, every reorder, every year.</p>
+        <p>No portals, no ticket queues, no "let me check with the rep." If you call the team line, a real person picks up. If you email after lunch on a Friday, you get a real reply before the weekend.</p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-avb-divider border border-avb-divider reveal">
+      <div class="svc-cell">
+        <div class="svc-cell-num">01</div>
+        <h3 class="svc-cell-title">A name, not a number</h3>
+        <p class="svc-cell-desc">One specialist on every order. They learn your roster, your colors, your reorder rhythm, your director's pet peeves.</p>
+      </div>
+      <div class="svc-cell">
+        <div class="svc-cell-num">02</div>
+        <h3 class="svc-cell-title">Real reply, one business day</h3>
+        <p class="svc-cell-desc">Quote in 24 hours. Mockup in 48. Question on a Friday afternoon — answer before you leave for the weekend.</p>
+      </div>
+      <div class="svc-cell">
+        <div class="svc-cell-num">03</div>
+        <h3 class="svc-cell-title">No surprises after</h3>
+        <p class="svc-cell-desc">The price you approve is the price you pay. The date we promise is the date it ships. No back-end fees, no policy fights.</p>
+      </div>
+      <div class="svc-cell">
+        <div class="svc-cell-num">04</div>
+        <h3 class="svc-cell-title">Reorders that remember</h3>
+        <p class="svc-cell-desc">We keep your artwork file, sizing notes, and roster from last year. A reorder is one email, not a restart from scratch.</p>
+      </div>
+      <div class="svc-cell">
+        <div class="svc-cell-num">05</div>
+        <h3 class="svc-cell-title">We answer the hard ones</h3>
+        <p class="svc-cell-desc">Late adds, libero contrast, school compliance, sponsor placement, sister-team kits. We've handled it before, and we'll tell you straight.</p>
+      </div>
+      <div class="svc-cell">
+        <div class="svc-cell-num">06</div>
+        <h3 class="svc-cell-title">Built for clubs, not brands</h3>
+        <p class="svc-cell-desc">We work for you, not the apparel companies. If a brand isn't right for your program this year, we'll say so on the call.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 6. THE DIFFERENCE — side-by-side comparison
+     ==================================================================== -->
+<section class="bg-avb-black py-24 md:py-32 px-6 lg:px-12">
+  <div class="max-w-[1280px] mx-auto">
+
+    <div class="mb-14 lg:mb-16">
+      <div class="text-[11px] uppercase tracking-[0.25em] text-avb-red font-semibold mb-4 reveal">05 / The difference</div>
+      <h2 class="font-display font-semibold text-white uppercase reveal display-tight"
+          style="font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1;">
+        Why programs<br>stay with us.
+      </h2>
+      <p class="mt-5 text-white/65 text-base md:text-lg max-w-xl reveal">
+        We didn't build this shop to be the cheapest. We built it to be the one directors call when the deadline is real and the order has to land.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-px bg-white/10 border border-white/15 reveal">
+      <div class="bg-avb-black p-8 md:p-10 compare-typical">
+        <div class="text-[11px] uppercase tracking-[0.25em] text-white/45 font-semibold mb-6">Typical promo shop</div>
+        <div class="text-white/75 leading-relaxed">
+          <div class="compare-row"><span class="compare-mark">—</span><span>Online portal you have to learn</span></div>
+          <div class="compare-row"><span class="compare-mark">—</span><span>Different rep every reorder</span></div>
+          <div class="compare-row"><span class="compare-mark">—</span><span>"4 to 8 weeks" with no commitment</span></div>
+          <div class="compare-row"><span class="compare-mark">—</span><span>Volleyball is one of twelve sports they handle</span></div>
+          <div class="compare-row"><span class="compare-mark">—</span><span>Surprise charges on the back end</span></div>
+          <div class="compare-row"><span class="compare-mark">—</span><span>Last year's order is gone — you start over</span></div>
+        </div>
+      </div>
+      <div class="bg-white p-8 md:p-10 compare-us">
+        <div class="text-[11px] uppercase tracking-[0.25em] text-avb-red font-semibold mb-6">All Volleyball</div>
+        <div class="text-avb-body leading-relaxed">
+          <div class="compare-row">
+            <svg class="compare-mark w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+            <span>A human you can call by name</span>
+          </div>
+          <div class="compare-row">
+            <svg class="compare-mark w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+            <span>Same specialist year after year</span>
+          </div>
+          <div class="compare-row">
+            <svg class="compare-mark w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+            <span>30 days, guaranteed in writing on CustomFuze</span>
+          </div>
+          <div class="compare-row">
+            <svg class="compare-mark w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+            <span>Volleyball is the only sport we do</span>
+          </div>
+          <div class="compare-row">
+            <svg class="compare-mark w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+            <span>Quoted price is the final price</span>
+          </div>
+          <div class="compare-row">
+            <svg class="compare-mark w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+            <span>Your file stays with us — reorders are one email</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -895,13 +741,12 @@
 
 <!-- ====================================================================
      SECTION 7. BRAND SHOWCASE
-     Scrolling rail of approved brand logos.
      ==================================================================== -->
 <section class="bg-white py-24 md:py-32 px-6 lg:px-12 overflow-hidden">
   <div class="max-w-[1280px] mx-auto">
 
     <div class="mb-12 lg:mb-16 text-center">
-      <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">04 / The lines</div>
+      <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">06 / The lines</div>
       <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
           style="font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1;">
         Every brand<br>worth wearing.
@@ -917,22 +762,18 @@
           <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/customfuze_logo_1.png?v=1756144449" alt="" loading="lazy" decoding="async">
           <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">House line</div>
         </div>
-
         <div class="brand-card" aria-hidden="true">
           <div class="brand-wordmark">adidas</div>
           <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
         </div>
-
         <div class="brand-card" aria-hidden="true">
           <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/under_armour_logo.png?v=1726495605" alt="" loading="lazy" decoding="async">
           <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
         </div>
-
         <div class="brand-card" aria-hidden="true">
           <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/Mizuno.svg?v=1778155832" alt="" loading="lazy" decoding="async">
           <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
         </div>
-
         <div class="brand-card" aria-hidden="true">
           <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/asics_logo.png?v=1726495605" alt="" loading="lazy" decoding="async">
           <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
@@ -942,22 +783,18 @@
           <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/customfuze_logo_1.png?v=1756144449" alt="CustomFuze" loading="lazy" decoding="async">
           <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">House line</div>
         </div>
-
         <div class="brand-card">
           <div class="brand-wordmark" aria-label="Adidas">adidas</div>
           <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
         </div>
-
         <div class="brand-card">
           <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/under_armour_logo.png?v=1726495605" alt="Under Armour" loading="lazy" decoding="async">
           <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
         </div>
-
         <div class="brand-card">
           <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/Mizuno.svg?v=1778155832" alt="Mizuno" loading="lazy" decoding="async">
           <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
         </div>
-
         <div class="brand-card">
           <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/asics_logo.png?v=1726495605" alt="ASICS" loading="lazy" decoding="async">
           <div class="mt-3 text-[10px] uppercase tracking-[0.22em] text-avb-grey font-semibold">Full custom</div>
@@ -973,7 +810,7 @@
 
 
 <!-- ====================================================================
-     SECTION 9. TEAM-SIDE CLOSE
+     SECTION 8. TEAM-SIDE CLOSE
      ==================================================================== -->
 <section class="bg-avb-offwhite py-24 md:py-32 px-6 lg:px-12">
   <div class="max-w-2xl mx-auto text-center">
@@ -988,7 +825,6 @@
       <a href="mailto:team@allvolleyball.com" class="inline-flex items-center gap-2 btn-red text-white font-medium px-7 py-4 text-base">
         Email team@allvolleyball.com
       </a>
-      <!-- TODO: replace href with the real team line phone number -->
       <a href="tel:" class="inline-flex items-center gap-2 border border-avb-black text-avb-black font-medium px-7 py-4 text-base btn-ghost-dark">
         Call the Team Line
       </a>
@@ -1001,288 +837,217 @@
 
 
 <!-- ====================================================================
-     GSAP for scroll reveals + count-up + workflow animations.
+     GSAP for scroll reveals + count-up
      ==================================================================== -->
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 
 
+<!-- ====================================================================
+     BUILD DETAILS — brand-tabbed text panel (no 3D)
+     ==================================================================== -->
 <script>
-/* ============================================================
-   DATE LOGIC. Today follows the customer's local date.
-   ============================================================ */
-const ANCHOR_TODAY = startOfDay(new Date());
-const DESIGN_LOCK_LEAD_DAYS = 2;
-const PRODUCTION_OFFSET_DAYS = 7;
-const SHIP_OFFSET_DAYS = 30;
-const ON_COURT_EXTRA_DAYS = 7;
-const RUSH_WINDOW_DAYS = 7;
-const MIN_IDEAL_DATE = getOnCourtDate(addDays(ANCHOR_TODAY, DESIGN_LOCK_LEAD_DAYS));
-const MIN_DATE = addDays(MIN_IDEAL_DATE, -RUSH_WINDOW_DAYS);
-const MAX_DATE = addDays(ANCHOR_TODAY, 365);
-
-function startOfDay(date) {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-}
-function addDays(date, days) {
-  const d = new Date(date);
-  d.setDate(d.getDate() + days);
-  return d;
-}
-function addMonths(date, months) {
-  const d = new Date(date);
-  const day = d.getDate();
-  d.setDate(1);
-  d.setMonth(d.getMonth() + months);
-  d.setDate(Math.min(day, new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate()));
-  return d;
-}
-function diffDays(a, b) {
-  const x = new Date(a.getFullYear(), a.getMonth(), a.getDate());
-  const y = new Date(b.getFullYear(), b.getMonth(), b.getDate());
-  return Math.round((x - y) / 86400000);
-}
-function isSameDay(a, b) {
-  return a.getFullYear() === b.getFullYear()
-      && a.getMonth() === b.getMonth()
-      && a.getDate() === b.getDate();
-}
-function getDesignLockDate(onCourtDate) {
-  return addMonths(addDays(onCourtDate, -ON_COURT_EXTRA_DAYS), -1);
-}
-function getOnCourtDate(designLockDate) {
-  return addDays(addMonths(designLockDate, 1), ON_COURT_EXTRA_DAYS);
-}
-function getTimelineDates(onCourtDate) {
-  const designLock = getDesignLockDate(onCourtDate);
-  return [
-    addDays(designLock, -DESIGN_LOCK_LEAD_DAYS),
-    designLock,
-    addDays(designLock, PRODUCTION_OFFSET_DAYS),
-    addDays(designLock, SHIP_OFFSET_DAYS),
-    onCourtDate
-  ];
-}
-function getDateState(date) {
-  if (date < MIN_DATE || date > MAX_DATE) return 'disabled';
-  if (date < MIN_IDEAL_DATE) return 'critical';
-  return 'ideal';
-}
-
-const MONTHS_LONG  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const fmtFull  = d => `${MONTHS_SHORT[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-const fmtShort = d => `${MONTHS_SHORT[d.getMonth()]} ${d.getDate()}`;
-
-
-/* ============================================================
-   CALENDAR
-   ============================================================ */
-let selectedDate = addDays(ANCHOR_TODAY, 42);
-let viewYear  = selectedDate.getFullYear();
-let viewMonth = selectedDate.getMonth();
-
-const calLabel = document.getElementById('cal-label');
-const calGrid  = document.getElementById('cal-grid');
-const calPrev  = document.getElementById('cal-prev');
-const calNext  = document.getElementById('cal-next');
-const calAvailabilityNote = document.getElementById('cal-availability-note');
-const calRushNote = document.getElementById('cal-rush-note');
-const calIdealNote = document.getElementById('cal-ideal-note');
-
-function updateCalendarNotes() {
-  const rushEnd = addDays(MIN_IDEAL_DATE, -1);
-  calAvailabilityNote.textContent = `Today is ${fmtFull(ANCHOR_TODAY)}. Dates before ${fmtFull(MIN_DATE)} are unavailable.`;
-  calRushNote.textContent = `${fmtFull(MIN_DATE)} through ${fmtFull(rushEnd)} are no longer ideal, but we'll try to make them work.`;
-  calIdealNote.textContent = `For the cleanest path, choose ${fmtFull(MIN_IDEAL_DATE)} or later so artwork approval, production, shipping, and team handoff all have room to breathe.`;
-}
-
-function renderCalendar() {
-  calLabel.textContent = `${MONTHS_LONG[viewMonth]} ${viewYear}`;
-  calGrid.innerHTML = '';
-
-  const firstDay = new Date(viewYear, viewMonth, 1);
-  const lastDay  = new Date(viewYear, viewMonth + 1, 0);
-  const startBlanks = firstDay.getDay();
-  const totalDays = lastDay.getDate();
-
-  for (let i = 0; i < startBlanks; i++) {
-    const cell = document.createElement('div');
-    cell.className = 'cal-cell';
-    calGrid.appendChild(cell);
+const BRANDS = [
+  {
+    slug: 'customfuze',
+    name: 'CustomFuze',
+    tabLabel: 'House line',
+    accent: '#C23946',
+    copy: 'Our house line. The path we recommend when the deadline is real, the budget needs to be tight, and the director needs the same kit to be available again next season without a story.',
+    details: [
+      ['Color fidelity, locked.',     'Your palette is matched against a saved swatch on file. Every reorder pulls from the same approved color — not a fresh interpretation.'],
+      ['30-day delivery, guaranteed.','From Design Lock to your door in 30 days. If we miss the date, the freight is on us. It is written into your quote.'],
+      ['Roster changes, last week.',  'Late adds, libero alternates, and split rosters are handled by your specialist on a phone call. No portal, no change-order form.'],
+      ['Reorders without restart.',   'Your artwork file, sizes, and roster stay on file. Next season is one approval email — same kit, same look, same price band.'],
+      ['No minimums, no minimums.',   'Order one replacement jersey midseason at the same price-per-unit. We do not punish small reorders.']
+    ],
+    sideTitle: 'House line guarantee',
+    sideCopy: 'CustomFuze ships in 30 days from Design Lock — every order, every reorder. Same artwork file, same team, same date on the calendar.',
+    proofs: [
+      ['Promise',        '30 days from Design Lock'],
+      ['If we miss',     'Freight on us'],
+      ['Reorder',        'Same kit, one email'],
+      ['Minimum',        'No order minimum on reorders']
+    ],
+    cta: 'Ask about CustomFuze'
+  },
+  {
+    slug: 'adidas',
+    name: 'Adidas',
+    tabLabel: 'Icon line',
+    accent: '#111111',
+    copy: 'For programs that need the brand badge on the kit — schools, scholastic programs, and clubs with a sponsor presentation to maintain. We handle the dealer side so you only deal with us.',
+    details: [
+      ['Authorized dealer access.',   'We carry the full Adidas team catalog. You don\'t need to chase the brand — we slot the order on our dealer account.'],
+      ['Brand-mark compliance.',      'Every layout we send back is built to Adidas brand standards, so school approvals and sponsor reviews go through without a second round.'],
+      ['Real range, not a guess.',    'We give you the brand\'s current production window up front and lock a confirmed ship date as soon as the line is allocated.'],
+      ['One contact, same person.',   'You email and call us — not Adidas. Your specialist owns the order from quote to delivery.'],
+      ['Reorder lockbox.',            'Adidas changes catalogs on their own schedule. We keep your spec on file and flag you early if a piece is being retired.']
+    ],
+    sideTitle: 'Adidas estimate window',
+    sideCopy: 'Adidas runs on the manufacturer\'s production calendar. We share the live range, then a confirmed date once stock and slotting clear.',
+    proofs: [
+      ['Typical',        '6 – 10 weeks'],
+      ['Confirmed when', 'Stock + slotting cleared'],
+      ['Your contact',   'One AVB specialist'],
+      ['Compliance',     'Built to brand standards']
+    ],
+    cta: 'Ask about Adidas'
+  },
+  {
+    slug: 'asics',
+    name: 'ASICS',
+    tabLabel: 'Court line',
+    accent: '#0057A8',
+    copy: 'A strong fit for programs that want a sharp court presentation and a clean sponsor or school-mark layout. We manage the ASICS team-line process end to end.',
+    details: [
+      ['Team-line access.',           'We hold the dealer relationship that puts your order in the ASICS team production queue — not the retail one.'],
+      ['Sponsor and mark layout.',    'We lay out sponsor placement, school marks, and number block to ASICS\'s spec so the kit reads cleanly from the bleachers.'],
+      ['Confirmed ship date.',        'We share the estimate window the day we quote, and replace it with a hard date the moment ASICS confirms allocation.'],
+      ['Late-roster handling.',       'Adds and libero alternates are placed against the same approved spec, not a new design — no risk of mismatched generations.'],
+      ['One reorder window per year.','We coordinate your reorder against the brand\'s production window so you don\'t miss the cutoff for next season.']
+    ],
+    sideTitle: 'ASICS estimate window',
+    sideCopy: 'ASICS runs in production cycles. We get you a real range fast and a hard ship date the moment your slot confirms.',
+    proofs: [
+      ['Typical',        '6 – 10 weeks'],
+      ['Confirmed when', 'Allocation locked'],
+      ['Your contact',   'One AVB specialist'],
+      ['Reorder window', 'Coordinated yearly']
+    ],
+    cta: 'Ask about ASICS'
+  },
+  {
+    slug: 'mizuno',
+    name: 'Mizuno',
+    tabLabel: 'Volleyball line',
+    accent: '#174EA6',
+    copy: 'The volleyball-credibility brand. For programs whose athletes already know the badge and whose directors want a kit that looks the part on a tournament stream.',
+    details: [
+      ['Volleyball-line standing.',   'We carry Mizuno\'s volleyball team line directly. You don\'t go through retail — we go through the team channel.'],
+      ['Libero variant handling.',    'Your libero kit is built from the same approved spec as the team look — same generation, same artwork file, not a last-minute alternate.'],
+      ['Sister-team coordination.',   'Multi-team clubs ordering Mizuno for varsity and a different line for younger groups get one bundled timeline from us.'],
+      ['Quote-to-confirm communication.', 'We share weekly status checkpoints once the order is placed with Mizuno — no silent stretches between Design Lock and ship date.'],
+      ['Reorder continuity.',         'Mizuno catalogs shift season to season. We flag you in advance if a piece is going to be replaced, so you can lock supply.']
+    ],
+    sideTitle: 'Mizuno estimate window',
+    sideCopy: 'Mizuno volleyball runs on a tight production cadence. We give a real range, then a confirmed date once the brand clears your allocation.',
+    proofs: [
+      ['Typical',        '6 – 10 weeks'],
+      ['Confirmed when', 'Volleyball line allocation'],
+      ['Status check',   'Weekly through your specialist'],
+      ['Libero variant', 'Same spec, same file']
+    ],
+    cta: 'Ask about Mizuno'
+  },
+  {
+    slug: 'under-armour',
+    name: 'Under Armour',
+    tabLabel: 'Performance line',
+    accent: '#C23946',
+    copy: 'For programs that want a high-contrast, performance-forward read. We handle the dealer side and the kit layout so your director only deals with us.',
+    details: [
+      ['Authorized team dealer.',     'We carry the Under Armour team line on our dealer account, so your order goes in through the right channel from day one.'],
+      ['High-contrast number layout.','Numbers, names, and sponsor blocks are laid out for legibility from the stands and from broadcast cameras — not just on the proof sheet.'],
+      ['Estimate, then confirmed.',   'We share the production window up front and replace it with a hard ship date when Under Armour confirms allocation.'],
+      ['Multi-team continuity.',      'Clubs running UA for varsity and a different line elsewhere get one consolidated delivery schedule from your specialist.'],
+      ['Reorder spec preservation.',  'Your approved spec stays on file. Next season\'s order pulls from the same artwork, not a fresh round of revisions.']
+    ],
+    sideTitle: 'Under Armour estimate window',
+    sideCopy: 'Under Armour runs on the manufacturer\'s production calendar. We share the live range and lock a confirmed ship date once allocated.',
+    proofs: [
+      ['Typical',        '6 – 10 weeks'],
+      ['Confirmed when', 'UA allocation cleared'],
+      ['Your contact',   'One AVB specialist'],
+      ['Reorder',        'Same spec, on file']
+    ],
+    cta: 'Ask about Under Armour'
   }
-  for (let day = 1; day <= totalDays; day++) {
-    const date = new Date(viewYear, viewMonth, day);
-    const cell = document.createElement('div');
-    cell.className = 'cal-cell';
-
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.textContent = day;
-
-    const dateState  = getDateState(date);
-    const disabled   = dateState === 'disabled';
-    const isCritical = dateState === 'critical';
-    const isSelected = isSameDay(date, selectedDate);
-    const isToday    = isSameDay(date, ANCHOR_TODAY);
-
-    btn.className = 'cal-day ' + (
-      disabled   ? 'cal-day--disabled' :
-      isSelected && isCritical ? 'cal-day--selected-critical' :
-      isSelected ? 'cal-day--selected' :
-      isCritical ? 'cal-day--critical' :
-      isToday    ? 'cal-day--today'    :
-                   'cal-day--default'
-    );
-    if (isCritical) btn.setAttribute('aria-label', `${fmtFull(date)} rush request window`);
-    if (disabled) btn.disabled = true;
-    else btn.addEventListener('click', () => {
-      selectedDate = date;
-      renderCalendar();
-      updateTimeline();
-      syncScenarioChips();
-    });
-
-    cell.appendChild(btn);
-    calGrid.appendChild(cell);
-  }
-
-  const minMonthStart    = new Date(MIN_DATE.getFullYear(),      MIN_DATE.getMonth(),      1);
-  const maxMonthStart    = new Date(MAX_DATE.getFullYear(),    MAX_DATE.getMonth(),    1);
-  const viewMonthStart   = new Date(viewYear, viewMonth, 1);
-  calPrev.disabled = viewMonthStart <= minMonthStart;
-  calNext.disabled = viewMonthStart >= maxMonthStart;
-}
-
-calPrev.addEventListener('click', () => {
-  if (calPrev.disabled) return;
-  const prev = new Date(viewYear, viewMonth - 1, 1);
-  viewMonth = prev.getMonth();
-  viewYear  = prev.getFullYear();
-  renderCalendar();
-});
-calNext.addEventListener('click', () => {
-  if (calNext.disabled) return;
-  const next = new Date(viewYear, viewMonth + 1, 1);
-  viewMonth = next.getMonth();
-  viewYear  = next.getFullYear();
-  renderCalendar();
-});
-
-
-/* ============================================================
-   SCENARIO QUICK-PICK CHIPS
-   ============================================================ */
-function syncScenarioChips() {
-  const days = diffDays(selectedDate, ANCHOR_TODAY);
-  const weeks = Math.round(days / 7);
-  document.querySelectorAll('.scenario-chip').forEach(chip => {
-    const chipDate = addDays(ANCHOR_TODAY, +chip.dataset.weeks * 7);
-    const chipState = getDateState(chipDate);
-    const disabled = chipState === 'disabled';
-    chip.disabled = disabled;
-    chip.classList.toggle('critical', !disabled && chipState === 'critical');
-    chip.classList.toggle('active', !disabled && +chip.dataset.weeks === weeks);
-  });
-}
-document.querySelectorAll('.scenario-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    if (chip.disabled) return;
-    const weeks = +chip.dataset.weeks;
-    selectedDate = addDays(ANCHOR_TODAY, weeks * 7);
-    viewYear  = selectedDate.getFullYear();
-    viewMonth = selectedDate.getMonth();
-    renderCalendar();
-    updateTimeline();
-    syncScenarioChips();
-  });
-});
-
-
-/* ============================================================
-   TIMELINE
-   ============================================================ */
-const tlTrack    = document.getElementById('tl-track');
-const tlSummary  = document.getElementById('tl-summary');
-const tlHelper   = document.getElementById('tl-helper');
-const tlStatus   = document.getElementById('tl-status');
-
-const TL_STEPS = [
-  { label: 'Start request', note: '2 days before Design Lock' },
-  { label: 'Design Lock',   note: 'Roster, sizes, artwork approved' },
-  { label: 'Production',    note: '7 days from Design Lock' },
-  { label: 'Ships',         note: '30 days from Design Lock' },
-  { label: 'On Court',      note: 'Target date' }
 ];
 
-function buildTimelineSteps() {
-  tlTrack.innerHTML = '';
-  TL_STEPS.forEach((step, i) => {
-    const row = document.createElement('div');
-    row.className = 'tl-step';
-    row.dataset.idx = i;
-    row.innerHTML = `
-      <div class="tl-step-marker">${i + 1}</div>
-      <div>
-        <div class="tl-step-kicker">${step.note}</div>
-        <div class="tl-step-title">${step.label}</div>
-      </div>
-      <div class="tl-step-date" data-role="date"></div>
+const brandTabs       = document.getElementById('build-brand-tabs');
+const buildKicker     = document.getElementById('build-brand-kicker');
+const buildName       = document.getElementById('build-brand-name');
+const buildCopy       = document.getElementById('build-brand-copy');
+const buildDetails    = document.getElementById('build-details');
+const buildSideTitle  = document.getElementById('build-side-title');
+const buildSideCopy   = document.getElementById('build-side-copy');
+const buildSideProofs = document.getElementById('build-side-proofs');
+const buildSideCta    = document.getElementById('build-side-cta');
+
+let currentBrandIndex = 0;
+
+function buildBrandTabs() {
+  if (!brandTabs) return;
+  brandTabs.innerHTML = '';
+  BRANDS.forEach((brand, index) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'build-brand-tab';
+    btn.setAttribute('role', 'tab');
+    btn.setAttribute('aria-selected', index === currentBrandIndex ? 'true' : 'false');
+    btn.style.setProperty('--tab-accent', brand.accent);
+    btn.innerHTML = `
+      <span class="build-brand-tab-name">${brand.name}</span>
+      <span class="build-brand-tab-label">${brand.tabLabel}</span>
     `;
-    tlTrack.appendChild(row);
+    btn.addEventListener('click', () => selectBrand(index));
+    btn.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      const dir = e.key === 'ArrowRight' ? 1 : -1;
+      const next = (index + dir + BRANDS.length) % BRANDS.length;
+      selectBrand(next);
+      brandTabs.querySelectorAll('.build-brand-tab')[next].focus();
+    });
+    brandTabs.appendChild(btn);
   });
 }
 
-function updateTimeline() {
-  const today      = ANCHOR_TODAY;
-  const target     = selectedDate;
-  const dates      = getTimelineDates(target);
-  const dateState  = getDateState(target);
-  const rows = tlTrack.querySelectorAll('.tl-step');
+function selectBrand(index) {
+  currentBrandIndex = index;
+  const brand = BRANDS[index];
 
-  rows.forEach((row, i) => {
-    const isTarget = i === dates.length - 1;
-    const isPast = dates[i] < today && !isSameDay(dates[i], today);
-    row.classList.toggle('tl-step--target', isTarget);
-    row.classList.toggle('tl-step--critical', dateState === 'critical');
-    row.classList.toggle('tl-step--past', isPast);
-    row.querySelector('[data-role="date"]').textContent = fmtShort(dates[i]);
+  brandTabs.querySelectorAll('.build-brand-tab').forEach((btn, i) => {
+    btn.setAttribute('aria-selected', i === index ? 'true' : 'false');
   });
 
-  const days = diffDays(target, today);
-  const dayLabel = days === 1 ? 'day' : 'days';
+  buildKicker.textContent = brand.tabLabel;
+  buildName.textContent = brand.name;
+  buildCopy.textContent = brand.copy;
 
-  let html = '';
-  if (dateState === 'critical') {
-    tlSummary.textContent = 'Rush review needed';
-    tlHelper.textContent = `Selected on-court date: ${fmtFull(target)}. This is ${days} ${dayLabel} from today and needs a team review before we can promise delivery.`;
-    html = `<p class="text-avb-red"><span class="font-semibold">Rush request.</span> ${fmtFull(target)} is before the ideal window. The normal start point was ${fmtFull(dates[0])} and Design Lock was ${fmtFull(dates[1])}; we will review it and confirm what is possible.</p>`;
-  } else if (days <= diffDays(MIN_IDEAL_DATE, today) + 3) {
-    tlSummary.textContent = 'Earliest ideal schedule';
-    tlHelper.textContent = `Selected on-court date: ${fmtFull(target)}. The milestones below keep the order inside our standard delivery window.`;
-    html = `<p class="text-avb-black"><span class="font-semibold">Earliest ideal window.</span> Start by ${fmtFull(dates[0])}; lock the design by ${fmtFull(dates[1])}, production starts ${fmtFull(dates[2])}, ships ${fmtFull(dates[3])}, and lands on court ${fmtFull(target)}.</p>`;
-  } else if (days <= 56) {
-    tlSummary.textContent = 'Standard schedule';
-    tlHelper.textContent = `Selected on-court date: ${fmtFull(target)}. Use these dates as the latest safe checkpoints for the order.`;
-    html = `<p class="text-avb-black"><span class="font-semibold">Standard window.</span> Start by ${fmtFull(dates[0])} and lock the design by ${fmtFull(dates[1])} to keep the full production schedule intact.</p>`;
-  } else {
-    tlSummary.textContent = 'Plenty of runway';
-    tlHelper.textContent = `Selected on-court date: ${fmtFull(target)}. You have room to plan before the production clock starts.`;
-    html = `<p class="text-avb-black"><span class="font-semibold">Plenty of runway.</span> Your start target is ${fmtFull(dates[0])}, with room to plan before Design Lock.</p>`;
-  }
-  tlStatus.innerHTML = html;
+  buildDetails.innerHTML = brand.details.map(([title, desc], i) => `
+    <div class="detail-row" data-brand-accent style="--brand-accent:${brand.accent}">
+      <div class="detail-num">${String(i + 1).padStart(2, '0')}</div>
+      <div>
+        <div class="detail-title">${title}</div>
+        <div class="detail-desc">${desc}</div>
+      </div>
+    </div>
+  `).join('');
+
+  buildSideTitle.textContent = brand.sideTitle;
+  buildSideCopy.textContent = brand.sideCopy;
+  buildSideProofs.innerHTML = brand.proofs.map(([label, value]) => `
+    <div class="build-side-proof">
+      <span class="build-side-proof-label">${label}</span>
+      <span class="build-side-proof-value">${value}</span>
+    </div>
+  `).join('');
+
+  buildSideCta.textContent = `${brand.cta} →`;
+  buildSideCta.href = `mailto:team@allvolleyball.com?subject=${encodeURIComponent(brand.name + ' sublimation quote')}`;
 }
 
-buildTimelineSteps();
-updateCalendarNotes();
-renderCalendar();
-updateTimeline();
-syncScenarioChips();
+buildBrandTabs();
+selectBrand(0);
+</script>
 
 
-/* ============================================================
-   SCROLL REVEALS + COUNT-UP (GSAP)
-   ============================================================ */
+<!-- ====================================================================
+     SCROLL REVEALS + COUNT-UP (GSAP)
+     ==================================================================== -->
+<script>
 if (window.gsap && window.ScrollTrigger) {
   gsap.registerPlugin(ScrollTrigger);
 
@@ -1317,660 +1082,6 @@ if (window.gsap && window.ScrollTrigger) {
   document.querySelectorAll('.stat-num').forEach(el => {
     el.textContent = (+el.dataset.target).toLocaleString();
   });
-}
-</script>
-
-
-<!-- ====================================================================
-     JERSEY 3D EXPLORER (Three.js)
-     ==================================================================== -->
-<script type="module">
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-
-const stage    = document.getElementById('jersey-stage');
-const canvasEl = document.getElementById('jersey-canvas');
-const overlay  = document.getElementById('hotspot-overlay');
-const fallback = document.getElementById('jersey-fallback');
-const panel    = document.getElementById('hotspot-panel');
-const panelDef = document.getElementById('hotspot-default');
-const panelAct = document.getElementById('hotspot-active');
-const hotspotList = document.getElementById('hotspot-list');
-const hotspotReset = document.getElementById('hotspot-reset');
-const buildSection = document.getElementById('build');
-const brandTabs = document.getElementById('build-brand-tabs');
-const stageBrandKicker = document.getElementById('build-brand-kicker');
-const stageBrandName = document.getElementById('build-brand-name');
-const brandPanelKicker = document.getElementById('brand-panel-kicker');
-const brandPanelTitle = document.getElementById('brand-panel-title');
-const brandPanelCopy = document.getElementById('brand-panel-copy');
-const brandProofList = document.getElementById('brand-proof-list');
-const brandPanelCta = document.getElementById('brand-panel-cta');
-const hotspotListHeading = document.getElementById('hotspot-list-heading');
-
-const JERSEY_MODEL_URL = 'https://cdn.shopify.com/3d/models/350482a298e3bb83/3d-model.glb';
-const JERSEY_MODEL_HEIGHT = 3.05;
-const JERSEY_MATERIAL_OPACITY = 0.84;
-const HOTSPOT_SURFACE_OFFSET = 0.025;
-const HOTSPOT_DEFAULT_FRONT_Z = 0.73;
-const HOTSPOT_DEFAULT_BACK_Z = -0.73;
-
-const BRANDS = [
-  {
-    slug: 'customfuze',
-    name: 'CustomFuze',
-    tabLabel: 'House line',
-    stageLabel: 'House line',
-    modelUrl: JERSEY_MODEL_URL,
-    colors: {
-      accent: '#C23946',
-      soft: 'rgba(194,57,70,0.13)',
-      fabric: '#F6F1EF',
-      trim: '#C23946',
-      ink: '#0A0A0A'
-    },
-    panelTitle: 'CustomFuze house kit',
-    panelCopy: 'Built for programs that want the most control over color, roster changes, and budget without giving up a polished custom look.',
-    proofs: [
-      ['Best for', 'Original club looks'],
-      ['Control', 'Flexible colors, names, and numbers']
-    ],
-    marks: [
-      { side: 'front', x: -0.18, y: 0.25, w: 1.18, h: 0.18, rotation: -0.44, color: 'accent', opacity: 0.42 },
-      { side: 'front', x: 0.48, y: -0.48, w: 0.18, h: 1.1, rotation: -0.08, color: 'ink', opacity: 0.2 },
-      { side: 'back',  x: 0.0,  y: -0.9,  w: 0.9,  h: 0.13, rotation: 0,     color: 'accent', opacity: 0.32 }
-    ],
-    hotspots: [
-      { side: 'front', anchor: [ 0.00,  0.55], title: 'Club-color fidelity', desc: 'A good house line earns its keep by matching the club palette closely and repeating it across every reorder.' },
-      { side: 'front', anchor: [ 0.62,  0.10], title: 'Sleeve freedom',      desc: 'The cut stays out of the shoulder path, so outside hitters are not fighting the uniform late in a match.' },
-      { side: 'back',  anchor: [-0.45, -0.10], title: 'Roster flexibility',  desc: 'Names and numbers can be handled cleanly across split teams, late adds, and postseason call-ups.' },
-      { side: 'front', anchor: [ 0.55, -0.55], title: 'Budget-smart panels', desc: 'Strategic paneling keeps the look custom without adding decoration where athletes will never notice it.' },
-      { side: 'back',  anchor: [ 0.00, -1.15], title: 'Reorder confidence',  desc: 'The build is meant for multi-season programs that need a consistent look for replacement pieces.' }
-    ]
-  },
-  {
-    slug: 'adidas',
-    name: 'Adidas',
-    tabLabel: 'Icon line',
-    stageLabel: 'Icon line',
-    modelUrl: JERSEY_MODEL_URL,
-    colors: {
-      accent: '#111111',
-      soft: 'rgba(17,17,17,0.09)',
-      fabric: '#F7F7F4',
-      trim: '#111111',
-      ink: '#D7D2C8'
-    },
-    panelTitle: 'Adidas team look',
-    panelCopy: 'For programs that want a recognizable athletic brand presentation, with AVB helping keep the decoration, fit, and order details clean.',
-    proofs: [
-      ['Best for', 'School-standard programs'],
-      ['Priority', 'Brand-forward consistency']
-    ],
-    marks: [
-      { side: 'front', x: -0.55, y: 0.52, w: 0.055, h: 0.66, rotation: -0.2, color: 'accent', opacity: 0.5 },
-      { side: 'front', x: -0.43, y: 0.50, w: 0.055, h: 0.66, rotation: -0.2, color: 'accent', opacity: 0.5 },
-      { side: 'front', x: -0.31, y: 0.48, w: 0.055, h: 0.66, rotation: -0.2, color: 'accent', opacity: 0.5 },
-      { side: 'back',  x: 0.0,   y: 0.22, w: 0.82,  h: 0.12, rotation: 0,    color: 'accent', opacity: 0.24 }
-    ],
-    hotspots: [
-      { side: 'front', anchor: [-0.46,  0.55], title: 'Shoulder identity',   desc: 'The shoulder area needs to stay crisp because it carries the brand read in warmups, photos, and broadcasts.' },
-      { side: 'front', anchor: [ 0.46,  0.18], title: 'Match-ready fit',     desc: 'A cleaner athletic silhouette helps the jersey feel intentional without making sizing harder for mixed rosters.' },
-      { side: 'back',  anchor: [ 0.00,  0.05], title: 'Number contrast',     desc: 'Adidas builds work best when the number block is high-contrast and easy to read from the stands.' },
-      { side: 'front', anchor: [ 0.48, -0.52], title: 'Program consistency', desc: 'The design should line up with shorts, warmups, and spirit wear so the whole team shop feels coordinated.' },
-      { side: 'back',  anchor: [ 0.00, -1.05], title: 'Reorder standards',   desc: 'We keep the details documented so a replacement jersey does not feel like a different generation of the kit.' }
-    ]
-  },
-  {
-    slug: 'asics',
-    name: 'ASICS',
-    tabLabel: 'Court line',
-    stageLabel: 'Court line',
-    modelUrl: JERSEY_MODEL_URL,
-    colors: {
-      accent: '#0057A8',
-      soft: 'rgba(0,87,168,0.12)',
-      fabric: '#F4F8FC',
-      trim: '#D71920',
-      ink: '#0A0A0A'
-    },
-    panelTitle: 'ASICS court build',
-    panelCopy: 'A good option when the priority is a sharp court look with motion-friendly details and strong sponsor or school-mark placement.',
-    proofs: [
-      ['Best for', 'Fast, court-first teams'],
-      ['Priority', 'Movement and mark clarity']
-    ],
-    marks: [
-      { side: 'front', x: -0.18, y: 0.02, w: 1.18, h: 0.12, rotation: 0.28, color: 'accent', opacity: 0.38 },
-      { side: 'front', x: 0.22,  y: -0.2, w: 1.0,  h: 0.08, rotation: 0.28, color: 'trim',   opacity: 0.34 },
-      { side: 'back',  x: 0.0,   y: -0.9, w: 0.84, h: 0.1,  rotation: 0,    color: 'accent', opacity: 0.3 }
-    ],
-    hotspots: [
-      { side: 'front', anchor: [ 0.00,  0.55], title: 'Collar comfort',      desc: 'Neckline finish matters on long tournament days, especially when athletes are wearing the same kit for hours.' },
-      { side: 'front', anchor: [ 0.58,  0.08], title: 'Arm-swing clearance', desc: 'The sleeve and upper-body pattern should support serving and attacking without bunching under the arm.' },
-      { side: 'back',  anchor: [-0.32,  0.02], title: 'Sponsor clarity',     desc: 'ASICS layouts often need clean sponsor placement, so the back and chest marks must read without crowding numbers.' },
-      { side: 'front', anchor: [ 0.55, -0.55], title: 'Breathable body',     desc: 'Panel placement should work for hot gyms and quick turnarounds between matches.' },
-      { side: 'back',  anchor: [ 0.00, -1.12], title: 'Season continuity',   desc: 'The design needs enough structure to handle libero alternates and midseason adds without looking patched together.' }
-    ]
-  },
-  {
-    slug: 'mizuno',
-    name: 'Mizuno',
-    tabLabel: 'Volleyball line',
-    stageLabel: 'Volleyball line',
-    modelUrl: JERSEY_MODEL_URL,
-    colors: {
-      accent: '#174EA6',
-      soft: 'rgba(23,78,166,0.12)',
-      fabric: '#F6F8FF',
-      trim: '#0A0A0A',
-      ink: '#C23946'
-    },
-    panelTitle: 'Mizuno volleyball kit',
-    panelCopy: 'Strong for teams that want volleyball-specific credibility, a lightweight look, and careful planning for libero contrast.',
-    proofs: [
-      ['Best for', 'Volleyball-led programs'],
-      ['Priority', 'Fit and libero planning']
-    ],
-    marks: [
-      { side: 'front', x: -0.23, y: 0.1,  w: 0.95, h: 0.12, rotation: -0.58, color: 'accent', opacity: 0.36 },
-      { side: 'front', x: 0.23,  y: 0.1,  w: 0.95, h: 0.12, rotation: 0.58,  color: 'accent', opacity: 0.36 },
-      { side: 'front', x: 0.0,   y: -0.5, w: 0.86, h: 0.1,  rotation: 0,     color: 'ink',    opacity: 0.25 }
-    ],
-    hotspots: [
-      { side: 'front', anchor: [ 0.00,  0.56], title: 'Volleyball neckline', desc: 'The neckline should feel secure without sitting high or distracting athletes at serve receive.' },
-      { side: 'front', anchor: [ 0.60,  0.12], title: 'Range-ready shoulder', desc: 'Mizuno-style builds need room through the upper body so athletes can swing naturally.' },
-      { side: 'back',  anchor: [-0.42, -0.08], title: 'Libero contrast',     desc: 'The libero version should look like the same system, not a last-minute alternate from another catalog.' },
-      { side: 'front', anchor: [ 0.52, -0.55], title: 'Lightweight feel',    desc: 'Color blocking should support the design without adding visual weight through the torso.' },
-      { side: 'back',  anchor: [ 0.00, -1.12], title: 'Hem stability',       desc: 'The bottom finish should keep its shape after repeat wash cycles and long tournament weekends.' }
-    ]
-  },
-  {
-    slug: 'under-armour',
-    name: 'Under Armour',
-    tabLabel: 'Performance line',
-    stageLabel: 'Performance line',
-    modelUrl: JERSEY_MODEL_URL,
-    colors: {
-      accent: '#C23946',
-      soft: 'rgba(194,57,70,0.12)',
-      fabric: '#F5F5F5',
-      trim: '#111111',
-      ink: '#111111'
-    },
-    panelTitle: 'Under Armour performance kit',
-    panelCopy: 'For teams that want a bold performance read, strong contrast, and a kit that looks durable before the first serve.',
-    proofs: [
-      ['Best for', 'High-contrast team looks'],
-      ['Priority', 'Durability and performance']
-    ],
-    marks: [
-      { side: 'front', x: 0.0,  y: 0.12, w: 1.2,  h: 0.18, rotation: 0,     color: 'ink',    opacity: 0.28 },
-      { side: 'front', x: 0.5,  y: -0.4, w: 0.2,  h: 1.1,  rotation: -0.2,  color: 'accent', opacity: 0.42 },
-      { side: 'back',  x: 0.0,  y: -0.94,w: 0.95, h: 0.12, rotation: 0,     color: 'accent', opacity: 0.32 }
-    ],
-    hotspots: [
-      { side: 'front', anchor: [ 0.00,  0.55], title: 'Locked-in collar',    desc: 'The top block should feel structured and athletic without being stiff around the neck.' },
-      { side: 'front', anchor: [ 0.62,  0.10], title: 'Power shoulder',      desc: 'Under Armour looks work best when the shoulder reads strong but still gives hitters full range.' },
-      { side: 'back',  anchor: [-0.36, -0.06], title: 'Readable numbers',    desc: 'High-contrast numbers keep the kit compliant, easy to score, and easy to follow from the bleachers.' },
-      { side: 'front', anchor: [ 0.55, -0.55], title: 'Heat management',     desc: 'Side-body planning matters for athletes who play back-to-back matches in warm gyms.' },
-      { side: 'back',  anchor: [ 0.00, -1.12], title: 'Durable finish',      desc: 'The hem and side seams should look fresh deep into the season, not just at pickup.' }
-    ]
-  }
-];
-
-let currentBrandIndex = 0;
-let currentBrand = BRANDS[currentBrandIndex];
-let currentSurfaceZ = HOTSPOT_DEFAULT_FRONT_Z;
-let activeHotspots = [];
-let scene, camera, renderer, controls, jersey, modelRoot, accentGroup, hotspotEls, raf, observer;
-let activeModelUrl = null;
-let webglOK = true;
-
-function init() {
-  // Detect WebGL.
-  const canvas = document.createElement('canvas');
-  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-  if (!gl) { showFallback(); return; }
-
-  scene = new THREE.Scene();
-
-  const w = canvasEl.clientWidth, h = canvasEl.clientHeight;
-  camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
-  camera.position.set(0, 0, 5.1);
-
-  try {
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  } catch (e) { showFallback(); return; }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
-  renderer.setSize(w, h);
-  renderer.setClearColor(0xffffff, 0);
-  canvasEl.appendChild(renderer.domElement);
-
-  // Lighting. Soft ambient + key light from upper-right + fill from below.
-  scene.add(new THREE.AmbientLight(0xffffff, 0.72));
-  const key = new THREE.DirectionalLight(0xffffff, 0.82);
-  key.position.set(3, 4, 5);
-  scene.add(key);
-  const fill = new THREE.DirectionalLight(0xffffff, 0.46);
-  fill.position.set(-3, -2, 2);
-  scene.add(fill);
-  const rim = new THREE.DirectionalLight(0xC23946, 0.15);
-  rim.position.set(-4, 1, -2);
-  scene.add(rim);
-
-  jersey = new THREE.Group();
-  scene.add(jersey);
-  loadJerseyModel(currentBrand.modelUrl);
-
-  // OrbitControls. No zoom, no pan. Smooth damping.
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.07;
-  controls.enablePan = false;
-  controls.enableZoom = false;
-  controls.minPolarAngle = Math.PI / 2 - 0.55;
-  controls.maxPolarAngle = Math.PI / 2 + 0.55;
-  controls.autoRotate = true;
-  controls.autoRotateSpeed = 0.7;
-  controls.addEventListener('start', () => { controls.autoRotate = false; });
-
-  buildHotspotButtons();
-
-  // Resize handling.
-  const ro = new ResizeObserver(resize);
-  ro.observe(stage);
-
-  // Pause renderer when off-screen.
-  observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        if (!raf) loop();
-      } else {
-        cancelAnimationFrame(raf);
-        raf = null;
-      }
-    });
-  }, { threshold: 0.05 });
-  observer.observe(stage);
-
-  resize();
-  loop();
-}
-
-function loadJerseyModel(modelUrl) {
-  const loader = new GLTFLoader();
-  loader.load(
-    modelUrl,
-    gltf => {
-      const model = gltf.scene;
-      const box = new THREE.Box3().setFromObject(model);
-      const size = box.getSize(new THREE.Vector3());
-      const center = box.getCenter(new THREE.Vector3());
-      const scale = JERSEY_MODEL_HEIGHT / Math.max(size.y, 0.001);
-
-      model.scale.setScalar(scale);
-      model.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
-
-      model.traverse(obj => {
-        if (!obj.isMesh) return;
-        const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
-        materials.filter(Boolean).forEach(mat => {
-          if (mat.color && !mat.userData.avbBaseColor) mat.userData.avbBaseColor = mat.color.clone();
-          if (mat.map) mat.map.colorSpace = THREE.SRGBColorSpace;
-          if (mat.emissive) {
-            mat.emissive.set(0xffffff);
-            mat.emissiveIntensity = 0.035;
-          }
-          mat.side = THREE.DoubleSide;
-          mat.transparent = true;
-          mat.opacity = JERSEY_MATERIAL_OPACITY;
-          mat.needsUpdate = true;
-        });
-      });
-
-      jersey.clear();
-      modelRoot = model;
-      activeModelUrl = modelUrl;
-      jersey.add(model);
-      syncHotspotSurfaceDepth((size.z * scale * 0.5) + HOTSPOT_SURFACE_OFFSET);
-      applyBrandVisuals();
-      resize();
-    },
-    undefined,
-    error => {
-      console.error('Could not load jersey model:', error);
-      showFallback();
-    }
-  );
-}
-
-function syncHotspotSurfaceDepth(surfaceZ) {
-  currentSurfaceZ = surfaceZ;
-  refreshActiveHotspots();
-  if (!hotspotEls) return;
-  hotspotEls.forEach((item, index) => {
-    const data = activeHotspots[index];
-    if (!data) return;
-    item.data = data;
-    item.world.set(data.pos[0], data.pos[1], data.pos[2]);
-    item.el.setAttribute('aria-label', `${currentBrand.name} detail ${data.id}: ${data.title}`);
-  });
-  projectHotspots();
-}
-
-function refreshActiveHotspots() {
-  activeHotspots = currentBrand.hotspots.map((h, index) => ({
-    ...h,
-    id: index + 1,
-    pos: [
-      h.anchor[0],
-      h.anchor[1],
-      h.side === 'back' ? -currentSurfaceZ : currentSurfaceZ
-    ]
-  }));
-}
-
-function buildBrandTabs() {
-  if (!brandTabs) return;
-  brandTabs.innerHTML = '';
-  BRANDS.forEach((brand, index) => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'build-brand-tab';
-    btn.id = `build-brand-tab-${brand.slug}`;
-    btn.setAttribute('role', 'tab');
-    btn.setAttribute('aria-selected', index === currentBrandIndex ? 'true' : 'false');
-    btn.setAttribute('aria-controls', 'jersey-stage');
-    btn.style.setProperty('--tab-accent', brand.colors.accent);
-    btn.innerHTML = `
-      <span class="build-brand-tab-name">${brand.name}</span>
-      <span class="build-brand-tab-label">${brand.tabLabel}</span>
-    `;
-    btn.addEventListener('click', () => selectBrand(index));
-    btn.addEventListener('keydown', e => {
-      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      e.preventDefault();
-      const dir = e.key === 'ArrowRight' ? 1 : -1;
-      const next = (index + dir + BRANDS.length) % BRANDS.length;
-      selectBrand(next);
-      const nextTab = brandTabs.querySelectorAll('.build-brand-tab')[next];
-      if (nextTab) nextTab.focus();
-    });
-    brandTabs.appendChild(btn);
-  });
-}
-
-function updateBrandTabs() {
-  if (!brandTabs) return;
-  brandTabs.querySelectorAll('.build-brand-tab').forEach((btn, index) => {
-    btn.setAttribute('aria-selected', index === currentBrandIndex ? 'true' : 'false');
-  });
-}
-
-function setBuildBrandVars(brand) {
-  if (!buildSection) return;
-  buildSection.style.setProperty('--brand-accent', brand.colors.accent);
-  buildSection.style.setProperty('--brand-soft', brand.colors.soft);
-  buildSection.style.setProperty('--brand-ink', brand.colors.ink);
-}
-
-function updateBrandContent() {
-  setBuildBrandVars(currentBrand);
-  if (stageBrandKicker) stageBrandKicker.textContent = currentBrand.stageLabel;
-  if (stageBrandName) stageBrandName.textContent = currentBrand.name;
-  if (brandPanelKicker) brandPanelKicker.textContent = currentBrand.stageLabel;
-  if (brandPanelTitle) brandPanelTitle.textContent = currentBrand.panelTitle;
-  if (brandPanelCopy) brandPanelCopy.textContent = currentBrand.panelCopy;
-  if (hotspotListHeading) hotspotListHeading.textContent = `${currentBrand.name} highlights`;
-  if (brandProofList) {
-    brandProofList.innerHTML = currentBrand.proofs.map(([label, value]) => `
-      <div class="build-proof-row">
-        <span class="build-proof-label">${label}</span>
-        <span class="build-proof-value">${value}</span>
-      </div>
-    `).join('');
-  }
-  if (brandPanelCta) {
-    brandPanelCta.textContent = `Ask about ${currentBrand.name}`;
-    brandPanelCta.href = `mailto:team@allvolleyball.com?subject=${encodeURIComponent(currentBrand.name + ' sublimation quote')}`;
-  }
-  updateBrandTabs();
-}
-
-function buildHotspotButtons() {
-  if (!overlay) return;
-  overlay.innerHTML = '';
-  hotspotsReady = false;
-  hotspotEls = activeHotspots.map(h => {
-    const el = document.createElement('button');
-    el.type = 'button';
-    el.className = 'hotspot pointer-events-auto';
-    el.textContent = h.id;
-    el.dataset.id = h.id;
-    el.setAttribute('aria-label', `${currentBrand.name} detail ${h.id}: ${h.title}`);
-    el.addEventListener('click', () => activateHotspot(h.id));
-    overlay.appendChild(el);
-    return { el, world: new THREE.Vector3(...h.pos), data: h };
-  });
-}
-
-function disposeBrandAccents(group) {
-  group.traverse(obj => {
-    if (!obj.isMesh) return;
-    if (obj.geometry) obj.geometry.dispose();
-    if (obj.material) obj.material.dispose();
-  });
-}
-
-function getBrandColor(brand, key) {
-  return brand.colors[key] || key || brand.colors.accent;
-}
-
-function rebuildBrandAccents(brand) {
-  if (!jersey) return;
-  if (accentGroup) {
-    jersey.remove(accentGroup);
-    disposeBrandAccents(accentGroup);
-  }
-  accentGroup = new THREE.Group();
-  brand.marks.forEach(mark => {
-    const material = new THREE.MeshBasicMaterial({
-      color: new THREE.Color(getBrandColor(brand, mark.color)),
-      transparent: true,
-      opacity: mark.opacity,
-      side: THREE.DoubleSide,
-      depthWrite: false
-    });
-    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(mark.w, mark.h), material);
-    const surfaceZ = mark.side === 'back' ? -currentSurfaceZ - 0.028 : currentSurfaceZ + 0.028;
-    mesh.position.set(mark.x, mark.y, surfaceZ);
-    mesh.rotation.z = mark.rotation || 0;
-    if (mark.side === 'back') mesh.rotation.y = Math.PI;
-    accentGroup.add(mesh);
-  });
-  jersey.add(accentGroup);
-}
-
-function applyBrandMaterial(brand) {
-  if (!modelRoot) return;
-  const fabric = new THREE.Color(brand.colors.fabric);
-  const trim = new THREE.Color(brand.colors.trim);
-  let meshIndex = 0;
-  modelRoot.traverse(obj => {
-    if (!obj.isMesh) return;
-    const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
-    materials.filter(Boolean).forEach(mat => {
-      if (mat.color) mat.color.copy(meshIndex % 4 === 0 ? trim : fabric);
-      mat.opacity = JERSEY_MATERIAL_OPACITY;
-      mat.needsUpdate = true;
-    });
-    meshIndex += 1;
-  });
-}
-
-function applyBrandVisuals() {
-  applyBrandMaterial(currentBrand);
-  rebuildBrandAccents(currentBrand);
-}
-
-function buildHotspotList() {
-  hotspotList.querySelectorAll('.hotspot-list-item').forEach(el => el.remove());
-  activeHotspots.forEach(h => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'hotspot-list-item';
-    btn.dataset.hotspotId = h.id;
-    btn.innerHTML = `
-      <span class="hotspot-list-dot">${h.id}</span>
-      <span>
-        <span class="hotspot-list-title block font-display uppercase text-avb-black font-semibold leading-tight">${h.title}</span>
-        <span class="hotspot-list-desc block mt-1 text-xs text-avb-grey leading-snug">${h.desc}</span>
-      </span>
-    `;
-    btn.addEventListener('click', () => activateHotspot(h.id));
-    hotspotList.appendChild(btn);
-  });
-}
-
-function selectBrand(index) {
-  if (index < 0 || index >= BRANDS.length) return;
-  currentBrandIndex = index;
-  currentBrand = BRANDS[currentBrandIndex];
-  refreshActiveHotspots();
-  updateBrandContent();
-  buildHotspotList();
-  if (overlay) buildHotspotButtons();
-  deactivateHotspot();
-
-  if (jersey && webglOK && currentBrand.modelUrl !== activeModelUrl) {
-    loadJerseyModel(currentBrand.modelUrl);
-  } else {
-    applyBrandVisuals();
-  }
-  if (controls) controls.autoRotate = true;
-}
-
-function resize() {
-  if (!renderer) return;
-  const w = stage.clientWidth, h = stage.clientHeight;
-  camera.aspect = w / h;
-  camera.updateProjectionMatrix();
-  renderer.setSize(w, h);
-}
-
-let hotspotsReady = false;
-function projectHotspots() {
-  const tmp = new THREE.Vector3();
-  const camDir = new THREE.Vector3();
-  hotspotEls.forEach(({ el, world, data }) => {
-    tmp.copy(world);
-    jersey.localToWorld(tmp);
-
-    // Facing test: vector from jersey center to hotspot world pos vs camera.
-    const offset = tmp.clone().sub(jersey.position).normalize();
-    camDir.subVectors(camera.position, jersey.position).normalize();
-    const facing = offset.dot(camDir) > -0.05;
-
-    const sv = tmp.clone().project(camera);
-    const x = (sv.x * 0.5 + 0.5) * stage.clientWidth;
-    const y = (-sv.y * 0.5 + 0.5) * stage.clientHeight;
-    el.style.left = x + 'px';
-    el.style.top  = y + 'px';
-    el.classList.toggle('facing-away', !facing);
-  });
-  if (!hotspotsReady) {
-    hotspotEls.forEach(({ el }) => el.classList.add('ready'));
-    hotspotsReady = true;
-  }
-}
-
-function loop() {
-  if (controls) controls.update();
-  if (renderer && scene && camera) renderer.render(scene, camera);
-  if (jersey) projectHotspots();
-  raf = requestAnimationFrame(loop);
-}
-
-function showFallback() {
-  webglOK = false;
-  fallback.classList.remove('hidden');
-  fallback.classList.add('flex');
-}
-
-let activeId = null;
-function activateHotspot(id) {
-  activeId = id;
-  const h = activeHotspots.find(x => x.id === id);
-  if (!h) return;
-  if (hotspotEls) hotspotEls.forEach(({ el, data }) => el.classList.toggle('active', data.id === id));
-  hotspotList.querySelectorAll('.hotspot-list-item').forEach(el => {
-    el.classList.toggle('active', +el.dataset.hotspotId === id);
-  });
-
-  panelDef.classList.add('hidden');
-  panelAct.classList.remove('hidden');
-  hotspotReset.classList.add('is-visible');
-  document.getElementById('hotspot-num').textContent   = `Detail 0${id}`;
-  document.getElementById('hotspot-title').textContent = h.title;
-  document.getElementById('hotspot-desc').textContent  = h.desc;
-
-  if (!jersey || !camera) return;
-
-  // Camera tween toward the hotspot.
-  if (controls) controls.autoRotate = false;
-  const target = new THREE.Vector3(...h.pos);
-  jersey.localToWorld(target);
-  const dir = target.clone().sub(jersey.position).normalize();
-  const camTarget = jersey.position.clone().add(dir.multiplyScalar(3.0));
-  if (window.gsap) {
-    gsap.to(camera.position, { x: camTarget.x, y: camTarget.y, z: camTarget.z, duration: 0.85, ease: 'power2.inOut' });
-    gsap.to(controls.target,  { x: target.x * 0.4, y: target.y * 0.4, z: 0, duration: 0.85, ease: 'power2.inOut' });
-  } else {
-    camera.position.copy(camTarget);
-  }
-}
-
-function deactivateHotspot() {
-  activeId = null;
-  hotspotReset.classList.remove('is-visible');
-  if (!hotspotEls) {
-    panelDef.classList.remove('hidden');
-    panelAct.classList.add('hidden');
-    hotspotList.querySelectorAll('.hotspot-list-item').forEach(el => el.classList.remove('active'));
-    return;
-  }
-  hotspotEls.forEach(({ el }) => el.classList.remove('active'));
-  hotspotList.querySelectorAll('.hotspot-list-item').forEach(el => el.classList.remove('active'));
-  panelDef.classList.remove('hidden');
-  panelAct.classList.add('hidden');
-  if (window.gsap && controls) {
-    gsap.to(camera.position, { x: 0, y: 0, z: 5.1, duration: 0.85, ease: 'power2.inOut',
-      onComplete: () => { controls.autoRotate = true; } });
-    gsap.to(controls.target, { x: 0, y: 0, z: 0, duration: 0.85, ease: 'power2.inOut' });
-  } else if (camera && controls) {
-    camera.position.set(0, 0, 5.1);
-    controls.target.set(0, 0, 0);
-    controls.autoRotate = true;
-  }
-}
-
-buildBrandTabs();
-refreshActiveHotspots();
-updateBrandContent();
-buildHotspotList();
-document.getElementById('hotspot-back').addEventListener('click', deactivateHotspot);
-hotspotReset.addEventListener('click', deactivateHotspot);
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && activeId !== null) deactivateHotspot();
-});
-
-// Init as soon as layout is measurable. window.load waits on images we don't need.
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-  requestAnimationFrame(() => init());
-} else {
-  document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(() => init()));
 }
 </script>
 
