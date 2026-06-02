@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tryout-Ready Team Gear in Texas | Free Quote in 24 Hours | All Volleyball</title>
+<meta name="description" content="Texas tryouts are here. Get your whole team outfitted on time — jerseys, spandex, warmups, bags. Free gift on orders over $100. Quote back in 24 hours. Volleyball-only since 1995.">
+<meta name="robots" content="noindex">
+
+<!-- Open Graph (for paid social previews) -->
+<meta property="og:title" content="Get Your Team Tryout-Ready | All Volleyball">
+<meta property="og:description" content="One order outfits the whole team. Free gift over $100. Quote in 24 hours. Volleyball-only since 1995.">
+<meta property="og:type" content="website">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Tailwind via the official Play CDN. Prototype only; the Shopify port should compile Tailwind from source. -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          'avb-black':    '#0A0A0A',
+          'avb-body':     '#242424',
+          'avb-red':      '#C23946',
+          'avb-red-dark': '#A82F3B',
+          'avb-offwhite': '#FCF8F7',
+          'avb-grey':     '#6B6C6C',
+          'avb-divider':  '#E8E6E4',
+          'avb-promo':    '#F2F2F2',
+        },
+        fontFamily: {
+          display: ['Oswald', 'sans-serif'],
+          body:    ['Inter',  'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
+
+<!-- ============================================================
+     CONVERSION TRACKING — paste your IDs below.
+     Leave blank and the tags simply no-op; the form still works.
+     ============================================================ -->
+<!-- Google Ads / GA4: replace G-XXXX and the conversion send_to in the JS at the bottom.
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXX');</script>
+-->
+<!-- Meta Pixel: paste your standard pixel snippet here, then the JS below fires 'Lead' on submit. -->
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; color: #242424; background: #fff; -webkit-font-smoothing: antialiased; }
+  .font-display { font-family: 'Oswald', sans-serif; }
+  .display-tight { letter-spacing: 0; }
+  #quote { scroll-margin-top: 80px; }
+
+  .hero-fade { opacity: 0; animation: heroFade 700ms ease-out 60ms forwards; }
+  @keyframes heroFade { to { opacity: 1; } }
+
+  .reveal { opacity: 0; transform: translateY(18px); }
+  .reveal.is-visible { opacity: 1; transform: translateY(0);
+    transition: opacity 700ms cubic-bezier(.2,.7,.2,1), transform 700ms cubic-bezier(.2,.7,.2,1); }
+
+  .btn-red { background-color: #C23946; transition: background-color 180ms ease, transform 220ms cubic-bezier(.2,.7,.2,1); }
+  .btn-red:hover { background-color: #A82F3B; }
+  .btn-red:active { transform: translateY(1px); }
+  .btn-ghost-light { transition: background-color 180ms ease; }
+  .btn-ghost-light:hover { background-color: rgba(255,255,255,.08); }
+  .link-inline { text-decoration: underline; text-decoration-color: transparent;
+    text-underline-offset: 4px; transition: text-decoration-color 200ms ease; }
+  .link-inline:hover { text-decoration-color: currentColor; }
+
+  /* ===== Lead form ===== */
+  .lead-field {
+    width: 100%;
+    background: #fff;
+    border: 1px solid #E8E6E4;
+    color: #0A0A0A;
+    font-size: 0.95rem;
+    padding: 12px 14px;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+  }
+  .lead-field::placeholder { color: #9a9a9a; }
+  .lead-field:focus {
+    outline: none;
+    border-color: #C23946;
+    box-shadow: 0 0 0 3px rgba(194,57,70,0.14);
+  }
+  .lead-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #6B6C6C;
+    margin-bottom: 6px;
+  }
+  .hp-field { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  /* ===== Offer chips ===== */
+  .offer-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(255,255,255,0.22);
+    background: rgba(255,255,255,0.04);
+    padding: 8px 13px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #fff;
+  }
+  .offer-chip svg { color: #C23946; }
+
+  /* ===== Trust bar ===== */
+  .trust-num {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    line-height: 0.9;
+    color: #0A0A0A;
+    font-size: clamp(2rem, 4.5vw, 2.9rem);
+  }
+
+  /* ===== Benefit / include cards ===== */
+  .ic-badge {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid #E8E6E4;
+    background: #FCF8F7;
+    color: #C23946;
+    flex-shrink: 0;
+  }
+
+  /* ===== Sticky mobile CTA ===== */
+  .sticky-cta {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 50;
+    display: flex;
+    gap: 8px;
+    padding: 10px 12px;
+    background: rgba(10,10,10,0.96);
+    backdrop-filter: blur(6px);
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  @media (min-width: 1024px) { .sticky-cta { display: none; } }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(120%);
+    background: #0A0A0A; color: #fff; padding: 14px 20px; font-size: 0.9rem; font-weight: 500;
+    box-shadow: 0 16px 40px -16px rgba(0,0,0,0.6); z-index: 60; opacity: 0;
+    transition: transform 320ms cubic-bezier(.2,.7,.2,1), opacity 320ms ease;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+</style>
+</head>
+<body class="font-body">
+
+<!-- ====================================================================
+     HEADER — bare logo + click-to-call. No nav menu (paid LP = no exits).
+     ==================================================================== -->
+<header class="bg-white border-b border-avb-divider">
+  <div class="max-w-[1180px] mx-auto px-5 lg:px-8 py-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="font-display font-semibold uppercase text-avb-black text-lg tracking-tight leading-none">All Volleyball</span>
+      <span class="hidden sm:inline text-[10px] uppercase tracking-[0.2em] text-avb-grey font-semibold border-l border-avb-divider pl-2">Since 1995</span>
+    </div>
+    <a href="tel:+10000000000" data-call class="inline-flex items-center gap-2 text-sm font-semibold text-avb-black hover:text-avb-red transition-colors">
+      <svg class="w-4 h-4 text-avb-red" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/></svg>
+      <span class="hidden sm:inline">Call the Team Line</span>
+      <span class="sm:hidden">Call</span>
+    </a>
+  </div>
+</header>
+
+
+<!-- ====================================================================
+     HERO — message-matched headline + lead form above the fold
+     ==================================================================== -->
+<section class="relative bg-avb-black overflow-hidden hero-fade">
+  <div class="absolute inset-0" style="
+       background:
+         radial-gradient(ellipse 70% 55% at 18% 10%, rgba(194,57,70,0.50) 0%, rgba(194,57,70,0) 60%),
+         radial-gradient(ellipse 60% 50% at 88% 92%, rgba(80,16,24,0.75) 0%, rgba(80,16,24,0) 65%),
+         linear-gradient(155deg, #050505 0%, #1A0508 48%, #0A0A0A 100%);"></div>
+  <div class="absolute inset-0 opacity-[0.06] mix-blend-overlay pointer-events-none" style="
+       background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22220%22 height=%22220%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%222%22 stitchTiles=%22stitch%22/><feColorMatrix values=%220 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>');"></div>
+
+  <div class="relative max-w-[1180px] mx-auto px-5 lg:px-8 py-12 md:py-16 lg:py-20">
+    <div class="grid lg:grid-cols-[1fr_minmax(420px,470px)] gap-10 lg:gap-14 items-center">
+
+      <!-- Left: pitch -->
+      <div>
+        <div class="inline-flex items-center gap-2 text-[0.7rem] uppercase tracking-[0.28em] text-avb-red font-semibold mb-5">
+          <span class="w-2 h-2 rounded-full bg-avb-red animate-pulse"></span>
+          <span data-region>Texas</span> Tryout Season · Now Booking
+        </div>
+        <h1 class="font-display font-semibold text-white uppercase leading-[0.95] display-tight text-[2.1rem] sm:text-[2.7rem] lg:text-[3.5rem]">
+          Get your team<br>tryout-ready.<br><span class="text-avb-red">On time.</span>
+        </h1>
+        <p class="mt-5 text-white/85 text-[1.02rem] md:text-[1.12rem] max-w-lg leading-relaxed">
+          One order outfits the whole roster — jerseys, spandex, warmups, bags. Volleyball-only since 1995. Send your numbers and get a real quote back in <strong class="text-white">24 hours</strong>.
+        </p>
+
+        <!-- Offer chips -->
+        <div class="mt-7 flex flex-wrap gap-2.5">
+          <span class="offer-chip">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"/></svg>
+            Free gift on orders over $100
+          </span>
+          <span class="offer-chip">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+            Team bundle pricing
+          </span>
+          <span class="offer-chip">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+            30-day delivery, in writing
+          </span>
+        </div>
+
+        <!-- Quick trust line -->
+        <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-white/70 text-sm">
+          <span class="inline-flex items-center gap-2"><svg class="w-4 h-4 text-avb-red" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.96a1 1 0 0 0 .95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.447a1 1 0 0 0-.364 1.118l1.287 3.96c.3.922-.755 1.688-1.54 1.118l-3.367-2.447a1 1 0 0 0-1.176 0l-3.367 2.447c-.784.57-1.838-.196-1.539-1.118l1.287-3.96a1 1 0 0 0-.364-1.118L2.345 9.387c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 0 0 .95-.69l1.286-3.96Z"/></svg> 2,000+ clubs outfitted</span>
+          <span class="inline-flex items-center gap-2"><svg class="w-4 h-4 text-avb-red" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.96a1 1 0 0 0 .95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.447a1 1 0 0 0-.364 1.118l1.287 3.96c.3.922-.755 1.688-1.54 1.118l-3.367-2.447a1 1 0 0 0-1.176 0l-3.367 2.447c-.784.57-1.838-.196-1.539-1.118l1.287-3.96a1 1 0 0 0-.364-1.118L2.345 9.387c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 0 0 .95-.69l1.286-3.96Z"/></svg> One specialist, by name</span>
+          <span class="inline-flex items-center gap-2"><svg class="w-4 h-4 text-avb-red" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.96a1 1 0 0 0 .95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.447a1 1 0 0 0-.364 1.118l1.287 3.96c.3.922-.755 1.688-1.54 1.118l-3.367-2.447a1 1 0 0 0-1.176 0l-3.367 2.447c-.784.57-1.838-.196-1.539-1.118l1.287-3.96a1 1 0 0 0-.364-1.118L2.345 9.387c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 0 0 .95-.69l1.286-3.96Z"/></svg> Volleyball-only</span>
+        </div>
+      </div>
+
+      <!-- Right: lead form -->
+      <div id="quote" class="bg-white shadow-2xl">
+        <div class="bg-avb-red px-6 py-4">
+          <div class="font-display font-semibold uppercase text-white text-xl leading-none">Get your free team quote</div>
+          <div class="text-white/85 text-sm mt-1.5">Back in 24 hours — no obligation.</div>
+        </div>
+        <form id="lead-form" class="p-6 space-y-4" novalidate>
+          <!-- honeypot -->
+          <div class="hp-field" aria-hidden="true">
+            <label>Leave this empty<input type="text" name="company_website" tabindex="-1" autocomplete="off"></label>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="lead-label" for="f-name">First name</label>
+              <input class="lead-field" id="f-name" name="name" type="text" placeholder="Jordan" required>
+            </div>
+            <div>
+              <label class="lead-label" for="f-club">Club / School</label>
+              <input class="lead-field" id="f-club" name="club" type="text" placeholder="Lone Star VBC" required>
+            </div>
+          </div>
+
+          <div>
+            <label class="lead-label" for="f-email">Email</label>
+            <input class="lead-field" id="f-email" name="email" type="email" placeholder="you@club.com" required>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="lead-label" for="f-phone">Phone</label>
+              <input class="lead-field" id="f-phone" name="phone" type="tel" placeholder="(555) 555-5555" required>
+            </div>
+            <div>
+              <label class="lead-label" for="f-athletes"># Athletes</label>
+              <input class="lead-field" id="f-athletes" name="athletes" type="number" min="1" placeholder="12">
+            </div>
+          </div>
+
+          <div>
+            <label class="lead-label" for="f-date">When do you need it?</label>
+            <input class="lead-field" id="f-date" name="needed" type="text" placeholder="First tournament — late August">
+          </div>
+
+          <button type="submit" class="w-full btn-red text-white font-semibold uppercase tracking-wide px-6 py-4 text-base flex items-center justify-center gap-2">
+            Get my free quote
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+          </button>
+          <p class="text-xs text-avb-grey text-center leading-relaxed">
+            We only use your info to send your quote. No spam, ever.
+          </p>
+        </form>
+
+        <!-- success state -->
+        <div id="lead-success" class="hidden p-8 text-center">
+          <div class="mx-auto w-14 h-14 rounded-full bg-avb-red/10 text-avb-red flex items-center justify-center mb-4">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+          </div>
+          <h3 class="font-display font-semibold uppercase text-avb-black text-2xl mb-2">You're in.</h3>
+          <p class="text-avb-body leading-relaxed">A Team Sales Specialist will reach out within 24 hours with your quote. Need it sooner? <a href="tel:+10000000000" data-call class="link-inline text-avb-red font-semibold">Call us now.</a></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     OFFER STRIP
+     ==================================================================== -->
+<section class="bg-avb-offwhite border-b border-avb-divider">
+  <div class="max-w-[1180px] mx-auto px-5 lg:px-8 py-6 grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-8 text-center sm:text-left">
+    <div class="flex items-center gap-3 justify-center sm:justify-start">
+      <div class="ic-badge"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"/></svg></div>
+      <div><div class="font-semibold text-avb-black text-sm">Free gift over $100</div><div class="text-xs text-avb-grey">On every qualifying order</div></div>
+    </div>
+    <div class="flex items-center gap-3 justify-center sm:justify-start">
+      <div class="ic-badge"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941"/></svg></div>
+      <div><div class="font-semibold text-avb-black text-sm">The more you order, the more you unlock</div><div class="text-xs text-avb-grey">Tiered team perks &amp; bundle pricing</div></div>
+    </div>
+    <div class="flex items-center gap-3 justify-center sm:justify-start">
+      <div class="ic-badge"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></div>
+      <div><div class="font-semibold text-avb-black text-sm">30-day delivery, guaranteed</div><div class="text-xs text-avb-grey">In writing on our CustomFuze line</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     WHY AVB — benefit cards
+     ==================================================================== -->
+<section class="bg-white py-16 md:py-20 px-5 lg:px-8">
+  <div class="max-w-[1180px] mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight" style="font-size: clamp(1.9rem, 4.5vw, 3rem); line-height: 1.02;">
+        Why directors hand us<br>the whole roster
+      </h2>
+      <p class="mt-4 text-avb-grey text-base md:text-lg reveal">Tryout season is no time to babysit an order. Here's what you get instead.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="reveal">
+        <div class="ic-badge mb-4"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></div>
+        <h3 class="font-display font-semibold uppercase text-avb-black text-lg mb-2 leading-tight">Quote in 24 hours</h3>
+        <p class="text-avb-body text-sm leading-relaxed">A real number from a real person — not a portal ticket. Mockup follows in 48.</p>
+      </div>
+      <div class="reveal">
+        <div class="ic-badge mb-4"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.5 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg></div>
+        <h3 class="font-display font-semibold uppercase text-avb-black text-lg mb-2 leading-tight">One specialist</h3>
+        <p class="text-avb-body text-sm leading-relaxed">Same name, same direct line, every reorder. They learn your colors and your roster.</p>
+      </div>
+      <div class="reveal">
+        <div class="ic-badge mb-4"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></div>
+        <h3 class="font-display font-semibold uppercase text-avb-black text-lg mb-2 leading-tight">On-time, in writing</h3>
+        <p class="text-avb-body text-sm leading-relaxed">30 days from design lock on CustomFuze. Miss the date and the freight's on us.</p>
+      </div>
+      <div class="reveal">
+        <div class="ic-badge mb-4"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"/></svg></div>
+        <h3 class="font-display font-semibold uppercase text-avb-black text-lg mb-2 leading-tight">Volleyball-only</h3>
+        <p class="text-avb-body text-sm leading-relaxed">One sport since 1995. We're not learning on your program — we've done this 2,000+ times.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     WHAT'S INCLUDED + secondary CTA
+     ==================================================================== -->
+<section class="bg-avb-black py-16 md:py-24 px-5 lg:px-8">
+  <div class="max-w-[1180px] mx-auto grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+    <div>
+      <div class="text-[11px] uppercase tracking-[0.25em] text-avb-red font-semibold mb-4 reveal">One order, head to toe</div>
+      <h2 class="font-display font-semibold text-white uppercase reveal display-tight" style="font-size: clamp(1.9rem, 4.5vw, 3.1rem); line-height: 1;">
+        Everything your<br>team steps out in
+      </h2>
+      <p class="mt-5 text-white/75 text-base md:text-lg leading-relaxed reveal max-w-lg">
+        Pick what your program needs — we build it all on one matched order, in your exact colors.
+      </p>
+      <div class="mt-8 grid grid-cols-2 gap-x-8 gap-y-3 reveal">
+        <div class="flex items-center gap-2.5 text-white/90"><svg class="w-4 h-4 text-avb-red flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg> Custom jerseys</div>
+        <div class="flex items-center gap-2.5 text-white/90"><svg class="w-4 h-4 text-avb-red flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg> Spandex &amp; shorts</div>
+        <div class="flex items-center gap-2.5 text-white/90"><svg class="w-4 h-4 text-avb-red flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg> Warmups &amp; outerwear</div>
+        <div class="flex items-center gap-2.5 text-white/90"><svg class="w-4 h-4 text-avb-red flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg> Team bags</div>
+        <div class="flex items-center gap-2.5 text-white/90"><svg class="w-4 h-4 text-avb-red flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg> Knee pads &amp; socks</div>
+        <div class="flex items-center gap-2.5 text-white/90"><svg class="w-4 h-4 text-avb-red flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg> Spirit wear store</div>
+      </div>
+      <a href="#quote" data-scroll class="mt-9 inline-flex items-center gap-2 btn-red text-white font-semibold uppercase tracking-wide px-7 py-4 text-base">
+        Start my quote
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+      </a>
+    </div>
+
+    <!-- Stat block -->
+    <div class="grid grid-cols-2 gap-px bg-white/10 border border-white/15 reveal">
+      <div class="bg-avb-black p-7">
+        <div class="font-display font-semibold text-white leading-[0.9]" style="font-size: clamp(2.2rem,5vw,3.2rem);">30<span class="text-avb-red">yr</span></div>
+        <div class="mt-2 text-[11px] uppercase tracking-[0.16em] text-white/55 font-semibold">In the sport</div>
+      </div>
+      <div class="bg-avb-black p-7">
+        <div class="font-display font-semibold text-white leading-[0.9]" style="font-size: clamp(2.2rem,5vw,3.2rem);">2k<span class="text-avb-red">+</span></div>
+        <div class="mt-2 text-[11px] uppercase tracking-[0.16em] text-white/55 font-semibold">Clubs outfitted</div>
+      </div>
+      <div class="bg-avb-black p-7">
+        <div class="font-display font-semibold text-white leading-[0.9]" style="font-size: clamp(2.2rem,5vw,3.2rem);">24<span class="text-avb-red">hr</span></div>
+        <div class="mt-2 text-[11px] uppercase tracking-[0.16em] text-white/55 font-semibold">Quote turnaround</div>
+      </div>
+      <div class="bg-avb-black p-7">
+        <div class="font-display font-semibold text-white leading-[0.9]" style="font-size: clamp(2.2rem,5vw,3.2rem);">1</div>
+        <div class="mt-2 text-[11px] uppercase tracking-[0.16em] text-white/55 font-semibold">Sport we cover</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     FINAL CTA
+     ==================================================================== -->
+<section class="bg-white py-16 md:py-24 px-5 lg:px-8">
+  <div class="max-w-2xl mx-auto text-center">
+    <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight" style="font-size: clamp(1.9rem, 5vw, 3.2rem); line-height: 1;">
+      The teams that move<br>first get on the<br>court first.
+    </h2>
+    <p class="mt-5 text-avb-body text-base md:text-lg leading-relaxed reveal">
+      Send your numbers today. Quote back in 24 hours, free gift over $100, and a ship date you can plan the season around.
+    </p>
+    <div class="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3 reveal">
+      <a href="#quote" data-scroll class="inline-flex items-center gap-2 btn-red text-white font-semibold uppercase tracking-wide px-8 py-4 text-base">
+        Get my free quote
+      </a>
+      <a href="tel:+10000000000" data-call class="inline-flex items-center gap-2 border border-avb-black text-avb-black font-semibold uppercase tracking-wide px-8 py-4 text-base hover:bg-avb-black hover:text-white transition-colors">
+        Or call the team line
+      </a>
+    </div>
+    <p class="mt-8 font-display uppercase tracking-[0.14em] text-avb-black text-sm md:text-base">
+      Gear you love. On time. Under budget. <span class="text-avb-red">Guaranteed.</span>
+    </p>
+  </div>
+</section>
+
+<footer class="bg-avb-offwhite border-t border-avb-divider py-8 px-5 lg:px-8">
+  <div class="max-w-[1180px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-avb-grey">
+    <span class="font-display font-semibold uppercase text-avb-black tracking-tight">All Volleyball · Since 1995</span>
+    <span>Volleyball-only team gear · Quotes in 24 hours</span>
+  </div>
+</footer>
+
+
+<!-- ====================================================================
+     STICKY MOBILE CTA
+     ==================================================================== -->
+<div class="sticky-cta">
+  <a href="#quote" data-scroll class="flex-1 btn-red text-white font-semibold uppercase tracking-wide text-center py-3 text-sm">Get free quote</a>
+  <a href="tel:+10000000000" data-call class="flex-1 border border-white/40 text-white font-semibold uppercase tracking-wide text-center py-3 text-sm btn-ghost-light">Call</a>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+
+<!-- ====================================================================
+     SCRIPTS
+     ==================================================================== -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+/* ============================================================
+   CONFIG — set these three and the page is campaign-ready.
+   ============================================================ */
+var LEAD_EMAIL    = 'team@allvolleyball.com'; // where mailto-fallback leads go
+var PHONE_NUMBER  = '';                        // e.g. '+12145550123' — wires every Call button
+var FORM_ENDPOINT = '';                        // optional Formspree/Zapier URL. Empty = mailto fallback.
+
+/* ---- wire phone numbers ---- */
+(function () {
+  if (!PHONE_NUMBER) return;
+  document.querySelectorAll('[data-call]').forEach(function (a) { a.href = 'tel:' + PHONE_NUMBER; });
+})();
+
+/* ---- smooth scroll to form ---- */
+document.querySelectorAll('[data-scroll]').forEach(function (a) {
+  a.addEventListener('click', function (e) {
+    e.preventDefault();
+    var t = document.getElementById('quote');
+    if (t) t.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    var firstField = document.getElementById('f-name');
+    setTimeout(function () { if (firstField) firstField.focus(); }, 500);
+  });
+});
+
+/* ---- conversion event (fires on successful submit) ---- */
+function fireConversion() {
+  try { if (window.gtag) gtag('event', 'generate_lead', { event_category: 'tryout', value: 1 }); } catch (e) {}
+  try { if (window.fbq)  fbq('track', 'Lead'); } catch (e) {}
+}
+
+/* ---- toast ---- */
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function () { t.classList.remove('show'); }, 3800);
+}
+
+/* ---- form handling ---- */
+var form = document.getElementById('lead-form');
+form.addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  // honeypot — silently drop bots
+  if (form.company_website && form.company_website.value) return;
+
+  // minimal validation
+  var name = form.name.value.trim();
+  var club = form.club.value.trim();
+  var email = form.email.value.trim();
+  var phone = form.phone.value.trim();
+  if (!name || !club || !email || !phone) {
+    showToast('Please fill in your name, club, email, and phone.');
+    return;
+  }
+
+  fireConversion();
+
+  var data = {
+    name: name, club: club, email: email, phone: phone,
+    athletes: form.athletes.value.trim(), needed: form.needed.value.trim()
+  };
+
+  function done() {
+    form.style.display = 'none';
+    document.getElementById('lead-success').classList.remove('hidden');
+  }
+
+  if (FORM_ENDPOINT) {
+    fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(done).catch(function () {
+      // fall back to mailto if the endpoint fails
+      mailtoFallback(data); done();
+    });
+  } else {
+    mailtoFallback(data);
+    done();
+  }
+});
+
+function mailtoFallback(d) {
+  var subject = 'Tryout team quote — ' + d.club;
+  var body =
+    'Name: ' + d.name + '\n' +
+    'Club/School: ' + d.club + '\n' +
+    'Email: ' + d.email + '\n' +
+    'Phone: ' + d.phone + '\n' +
+    '# Athletes: ' + (d.athletes || '—') + '\n' +
+    'Needed by: ' + (d.needed || '—');
+  window.location.href = 'mailto:' + LEAD_EMAIL +
+    '?subject=' + encodeURIComponent(subject) +
+    '&body=' + encodeURIComponent(body);
+}
+
+/* ---- scroll reveals ---- */
+if (window.gsap && window.ScrollTrigger) {
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.utils.toArray('.reveal').forEach(function (el) {
+    gsap.set(el, { opacity: 0, y: 18 });
+    gsap.to(el, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 90%', once: true } });
+  });
+} else {
+  document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('is-visible'); });
+}
+</script>
+
+</body>
+</html>
