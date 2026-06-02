@@ -135,6 +135,98 @@
     flex-shrink: 0;
   }
 
+  /* ===== Jersey showcase ===== */
+  .filter-pill {
+    border: 1px solid #E8E6E4;
+    background: #fff;
+    color: #6B6C6C;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 9px 16px;
+    cursor: pointer;
+    transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+    white-space: nowrap;
+  }
+  .filter-pill:hover { border-color: #0A0A0A; color: #0A0A0A; }
+  .filter-pill[aria-pressed="true"] {
+    background: #0A0A0A;
+    border-color: #0A0A0A;
+    color: #fff;
+  }
+  .jersey-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #E8E6E4;
+    overflow: hidden;
+    transition: border-color 200ms ease, transform 250ms cubic-bezier(.2,.7,.2,1), box-shadow 250ms ease;
+  }
+  .jersey-card:hover {
+    border-color: #0A0A0A;
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px -24px rgba(10,10,10,0.45);
+  }
+  .jersey-thumb {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: #FCF8F7;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .jersey-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 350ms cubic-bezier(.2,.7,.2,1);
+  }
+  .jersey-card:hover .jersey-thumb img { transform: scale(1.05); }
+  .jersey-badge {
+    position: absolute; top: 10px; left: 10px;
+    font-size: 9px; letter-spacing: 0.16em; font-weight: 700; text-transform: uppercase;
+    color: #fff; background: rgba(10,10,10,0.85); padding: 4px 9px;
+  }
+  .jersey-badge--house { background: rgba(194,57,70,0.92); }
+  .jersey-body { padding: 16px 16px 18px; display: flex; flex-direction: column; flex: 1; }
+  .jersey-brand { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700; color: #6B6C6C; }
+  .jersey-name {
+    font-family: 'Oswald', sans-serif; font-weight: 600; text-transform: uppercase;
+    font-size: 1.05rem; line-height: 1.05; color: #0A0A0A; margin: 5px 0 10px;
+  }
+  .jersey-meta { display: flex; align-items: baseline; justify-content: space-between; margin-top: auto; }
+  .jersey-price { font-family: 'Oswald', sans-serif; font-weight: 600; color: #0A0A0A; font-size: 1.05rem; }
+  .jersey-price span { font-size: 0.7rem; color: #6B6C6C; font-weight: 600; }
+  .jersey-actions { margin-top: 12px; display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+  .jersey-quote {
+    background: #C23946; color: #fff; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 10px 12px; text-align: center; cursor: pointer; transition: background 160ms ease; border: 0;
+  }
+  .jersey-quote:hover { background: #A82F3B; }
+  .jersey-view {
+    border: 1px solid #E8E6E4; color: #0A0A0A; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+    padding: 10px 12px; display: inline-flex; align-items: center; gap: 5px; transition: border-color 160ms ease;
+  }
+  .jersey-view:hover { border-color: #0A0A0A; }
+
+  /* ===== Brand logo strip ===== */
+  .brand-logo { max-height: 34px; max-width: 130px; object-fit: contain; filter: grayscale(1); opacity: 0.55; transition: opacity 200ms ease, filter 200ms ease; }
+  .brand-logo:hover { opacity: 1; filter: none; }
+  .brand-word { font-family: 'Oswald', sans-serif; font-size: 1.5rem; font-weight: 600; color: #0A0A0A; opacity: 0.55; transition: opacity 200ms ease; }
+  .brand-word:hover { opacity: 1; }
+
+  /* ===== FAQ ===== */
+  .faq-item { border-top: 1px solid #E8E6E4; }
+  .faq-item:last-child { border-bottom: 1px solid #E8E6E4; }
+  .faq-q {
+    width: 100%; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 22px 0; cursor: pointer; background: none; border: 0;
+    font-family: 'Oswald', sans-serif; font-weight: 600; text-transform: uppercase; font-size: 1.05rem; color: #0A0A0A;
+  }
+  .faq-q svg { flex-shrink: 0; transition: transform 220ms ease; color: #C23946; }
+  .faq-item.open .faq-q svg { transform: rotate(45deg); }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height 280ms ease; }
+  .faq-a-inner { padding-bottom: 22px; color: #242424; line-height: 1.6; max-width: 52rem; }
+
   /* ===== Sticky mobile CTA ===== */
   .sticky-cta {
     position: fixed;
@@ -274,6 +366,13 @@
             <input class="lead-field" id="f-date" name="needed" type="text" placeholder="First tournament — late August">
           </div>
 
+          <input type="hidden" id="f-style" name="style">
+          <div id="style-pill" class="hidden items-center gap-2 text-sm bg-avb-offwhite border border-avb-divider px-3 py-2.5">
+            <svg class="w-4 h-4 text-avb-red flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+            <span class="text-avb-body">Quoting: <strong id="style-pill-text" class="text-avb-black"></strong></span>
+            <button type="button" id="style-clear" class="ml-auto text-avb-grey hover:text-avb-red text-lg leading-none" aria-label="Clear selected style">&times;</button>
+          </div>
+
           <button type="submit" class="w-full btn-red text-white font-semibold uppercase tracking-wide px-6 py-4 text-base flex items-center justify-center gap-2">
             Get my free quote
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
@@ -358,6 +457,61 @@
 
 
 <!-- ====================================================================
+     JERSEY SHOWCASE — real products, brand-filterable
+     ==================================================================== -->
+<section id="jerseys" class="bg-avb-offwhite py-16 md:py-20 px-5 lg:px-8">
+  <div class="max-w-[1180px] mx-auto">
+    <div class="grid lg:grid-cols-12 gap-6 lg:gap-12 items-end mb-9">
+      <div class="lg:col-span-7">
+        <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-3 reveal">The jerseys</div>
+        <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight" style="font-size: clamp(1.9rem, 4.5vw, 3rem); line-height: 1;">
+          The kit your team<br>plays in
+        </h2>
+      </div>
+      <div class="lg:col-span-5 lg:pb-2 reveal">
+        <p class="text-avb-grey text-base md:text-lg leading-relaxed">
+          Fully sublimated, your colors, your logo — names and numbers baked into the fabric, not pressed on. Pick a style and we'll quote your roster.
+        </p>
+      </div>
+    </div>
+
+    <!-- Brand filter -->
+    <div id="jersey-filter" class="flex flex-wrap gap-2 mb-8 reveal">
+      <button class="filter-pill" data-filter="all" aria-pressed="true">All styles</button>
+      <button class="filter-pill" data-filter="CustomFuze" aria-pressed="false">CustomFuze</button>
+      <button class="filter-pill" data-filter="adidas" aria-pressed="false">adidas</button>
+      <button class="filter-pill" data-filter="Mizuno" aria-pressed="false">Mizuno</button>
+      <button class="filter-pill" data-filter="Under Armour" aria-pressed="false">Under Armour</button>
+    </div>
+
+    <div id="jersey-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 reveal"></div>
+
+    <p class="mt-7 text-sm text-avb-grey reveal">
+      Prices shown are starting points — your team quote includes bundle pricing and your free gift over $100.
+      <a href="https://www.allvolleyball.com/collections/all-jerseys" target="_blank" rel="noopener" class="link-inline text-avb-black font-medium">Browse all 130+ jersey styles →</a>
+    </p>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     BRAND TRUST STRIP
+     ==================================================================== -->
+<section class="bg-white border-y border-avb-divider py-8 px-5 lg:px-8">
+  <div class="max-w-[1180px] mx-auto">
+    <p class="text-center text-[11px] uppercase tracking-[0.22em] text-avb-grey font-semibold mb-6">Official team dealer for</p>
+    <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
+      <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/customfuze_logo_1.png?v=1756144449" alt="CustomFuze" loading="lazy">
+      <span class="brand-word">adidas</span>
+      <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/Mizuno.svg?v=1778155832" alt="Mizuno" loading="lazy">
+      <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/asics_logo.png?v=1726495605" alt="ASICS" loading="lazy">
+      <img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0834/3745/3598/files/under_armour_logo.png?v=1726495605" alt="Under Armour" loading="lazy">
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
      WHAT'S INCLUDED + secondary CTA
      ==================================================================== -->
 <section class="bg-avb-black py-16 md:py-24 px-5 lg:px-8">
@@ -401,6 +555,45 @@
       <div class="bg-avb-black p-7">
         <div class="font-display font-semibold text-white leading-[0.9]" style="font-size: clamp(2.2rem,5vw,3.2rem);">1</div>
         <div class="mt-2 text-[11px] uppercase tracking-[0.16em] text-white/55 font-semibold">Sport we cover</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     FAQ — objection handling
+     ==================================================================== -->
+<section class="bg-white py-16 md:py-20 px-5 lg:px-8">
+  <div class="max-w-[820px] mx-auto">
+    <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight text-center mb-10" style="font-size: clamp(1.7rem, 4vw, 2.6rem); line-height: 1.02;">
+      Tryout-order questions,<br>answered straight
+    </h2>
+    <div id="faq" class="reveal">
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false"><span>What's the minimum order?</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></button>
+        <div class="faq-a"><div class="faq-a-inner">Most custom team jerseys start at a 12-piece minimum. Got a smaller team or a few late adds? Tell your specialist — we handle real rosters, not just round numbers.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false"><span>How fast can we get them?</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></button>
+        <div class="faq-a"><div class="faq-a-inner">Our CustomFuze house line is <strong>30 days from design lock, guaranteed in writing</strong> — miss the date and the freight's on us. Branded lines (adidas, Mizuno, ASICS, Under Armour) run 6–10 weeks on the manufacturer's calendar; we lock a confirmed date as soon as stock clears.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false"><span>Can we mix brands or add other gear?</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></button>
+        <div class="faq-a"><div class="faq-a-inner">Yes. One order, one specialist, one ship date — jerseys, spandex, warmups, bags, and knee pads all on the same quote. Want a spirit store for parents and fans too? We build that on the same artwork.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false"><span>How does the pricing and free gift work?</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></button>
+        <div class="faq-a"><div class="faq-a-inner">We win on bundles, not deep discounts that cheapen the kit. Every qualifying order over $100 gets a free gift, and team bundle pricing scales the more your program orders. Send your numbers and your full quote comes back within 24 hours.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false"><span>Do you do names, numbers, and our logo?</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></button>
+        <div class="faq-a"><div class="faq-a-inner">Always. Full sublimation means your colors, logo, names, and numbers are dyed permanently into the fabric — they won't crack, peel, or fade no matter how many tournaments and washes the season throws at them.</div></div>
       </div>
     </div>
   </div>
@@ -471,13 +664,113 @@ var FORM_ENDPOINT = '';                        // optional Formspree/Zapier URL.
 })();
 
 /* ---- smooth scroll to form ---- */
-document.querySelectorAll('[data-scroll]').forEach(function (a) {
-  a.addEventListener('click', function (e) {
-    e.preventDefault();
-    var t = document.getElementById('quote');
-    if (t) t.scrollIntoView({ behavior: 'smooth', block: 'center' });
+function scrollToQuote(focus) {
+  var t = document.getElementById('quote');
+  if (t) t.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  if (focus !== false) {
     var firstField = document.getElementById('f-name');
-    setTimeout(function () { if (firstField) firstField.focus(); }, 500);
+    setTimeout(function () { if (firstField && !firstField.value) firstField.focus(); }, 500);
+  }
+}
+document.querySelectorAll('[data-scroll]').forEach(function (a) {
+  a.addEventListener('click', function (e) { e.preventDefault(); scrollToQuote(true); });
+});
+
+/* ============================================================
+   JERSEY SHOWCASE — real products pulled from allvolleyball.com
+   ============================================================ */
+var JERSEYS = [
+  { name: "Paramount Sleeveless", brand: "CustomFuze", fit: "Women's", tag: "House line", house: true, price: "57.99",
+    img: "https://cdn.shopify.com/s/files/1/0834/3745/3598/files/JVJ3-0611_SUBLIME.jpg?v=1753807053",
+    url: "https://www.allvolleyball.com/products/customfuze-womens-paramount-sleeveless-jersey" },
+  { name: "Paramount Long Sleeve", brand: "CustomFuze", fit: "Women's", tag: "House line", house: true, price: "59.99",
+    img: "https://cdn.shopify.com/s/files/1/0834/3745/3598/files/JVJ4-0612_VIRTUE_b8555114-294e-483c-943a-8f21bab52d68.jpg?v=1753807206",
+    url: "https://www.allvolleyball.com/products/customfuze-womens-paramount-long-sleeve-jersey" },
+  { name: "Sublimated Sleeveless", brand: "CustomFuze", fit: "Men's", tag: "House line", house: true, price: "45.99",
+    img: "https://cdn.shopify.com/s/files/1/0834/3745/3598/files/MSL_Ace_Front.jpg?v=1727725075",
+    url: "https://www.allvolleyball.com/products/customfuze-mens-sublimated-sleeveless-volleyball-jersey" },
+  { name: "Tabela 23 Short Sleeve", brand: "adidas", fit: "Women's", tag: "Full custom", house: false, price: "19.99",
+    img: "https://cdn.shopify.com/s/files/1/0834/3745/3598/files/adidas_Women_s_Tabela_23_Short_Sleeve_Jersey_Black_-_1.png?v=1748305203",
+    url: "https://www.allvolleyball.com/products/adidas-womens-tabela-23-short-sleeve-jersey" },
+  { name: "V-Neck Sleeveless", brand: "Mizuno", fit: "Women's", tag: "Full custom", house: false, price: "31.99",
+    img: "https://cdn.shopify.com/s/files/1/0834/3745/3598/files/440813_9090_01.jpg?v=1744990865",
+    url: "https://www.allvolleyball.com/products/mizuno-womens-v-neck-sleeveless-jersey" },
+  { name: "Team Tech Short Sleeve", brand: "Under Armour", fit: "Women's", tag: "Full custom", house: false, price: "21.99",
+    img: "https://cdn.shopify.com/s/files/1/0834/3745/3598/files/1367847_001_01.jpg?v=1744990889",
+    url: "https://www.allvolleyball.com/products/under-armour-womens-team-tech-short-sleeve" }
+];
+
+var jerseyGrid = document.getElementById('jersey-grid');
+function renderJerseys(filter) {
+  if (!jerseyGrid) return;
+  var list = (filter && filter !== 'all') ? JERSEYS.filter(function (j) { return j.brand === filter; }) : JERSEYS;
+  jerseyGrid.innerHTML = list.map(function (j) {
+    return '' +
+      '<article class="jersey-card">' +
+        '<div class="jersey-thumb">' +
+          '<span class="jersey-badge ' + (j.house ? 'jersey-badge--house' : '') + '">' + j.tag + '</span>' +
+          '<img src="' + j.img + '" alt="' + j.brand + ' ' + j.name + '" loading="lazy" ' +
+            'onerror="this.style.display=\'none\';this.parentNode.style.background=\'#0A0A0A\'">' +
+        '</div>' +
+        '<div class="jersey-body">' +
+          '<div class="jersey-brand">' + j.brand + ' · ' + j.fit + '</div>' +
+          '<h3 class="jersey-name">' + j.name + '</h3>' +
+          '<div class="jersey-meta">' +
+            '<span class="jersey-price"><span>from</span> $' + j.price + '</span>' +
+          '</div>' +
+          '<div class="jersey-actions">' +
+            '<button type="button" class="jersey-quote" data-quote="' + j.brand + ' ' + j.name + '">Quote this</button>' +
+            '<a class="jersey-view" href="' + j.url + '" target="_blank" rel="noopener">View' +
+              '<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>' +
+            '</a>' +
+          '</div>' +
+        '</div>' +
+      '</article>';
+  }).join('');
+}
+renderJerseys('all');
+
+var jerseyFilter = document.getElementById('jersey-filter');
+if (jerseyFilter) {
+  jerseyFilter.addEventListener('click', function (e) {
+    var btn = e.target.closest('.filter-pill');
+    if (!btn) return;
+    jerseyFilter.querySelectorAll('.filter-pill').forEach(function (p) { p.setAttribute('aria-pressed', 'false'); });
+    btn.setAttribute('aria-pressed', 'true');
+    renderJerseys(btn.getAttribute('data-filter'));
+  });
+}
+
+/* ---- "Quote this style" → prefill + scroll ---- */
+var styleField = document.getElementById('f-style');
+var stylePill = document.getElementById('style-pill');
+var stylePillText = document.getElementById('style-pill-text');
+function setStyle(label) {
+  if (styleField) styleField.value = label || '';
+  if (!stylePill) return;
+  if (label) { stylePill.classList.remove('hidden'); stylePill.classList.add('flex'); stylePillText.textContent = label; }
+  else { stylePill.classList.add('hidden'); stylePill.classList.remove('flex'); stylePillText.textContent = ''; }
+}
+document.addEventListener('click', function (e) {
+  var q = e.target.closest('[data-quote]');
+  if (!q) return;
+  setStyle(q.getAttribute('data-quote'));
+  scrollToQuote(false);
+});
+var styleClear = document.getElementById('style-clear');
+if (styleClear) styleClear.addEventListener('click', function () { setStyle(''); });
+
+/* ---- FAQ accordion ---- */
+document.querySelectorAll('.faq-q').forEach(function (q) {
+  q.addEventListener('click', function () {
+    var item = q.closest('.faq-item');
+    var ans = item.querySelector('.faq-a');
+    var isOpen = item.classList.contains('open');
+    if (isOpen) {
+      item.classList.remove('open'); q.setAttribute('aria-expanded', 'false'); ans.style.maxHeight = null;
+    } else {
+      item.classList.add('open'); q.setAttribute('aria-expanded', 'true'); ans.style.maxHeight = ans.scrollHeight + 'px';
+    }
   });
 });
 
@@ -516,7 +809,8 @@ form.addEventListener('submit', function (e) {
 
   var data = {
     name: name, club: club, email: email, phone: phone,
-    athletes: form.athletes.value.trim(), needed: form.needed.value.trim()
+    athletes: form.athletes.value.trim(), needed: form.needed.value.trim(),
+    style: form.style.value.trim()
   };
 
   function done() {
@@ -547,7 +841,8 @@ function mailtoFallback(d) {
     'Email: ' + d.email + '\n' +
     'Phone: ' + d.phone + '\n' +
     '# Athletes: ' + (d.athletes || '—') + '\n' +
-    'Needed by: ' + (d.needed || '—');
+    'Needed by: ' + (d.needed || '—') + '\n' +
+    'Jersey style of interest: ' + (d.style || '—');
   window.location.href = 'mailto:' + LEAD_EMAIL +
     '?subject=' + encodeURIComponent(subject) +
     '&body=' + encodeURIComponent(body);
