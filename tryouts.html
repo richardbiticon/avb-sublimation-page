@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tryout Season — Outfit Your Team | All Volleyball</title>
+<meta name="description" content="Tryouts set your roster. We set your team up. One team order outfits everyone — then open a spirit store so every parent and fan reps the program. Volleyball-only. On time. Guaranteed.">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Tailwind via the official Play CDN. Prototype only; the Shopify port should compile Tailwind from source. -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          'avb-black':    '#0A0A0A',
+          'avb-body':     '#242424',
+          'avb-red':      '#C23946',
+          'avb-red-dark': '#A82F3B',
+          'avb-offwhite': '#FCF8F7',
+          'avb-grey':     '#6B6C6C',
+          'avb-divider':  '#E8E6E4',
+          'avb-promo':    '#F2F2F2',
+        },
+        fontFamily: {
+          display: ['Oswald', 'sans-serif'],
+          body:    ['Inter',  'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; color: #242424; background: #fff; -webkit-font-smoothing: antialiased; }
+  .font-display { font-family: 'Oswald', sans-serif; }
+  .display-tight { letter-spacing: 0; }
+  #team, #gear, #spirit { scroll-margin-top: 32px; }
+
+  /* Hero loads with a single slow fade. No looping. */
+  .hero-fade { opacity: 0; animation: heroFade 900ms ease-out 80ms forwards; }
+  @keyframes heroFade { to { opacity: 1; } }
+
+  /* Reveal-on-scroll. CSS hides the initial state; GSAP fades in.
+     If GSAP fails to load, the JS fallback adds .is-visible. */
+  .reveal { opacity: 0; transform: translateY(20px); }
+  .reveal.is-visible { opacity: 1; transform: translateY(0);
+    transition: opacity 800ms cubic-bezier(.2,.7,.2,1), transform 800ms cubic-bezier(.2,.7,.2,1); }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+
+  /* Buttons */
+  .btn-red { background-color: #C23946; transition: background-color 200ms ease, transform 250ms cubic-bezier(.2,.7,.2,1); }
+  .btn-red:hover { background-color: #A82F3B; }
+  .btn-ghost-light { transition: background-color 200ms ease, border-color 200ms ease; }
+  .btn-ghost-light:hover { background-color: rgba(255,255,255,.06); }
+  .btn-ghost-dark { transition: background-color 200ms ease, color 200ms ease; }
+  .btn-ghost-dark:hover { background-color: #0A0A0A; color: #fff; }
+
+  .link-inline { text-decoration: underline; text-decoration-color: transparent;
+    text-underline-offset: 4px; transition: text-decoration-color 200ms ease, color 150ms ease; }
+  .link-inline:hover { text-decoration-color: currentColor; }
+
+  /* ============ TRYOUT TIMELINE ============ */
+  .flow-track {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    counter-reset: flow;
+  }
+  @media (max-width: 760px) {
+    .flow-track { grid-template-columns: 1fr 1fr; }
+  }
+  .flow-step {
+    position: relative;
+    padding: 30px 26px 30px 0;
+  }
+  .flow-step::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 26px;
+    height: 2px;
+    background: #E8E6E4;
+  }
+  .flow-step--active::before { background: #C23946; }
+  .flow-num {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: #6B6C6C;
+    margin-bottom: 14px;
+  }
+  .flow-step--active .flow-num { color: #C23946; }
+  .flow-title {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 1.25rem;
+    line-height: 1.05;
+    color: #0A0A0A;
+    margin-bottom: 8px;
+  }
+  .flow-desc { color: #242424; font-size: 0.9rem; line-height: 1.5; }
+
+  /* ============ PRODUCT CARDS ============ */
+  .gear-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #E8E6E4;
+    overflow: hidden;
+    transition: border-color 200ms ease, transform 250ms cubic-bezier(.2,.7,.2,1), box-shadow 250ms ease;
+  }
+  .gear-card:hover {
+    border-color: #0A0A0A;
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px -24px rgba(10,10,10,0.45);
+  }
+  .gear-thumb {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 70% 60% at 30% 20%, rgba(194,57,70,0.16) 0%, rgba(194,57,70,0) 60%),
+      linear-gradient(155deg, #141416 0%, #0A0A0A 100%);
+  }
+  .gear-thumb-mark {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.10);
+    font-size: clamp(2.8rem, 7vw, 4.2rem);
+    line-height: 0.85;
+    text-align: center;
+    padding: 0 12px;
+  }
+  .gear-tag {
+    position: absolute;
+    top: 12px; left: 12px;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #fff;
+    background: rgba(194,57,70,0.92);
+    padding: 5px 9px;
+  }
+  .gear-tag--muted { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); }
+  .gear-body { padding: 20px 20px 22px; display: flex; flex-direction: column; flex: 1; }
+  .gear-name {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+    line-height: 1.05;
+    color: #0A0A0A;
+    margin-bottom: 7px;
+  }
+  .gear-desc { color: #242424; font-size: 0.88rem; line-height: 1.5; flex: 1; }
+  .gear-foot {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #E8E6E4;
+    padding-top: 14px;
+  }
+  .gear-foot-label {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #6B6C6C;
+  }
+
+  /* ============ SPIRIT STORE PANEL ============ */
+  .spirit-feature {
+    display: grid;
+    grid-template-columns: 38px minmax(0,1fr);
+    gap: 16px;
+    padding: 18px 0;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .spirit-feature:first-child { border-top: 0; padding-top: 0; }
+  .spirit-feature-ic {
+    width: 38px; height: 38px;
+    border-radius: 999px;
+    border: 1px solid rgba(194,57,70,0.5);
+    color: #C23946;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .spirit-feature-title {
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 1rem;
+    line-height: 1.1;
+    margin-bottom: 5px;
+  }
+  .spirit-feature-desc { color: rgba(255,255,255,0.72); font-size: 0.9rem; line-height: 1.5; }
+</style>
+</head>
+<body class="font-body">
+
+<!-- ====================================================================
+     SUB-NAV (back to overview)
+     ==================================================================== -->
+<nav class="bg-white border-b border-avb-divider">
+  <div class="max-w-[1280px] mx-auto px-6 lg:px-12 py-4 flex items-center justify-between">
+    <a href="index.html" class="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-avb-grey hover:text-avb-black font-semibold transition-colors">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
+      All Volleyball
+    </a>
+    <div class="text-[11px] uppercase tracking-[0.22em] text-avb-grey font-semibold hidden md:block">
+      Season · <span class="text-avb-black">Tryouts</span>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ====================================================================
+     SECTION 1. HERO
+     ==================================================================== -->
+<section class="relative w-full h-[100svh] max-h-[700px] md:h-[560px] md:max-h-none xl:h-[600px] bg-avb-black overflow-hidden hero-fade">
+  <div class="absolute inset-0" style="
+       background:
+         radial-gradient(ellipse 75% 55% at 22% 12%, rgba(194,57,70,0.55) 0%, rgba(194,57,70,0) 60%),
+         radial-gradient(ellipse 65% 50% at 82% 88%, rgba(80,16,24,0.75) 0%, rgba(80,16,24,0) 65%),
+         radial-gradient(ellipse 55% 40% at 50% 50%, rgba(30,6,10,0.55) 0%, rgba(30,6,10,0) 70%),
+         linear-gradient(155deg, #050505 0%, #1A0508 45%, #0A0A0A 100%);"></div>
+  <div class="absolute inset-0 opacity-[0.07] mix-blend-overlay pointer-events-none" style="
+       background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22220%22 height=%22220%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%222%22 stitchTiles=%22stitch%22/><feColorMatrix values=%220 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>');"></div>
+  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10"></div>
+
+  <div class="relative h-full max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col justify-center py-10 md:py-12">
+    <div class="max-w-3xl">
+      <div class="text-[0.7rem] uppercase tracking-[0.3em] text-avb-red font-semibold mb-4 md:mb-5">Tryout Season · Volleyball-only</div>
+      <h1 class="font-display font-semibold text-white uppercase leading-[0.95] display-tight text-[2.2rem] sm:text-[2.8rem] md:text-[3.6rem] lg:text-[4.4rem]">
+        Tryouts set<br>your roster.<br>We set your<br>team up.
+      </h1>
+      <p class="mt-5 text-white/85 text-[1rem] md:text-[1.15rem] max-w-xl leading-relaxed">
+        The moment your roster locks, the clock starts. One call gets your whole team outfitted on time — and your sideline reppin' the program. Don't shop around. Start here.
+      </p>
+      <div class="mt-7 flex flex-col sm:flex-row gap-3">
+        <a href="mailto:team@allvolleyball.com?subject=Tryout%20team%20order" class="group inline-flex items-center justify-center gap-2 btn-red text-white font-medium px-6 py-3.5 text-[1rem]">
+          Start a team order
+          <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+        </a>
+        <a href="#gear" class="inline-flex items-center justify-center gap-2 border border-white/45 text-white font-medium px-6 py-3.5 text-[1rem] btn-ghost-light">
+          See the gear
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 2. THE WINDOW — tryout-season urgency + the path
+     ==================================================================== -->
+<section class="bg-avb-offwhite py-24 md:py-32 px-6 lg:px-12">
+  <div class="max-w-[1280px] mx-auto">
+
+    <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start mb-16 lg:mb-20">
+      <div class="lg:col-span-5">
+        <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">01 / The window</div>
+        <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
+            style="font-size: clamp(2.25rem, 5vw, 3.75rem); line-height: 1.02;">
+          The window<br>is short.<br>Move first.
+        </h2>
+      </div>
+      <div class="lg:col-span-7 lg:pt-4 space-y-5 text-avb-body text-base md:text-lg leading-relaxed reveal">
+        <p>Tryouts end. Rosters lock. And every director in your region is suddenly racing for the same production calendar at the same time. The teams that move first get their gear first — on the court for the first tournament, not waiting on it.</p>
+        <p>That's the whole game right now. Don't wait until the bracket is set to think about uniforms. The minute you know your numbers, send them to us. We'll have a quote back in 24 hours and a real ship date you can plan the season around.</p>
+      </div>
+    </div>
+
+    <!-- Flow: tryouts -> roster -> one order -> on court -->
+    <div class="flow-track reveal">
+      <div class="flow-step flow-step--active">
+        <div class="flow-num">STEP 01</div>
+        <div class="flow-title">Roster locks</div>
+        <p class="flow-desc">Tryouts wrap. You know your numbers, your sizes, your teams.</p>
+      </div>
+      <div class="flow-step flow-step--active">
+        <div class="flow-num">STEP 02</div>
+        <div class="flow-title">One order</div>
+        <p class="flow-desc">Send it to us. Quote in 24 hours, mockup in 48 — no portal, no runaround.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">STEP 03</div>
+        <div class="flow-title">On the court</div>
+        <p class="flow-desc">Whole team outfitted, on time, on a date we put in writing.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">STEP 04</div>
+        <div class="flow-title">Sideline reps it</div>
+        <p class="flow-desc">Open a spirit store and let every parent and fan gear up too.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 3. PRIMARY PATH — the team order (the main CTA)
+     ==================================================================== -->
+<section id="team" class="bg-avb-black py-24 md:py-32 px-6 lg:px-12">
+  <div class="max-w-[1280px] mx-auto">
+
+    <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+      <div class="lg:col-span-7">
+        <div class="text-[11px] uppercase tracking-[0.25em] text-avb-red font-semibold mb-4 reveal">02 / The team order</div>
+        <h2 class="font-display font-semibold text-white uppercase reveal display-tight"
+            style="font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1;">
+          One order.<br>Whole team.<br>Handled.
+        </h2>
+        <p class="mt-6 text-white/80 text-base md:text-lg max-w-xl leading-relaxed reveal">
+          This is the move. Don't make twelve parents order twelve different ways. Send us the roster and one Team Sales Specialist outfits the entire program — jerseys, warmups, bags, the works — matched, on time, and under budget. You approve a mockup; we handle the rest.
+        </p>
+
+        <ul class="mt-8 space-y-3 reveal">
+          <li class="flex items-start gap-3 text-white/85 text-base">
+            <svg class="w-5 h-5 text-avb-red mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+            Quote in 24 hours, mockup in 48 — a real person, by name.
+          </li>
+          <li class="flex items-start gap-3 text-white/85 text-base">
+            <svg class="w-5 h-5 text-avb-red mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+            30-day delivery guaranteed in writing on our CustomFuze house line.
+          </li>
+          <li class="flex items-start gap-3 text-white/85 text-base">
+            <svg class="w-5 h-5 text-avb-red mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+            Late adds and libero alternates handled on a phone call, not a form.
+          </li>
+        </ul>
+
+        <div class="mt-9 flex flex-col sm:flex-row gap-3 reveal">
+          <a href="mailto:team@allvolleyball.com?subject=Tryout%20team%20order&body=Club%2Fschool%3A%0ANumber%20of%20athletes%3A%0ANumber%20of%20teams%3A%0ATarget%20date%20needed%3A%0ABrand%20preference%20(if%20any)%3A" class="group inline-flex items-center justify-center gap-2 btn-red text-white font-medium px-7 py-4 text-base">
+            Contact us for a team order
+            <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+          </a>
+          <a href="tel:" class="inline-flex items-center justify-center gap-2 border border-white/45 text-white font-medium px-7 py-4 text-base btn-ghost-light">
+            Call the Team Line
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick-quote card -->
+      <div class="lg:col-span-5 reveal">
+        <div class="bg-white p-8 md:p-10">
+          <div class="text-[11px] uppercase tracking-[0.22em] text-avb-grey font-semibold mb-2">What to send</div>
+          <h3 class="font-display font-semibold text-avb-black uppercase text-2xl md:text-3xl mb-6 leading-tight">Three lines.<br>That's the whole ask.</h3>
+          <div class="space-y-0">
+            <div class="flex items-start gap-4 py-4 border-t border-avb-divider">
+              <span class="font-display font-semibold text-avb-red text-xl leading-none">01</span>
+              <div>
+                <div class="font-semibold text-avb-black">Your numbers</div>
+                <div class="text-sm text-avb-grey">How many athletes, how many teams.</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-4 py-4 border-t border-avb-divider">
+              <span class="font-display font-semibold text-avb-red text-xl leading-none">02</span>
+              <div>
+                <div class="font-semibold text-avb-black">Your date</div>
+                <div class="text-sm text-avb-grey">When you need it on the court.</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-4 py-4 border-t border-avb-divider">
+              <span class="font-display font-semibold text-avb-red text-xl leading-none">03</span>
+              <div>
+                <div class="font-semibold text-avb-black">Your colors</div>
+                <div class="text-sm text-avb-grey">Or just send last year's — we'll match it.</div>
+              </div>
+            </div>
+          </div>
+          <a href="mailto:team@allvolleyball.com?subject=Tryout%20team%20order" class="mt-6 inline-flex w-full items-center justify-center gap-2 btn-red text-white font-medium px-6 py-3.5 text-base">
+            Send it now
+          </a>
+          <p class="mt-4 text-xs text-avb-grey text-center">Quote back within 24 hours · No obligation</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 4. GEAR — product showcase
+     ==================================================================== -->
+<section id="gear" class="bg-white py-24 md:py-32 px-6 lg:px-12">
+  <div class="max-w-[1280px] mx-auto">
+
+    <div class="grid lg:grid-cols-12 gap-8 lg:gap-16 items-end mb-12 lg:mb-16">
+      <div class="lg:col-span-8">
+        <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">03 / The gear</div>
+        <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
+            style="font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1;">
+          Everything your<br>team steps out in.
+        </h2>
+      </div>
+      <div class="lg:col-span-4 lg:pb-2 reveal">
+        <p class="text-avb-grey text-base md:text-lg leading-relaxed">
+          From the first whistle to the team bus. Pick what your program needs — we'll build it all on one matched order.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 reveal">
+
+      <!-- Jerseys -->
+      <article class="gear-card">
+        <div class="gear-thumb">
+          <span class="gear-tag">Most popular</span>
+          <span class="gear-thumb-mark">Jerseys</span>
+        </div>
+        <div class="gear-body">
+          <h3 class="gear-name">Custom Jerseys</h3>
+          <p class="gear-desc">Full-sublimation home and away kits with libero contrast, names, and numbers. Matched to your exact colors, every reorder.</p>
+          <div class="gear-foot">
+            <span class="gear-foot-label">Team order</span>
+            <a href="mailto:team@allvolleyball.com?subject=Jersey%20quote" class="link-inline text-avb-black font-semibold text-sm">Quote →</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Spandex -->
+      <article class="gear-card">
+        <div class="gear-thumb">
+          <span class="gear-thumb-mark">Spandex</span>
+        </div>
+        <div class="gear-body">
+          <h3 class="gear-name">Spandex & Shorts</h3>
+          <p class="gear-desc">Court-ready fit your athletes actually want to wear. Team colors, optional side stripe, sizes from youth to adult.</p>
+          <div class="gear-foot">
+            <span class="gear-foot-label">Team order</span>
+            <a href="mailto:team@allvolleyball.com?subject=Spandex%20quote" class="link-inline text-avb-black font-semibold text-sm">Quote →</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Warmups -->
+      <article class="gear-card">
+        <div class="gear-thumb">
+          <span class="gear-thumb-mark">Warmups</span>
+        </div>
+        <div class="gear-body">
+          <h3 class="gear-name">Warmups & Outerwear</h3>
+          <p class="gear-desc">Shooting shirts, quarter-zips, and full warmup sets that make the program look the part walking into the gym.</p>
+          <div class="gear-foot">
+            <span class="gear-foot-label">Team order</span>
+            <a href="mailto:team@allvolleyball.com?subject=Warmups%20quote" class="link-inline text-avb-black font-semibold text-sm">Quote →</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Bags -->
+      <article class="gear-card">
+        <div class="gear-thumb">
+          <span class="gear-thumb-mark">Bags</span>
+        </div>
+        <div class="gear-body">
+          <h3 class="gear-name">Team Bags</h3>
+          <p class="gear-desc">Backpacks and duffels with name and number embroidery. The detail that makes a club look like a club on the road.</p>
+          <div class="gear-foot">
+            <span class="gear-foot-label">Team order</span>
+            <a href="mailto:team@allvolleyball.com?subject=Bags%20quote" class="link-inline text-avb-black font-semibold text-sm">Quote →</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Footwear / accessories -->
+      <article class="gear-card">
+        <div class="gear-thumb">
+          <span class="gear-thumb-mark">Knee Pads<br>& More</span>
+        </div>
+        <div class="gear-body">
+          <h3 class="gear-name">Knee Pads & Accessories</h3>
+          <p class="gear-desc">Knee pads, socks, sleeves, and the in-season replacements every roster runs through. Stocked and ready.</p>
+          <div class="gear-foot">
+            <span class="gear-foot-label">Team order</span>
+            <a href="mailto:team@allvolleyball.com?subject=Accessories%20quote" class="link-inline text-avb-black font-semibold text-sm">Quote →</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Spirit wear teaser (segue) -->
+      <article class="gear-card">
+        <div class="gear-thumb">
+          <span class="gear-tag gear-tag--muted">For the sideline</span>
+          <span class="gear-thumb-mark">Spirit<br>Wear</span>
+        </div>
+        <div class="gear-body">
+          <h3 class="gear-name">Spirit Wear</h3>
+          <p class="gear-desc">Tees, hoodies, and fan gear for parents, siblings, and the student section — sold through your own spirit store.</p>
+          <div class="gear-foot">
+            <span class="gear-foot-label">Spirit store</span>
+            <a href="#spirit" class="link-inline text-avb-red font-semibold text-sm">See how →</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <p class="mt-10 text-center text-sm text-avb-grey reveal">
+      Don't see it? <a href="mailto:team@allvolleyball.com?subject=Tryout%20gear%20question" class="link-inline text-avb-black font-medium">Ask us</a> — if it's volleyball, we can get it.
+    </p>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 5. SPIRIT STORE — the smooth segue
+     ==================================================================== -->
+<section id="spirit" class="bg-avb-offwhite py-24 md:py-32 px-6 lg:px-12">
+  <div class="max-w-[1280px] mx-auto">
+
+    <div class="mb-12 lg:mb-16">
+      <div class="text-[11px] uppercase tracking-[0.25em] text-avb-grey font-semibold mb-4 reveal">04 / The spirit store</div>
+      <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
+          style="font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1;">
+        Your team's set.<br>Now let everyone<br>rep it.
+      </h2>
+      <p class="mt-5 text-avb-grey text-base md:text-lg max-w-2xl reveal">
+        Here's where most directors leave money — and pride — on the table. Once the team's outfitted, parents, siblings, and fans all want the gear too. So we build you a spirit store: your own online shop, your logo, your colors, open all season.
+      </p>
+    </div>
+
+    <div class="grid lg:grid-cols-[minmax(0,1fr)_440px] gap-8 lg:gap-12 items-stretch">
+
+      <!-- Dark feature panel -->
+      <div class="bg-avb-black text-white p-8 md:p-12 flex flex-col justify-center">
+        <div class="text-[11px] uppercase tracking-[0.22em] text-avb-red font-semibold mb-6">Zero inventory. Zero hassle.</div>
+        <div class="space-y-0">
+          <div class="spirit-feature">
+            <div class="spirit-feature-ic">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h12M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5m-12 0h12m-12 0-.621 1.553A.75.75 0 0 0 6.067 19H18a.75.75 0 0 0 .687-1.447L18 16.5"/></svg>
+            </div>
+            <div>
+              <div class="spirit-feature-title">We build it, you share a link</div>
+              <p class="spirit-feature-desc">Your branded storefront goes live with your logo and colors. You just drop the link in the team group chat.</p>
+            </div>
+          </div>
+          <div class="spirit-feature">
+            <div class="spirit-feature-ic">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
+            </div>
+            <div>
+              <div class="spirit-feature-title">Everyone orders for themselves</div>
+              <p class="spirit-feature-desc">Parents and fans pay and pick their own sizes. No more collecting checks or chasing order forms.</p>
+            </div>
+          </div>
+          <div class="spirit-feature">
+            <div class="spirit-feature-ic">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/></svg>
+            </div>
+            <div>
+              <div class="spirit-feature-title">We make it, we ship it</div>
+              <p class="spirit-feature-desc">Orders come straight to us. We produce and ship — you never touch a box or run to the post office.</p>
+            </div>
+          </div>
+          <div class="spirit-feature">
+            <div class="spirit-feature-ic">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941"/></svg>
+            </div>
+            <div>
+              <div class="spirit-feature-title">An optional fundraiser</div>
+              <p class="spirit-feature-desc">Want the store to give back? We can build in a margin that flows to your program. Ask your specialist.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Light CTA card -->
+      <aside class="bg-white border border-avb-divider p-8 md:p-10 flex flex-col">
+        <div class="text-[11px] uppercase tracking-[0.22em] text-avb-grey font-semibold mb-2">From team order to team store</div>
+        <h3 class="font-display font-semibold text-avb-black uppercase text-2xl md:text-3xl mb-4 leading-tight">One partner<br>for both sides.</h3>
+        <p class="text-avb-body leading-relaxed mb-6">
+          Your uniforms and your spirit store run off the same artwork, the same specialist, the same standard. Lock the team order now and we'll have your store ready before your first home match.
+        </p>
+        <div class="mt-auto space-y-3">
+          <a href="mailto:team@allvolleyball.com?subject=Spirit%20store%20setup&body=Club%2Fschool%3A%0AApprox.%20families%2Ffans%3A%0ALogo%20on%20file%3F%3A%0AWant%20a%20fundraiser%20margin%3F%3A" class="inline-flex w-full items-center justify-center gap-2 btn-red text-white font-medium px-6 py-3.5 text-base">
+            Open my spirit store
+          </a>
+          <a href="mailto:team@allvolleyball.com?subject=Tryout%20team%20order" class="inline-flex w-full items-center justify-center gap-2 border border-avb-black text-avb-black font-medium px-6 py-3.5 text-base btn-ghost-dark">
+            Start the team order first
+          </a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     SECTION 6. CLOSE — take charge, one clear next step
+     ==================================================================== -->
+<section class="bg-white py-24 md:py-32 px-6 lg:px-12">
+  <div class="max-w-2xl mx-auto text-center">
+    <div class="text-[11px] uppercase tracking-[0.25em] text-avb-red font-semibold mb-4 reveal">Don't wait on the calendar</div>
+    <h2 class="font-display font-semibold text-avb-black uppercase reveal display-tight"
+        style="font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1;">
+      Roster's set?<br>Let's go.
+    </h2>
+    <p class="mt-6 text-avb-body text-base md:text-lg leading-relaxed reveal">
+      Send us your numbers today. Quote back in 24 hours, a real ship date you can plan around, and a spirit store ready when you are. The teams that move first get on the court first — be one of them.
+    </p>
+    <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 reveal">
+      <a href="mailto:team@allvolleyball.com?subject=Tryout%20team%20order&body=Club%2Fschool%3A%0ANumber%20of%20athletes%3A%0ANumber%20of%20teams%3A%0ATarget%20date%20needed%3A%0ABrand%20preference%20(if%20any)%3A" class="inline-flex items-center gap-2 btn-red text-white font-medium px-7 py-4 text-base">
+        Contact us for a team order
+      </a>
+      <a href="tel:" class="inline-flex items-center gap-2 border border-avb-black text-avb-black font-medium px-7 py-4 text-base btn-ghost-dark">
+        Call the Team Line
+      </a>
+    </div>
+    <p class="mt-8 text-sm text-avb-grey leading-relaxed">
+      Just need spirit gear for the fans? <a href="#spirit" class="link-inline text-avb-black font-medium">Open a spirit store instead.</a>
+    </p>
+    <div class="mt-14 pt-10 border-t border-avb-divider reveal">
+      <p class="font-display uppercase tracking-[0.14em] text-avb-black text-base md:text-xl leading-snug">
+        Gear you love. On time. Under budget. Done correctly. <span class="text-avb-red">Guaranteed.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     GSAP for scroll reveals
+     ==================================================================== -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+if (window.gsap && window.ScrollTrigger) {
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.utils.toArray('.reveal').forEach(el => {
+    gsap.set(el, { opacity: 0, y: 20 });
+    gsap.to(el, {
+      opacity: 1, y: 0,
+      duration: 0.8, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+    });
+  });
+} else {
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+}
+</script>
+
+</body>
+</html>
