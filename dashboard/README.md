@@ -18,8 +18,12 @@ Every view renders on seed data on first load. Nothing blocks on a missing API.
 
 ## Views
 
-`/ OVERVIEW` quarter at a glance, focus strip, live promo, alerts, live discipline scanner.
+`/ OVERVIEW` quarter at a glance, focus strip, June plan callout, live promo, alerts, live discipline scanner.
 `/ ROCKS` the full Q2 Rocks tree, collapsible, rollup % per Rock and subgroup, owners.
+`/ JUNE` the June social and email plan: ordering-window spine, three parallel tracks,
+   send-volume and social-pillar charts, cadence grid, a full June calendar, the Teams /
+   Retail / CustomFuze email tables (tabbed, scan badge per subject), email and social
+   post mockups, stories, and guardrails with the live source-flag scan.
 `/ CAMPAIGNS` Teams 10-email A/B arc and Retail track, scan badge per subject, Klaviyo KPIs.
 `/ PROMOS` active June 1 test (full matrix) and the ended VIP75 clearance, archived.
 `/ BUDGET` P&L by channel and category, target mix vs actual, Test carve-out tracker.
@@ -33,7 +37,8 @@ dashboard/
   index.html      shell: top rail + nav + main mount
   styles.css      brand tokens + the entire theme (no stray hex in markup)
   data.js         typed seed data: rocks, campaigns, promos, budget, automation, partnerships
-  scanner.js      discipline scanner (window.Discipline.scanCopy)
+  june.js         June social + email plan: tracks, email/social calendar, day map, mockup source
+  scanner.js      discipline scanner (window.Discipline.scanCopy) with locked-phrase exemption
   connectors.js   Asana / Klaviyo / n8n contracts with seed fallback
   README.md
   .env.example    env contract

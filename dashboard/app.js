@@ -119,6 +119,23 @@
     ]);
     v.appendChild(focus);
 
+    // June plan callout
+    v.appendChild(sectionLabel("THE MONTH"));
+    const jc = window.AVBJune;
+    v.appendChild(h("div", { class: "panel", onclick: function () { location.hash = "#/june"; }, style: "cursor:pointer" }, [
+      h("div", { style: "display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px" }, [
+        h("span", { class: "mono", style: "color:var(--red)" }, "/ JUNE PLAN"),
+        h("strong", { style: "font-size:17px" }, "Next-season ordering window"),
+      ]),
+      h("p", { style: "color:var(--muted);max-width:74ch" }, jc.jobLine),
+      h("div", { style: "display:flex;gap:18px;margin-top:14px;flex-wrap:wrap" }, [
+        miniStat(String(jc.counts.teams + jc.counts.retail + jc.counts.customfuze), "emails"),
+        miniStat(String(jc.counts.socialPosts), "social posts"),
+        miniStat("3", "parallel tracks"),
+        h("a", { href: "#/june", class: "fbtn on", style: "margin-left:auto;text-decoration:none" }, "Open June plan"),
+      ]),
+    ]));
+
     // Active promo callout
     v.appendChild(sectionLabel("LIVE TEST"));
     const june = D.promos.find(function (p) { return p.status === "active"; });
@@ -156,6 +173,12 @@
     return v;
   }
 
+  function miniStat(num, label) {
+    return h("div", null, [
+      h("div", { style: "font-size:26px;font-weight:700;letter-spacing:-0.02em;line-height:1" }, num),
+      h("div", { class: "mono", style: "margin-top:4px" }, label),
+    ]);
+  }
   function focusItem(label, text, owner) {
     return h("div", { class: "focus-item" }, [
       h("div", { class: "mono" }, "/ " + label),
@@ -657,11 +680,416 @@
   }
 
   /* ============================================================
+     VIEW: JUNE PLAN
+     ============================================================ */
+  const J = window.AVBJune;
+  let juneTab = "teams";
+
+  function viewJune() {
+    const v = h("div", { class: "view" });
+    v.appendChild(head("JUNE", "June social and email plan",
+      "The next-season ordering window is the spine of the month. Every Teams send and most education content points at it. Three tracks run in parallel."));
+
+    // The month's job
+    v.appendChild(h("div", { class: "panel ink" }, [
+      h("div", { class: "mono" }, "/ THE MONTH'S JOB"),
+      h("p", { style: "margin-top:12px;font-size:16px;max-width:78ch;line-height:1.5" }, J.jobLine),
+      h("p", { style: "margin-top:12px;color:var(--muted-ink);max-width:78ch" },
+        "Month-end success: quote requests up from the Teams track, the discount tiers lifting retail AOV toward $150 and $200, and the lookbook in the hands of every club that opened a Teams email."),
+    ]));
+
+    // Three parallel tracks
+    v.appendChild(sectionLabel("THREE TRACKS IN PARALLEL"));
+    const tg = h("div", { class: "grid g3" });
+    J.tracks.forEach(function (t, i) {
+      tg.appendChild(h("div", { class: "rock-card" }, [
+        h("div", { class: "mono", style: "color:var(--red)" }, "0" + (i + 1) + " / " + t.cadence),
+        h("h3", null, t.label),
+        h("p", { style: "font-size:13px;color:var(--muted);margin-top:8px" }, t.note),
+      ]));
+    });
+    v.appendChild(tg);
+
+    // Volume tiles + pillar donut
+    v.appendChild(sectionLabel("THE MONTH BY THE NUMBERS"));
+    v.appendChild(h("div", { class: "grid g4", style: "margin-bottom:16px" }, [
+      tile("dark", "TOTAL SENDS", J.counts.teams + J.counts.retail + J.counts.customfuze, "emails across three tracks"),
+      tile("light", "TEAMS", J.counts.teams, "Mon + Wed repositioning"),
+      tile("light", "RETAIL", J.counts.retail, "Tue + Thu discount rollout"),
+      tile("light", "SOCIAL POSTS", J.counts.socialPosts, "feed posts, stories daily"),
+    ]));
+    v.appendChild(h("div", { class: "grid g2" }, [pillarDonut(), trackSplit()]));
+
+    // Cadence at a glance
+    v.appendChild(sectionLabel("CADENCE AT A GLANCE"));
+    v.appendChild(cadenceGrid());
+    v.appendChild(h("div", { class: "note-line" }, "A/B subject variants on every email. Stories run daily regardless of the feed post."));
+
+    // Month calendar
+    v.appendChild(sectionLabel("JUNE CALENDAR"));
+    v.appendChild(monthCalendar());
+    v.appendChild(calLegend());
+
+    // Email plan with track tabs
+    v.appendChild(sectionLabel("EMAIL PLAN"));
+    v.appendChild(emailTabs(v));
+
+    // Email mockups
+    v.appendChild(sectionLabel("EMAIL MOCKUPS"));
+    v.appendChild(h("div", { class: "mock-grid" }, [
+      emailMock("Teams", "Wed Jun 3", "Volleyball only. That is the whole business.",
+        "Specialization. The whole business is volleyball.", "We only do one thing. We do it correctly.", "See how we work", "TYPOGRAPHY HERO"),
+      emailMock("Retail", "Tue Jun 16", "Round out your cart, take 15% off at $200",
+        "Still shipping free at $99. More in cart, more off.", "Free shipping at $99. 15% off at $200.", "Shop the tiers", "REAL PRODUCT PHOTO"),
+      emailMock("CustomFuze", "Fri Jun 12", "See the CustomFuze lookbook",
+        "Your next uniform starts here.", "Built for one team. One season.", "Open the lookbook", "LOOKBOOK COVER"),
+    ]));
+    v.appendChild(h("div", { class: "note-line hot" }, "Jun 12 carries the v1 lookbook PDF. Hold turnaround and comparison language until Brett confirms timelines and Andrew signs off the comparison copy."));
+
+    // Social plan
+    v.appendChild(sectionLabel("SOCIAL PLAN"));
+    J.social.forEach(function (w) {
+      v.appendChild(h("h4", { class: "mono", style: "margin:22px 0 12px;color:var(--cream-ink)" }, "WEEK " + w.week + "  /  " + w.range));
+      const t = h("table", { class: "matrix" });
+      t.appendChild(h("thead", null, h("tr", null, [th("Day"), th("Pillar"), th("Concept"), th("Caption hook"), th("Format"), th("Scan")])));
+      const tb = h("tbody");
+      w.posts.forEach(function (p) {
+        tb.appendChild(h("tr", null, [
+          h("td", { class: "strong" }, p.date),
+          h("td", null, pillarChip(p.pillar)),
+          h("td", null, p.concept),
+          h("td", { style: "color:var(--muted)" }, p.hook),
+          h("td", { class: "mono", style: "font-size:10px" }, p.format),
+          h("td", null, scanBadge(p.hook)),
+        ]));
+      });
+      t.appendChild(tb);
+      v.appendChild(t);
+    });
+
+    // Social mockups
+    v.appendChild(sectionLabel("SOCIAL MOCKUPS"));
+    v.appendChild(h("p", { class: "lede", style: "margin-top:-6px;margin-bottom:16px" }, "Real photography or typography only. No AI imagery in any customer-facing asset."));
+    v.appendChild(h("div", { class: "mock-grid" }, [
+      socialTypo("ink", "BRAND / SUN", "Too big to care.", "Too small to deliver.", "@allvolleyball", "Typography"),
+      socialTypo("red", "BRAND / SUN", "Volleyball only.", "That is the whole business.", "@allvolleyball", "Typography"),
+      socialPhoto("PRODUCT / TUE", "Court shoe in play", "Free shipping starts at $99. Here is where most teams start.", "Real photo"),
+      socialTypo("cream", "EDUCATION / MON", "When to order", "for fall.", "Swipe for the timeline", "Carousel"),
+      socialPhoto("CLUB SPOTLIGHT / WED", "Feature a serious program", "Runs their season the right way. Here is how they gear up.", "Club photos"),
+      socialCarousel("CUSTOMFUZE / FRI", "The lookbook is here.", "Your next look starts inside.", "Lookbook carousel"),
+    ]));
+
+    // Stories + engagement
+    v.appendChild(sectionLabel("STORIES AND ENGAGEMENT"));
+    v.appendChild(h("div", { class: "panel cream" }, [h("p", { style: "font-size:15px;line-height:1.55;max-width:80ch" }, J.stories)]));
+
+    // Guardrails + source flag (with live scan demo)
+    v.appendChild(sectionLabel("GUARDRAILS"));
+    const gWrap = h("div", { class: "panel" });
+    const gl = h("ul", { class: "bullets" });
+    J.guardrails.forEach(function (g) { gl.appendChild(h("li", null, g)); });
+    gWrap.appendChild(gl);
+    v.appendChild(gWrap);
+
+    v.appendChild(h("div", { class: "alert hot", style: "margin-top:16px" }, [
+      h("span", { class: "a-mark" }, "SOURCE FLAG"),
+      h("div", { class: "a-body" }, [
+        h("strong", null, "Strip this before reuse"),
+        h("span", null, J.sourceFlag),
+        h("div", { style: "margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap" }, [
+          h("span", { style: "font-family:var(--serif);font-style:italic;color:var(--cream-ink)" }, '"Real quote in 24 hours"'),
+          scanBadge("Real quote in 24 hours"),
+        ]),
+      ]),
+    ]));
+
+    // Pricing discipline
+    v.appendChild(h("div", { class: "panel ink", style: "margin-top:16px" }, [
+      h("div", { class: "mono" }, "/ PRICING DISCIPLINE"),
+      h("div", { style: "margin-top:14px;display:flex;gap:14px;flex-wrap:wrap" }, [
+        miniLine("QUOTE CTA", J.quoteCTA),
+        miniLine("CLUB PRICING", J.pricingLine),
+        miniLine("THE 20% CEILING", "Held internally. Never a headline."),
+      ]),
+    ]));
+
+    animateBars(v);
+    return v;
+  }
+
+  function miniLine(label, text) {
+    return h("div", { style: "flex:1;min-width:200px;border-left:2px solid var(--red);padding-left:12px" }, [
+      h("div", { class: "mono", style: "color:var(--muted-ink)" }, label),
+      h("div", { style: "margin-top:6px;font-size:14px" }, text),
+    ]);
+  }
+  function pillarChip(pillar) {
+    return h("span", { class: "chip", style: "background:var(--cream-base);color:var(--cream-ink)" }, [
+      h("span", { class: "d", style: "background:" + (J.pillarColor[pillar] || "var(--muted)") }),
+      document.createTextNode(pillar),
+    ]);
+  }
+
+  function cadenceGrid() {
+    const t = h("table", { class: "cadence" });
+    const head2 = h("tr", null, [h("th", null, "")].concat(J.cadence.cols.map(function (c) { return h("th", null, c); })));
+    t.appendChild(h("thead", null, head2));
+    const tb = h("tbody");
+    const emailRow = h("tr", null, [h("td", { class: "row-label" }, "Email")]);
+    J.cadence.email.forEach(function (e) {
+      let cls = "cad-none", label = e;
+      if (e === "Teams") cls = "cad-teams"; else if (e === "Retail") cls = "cad-retail"; else if (e === "CustomFuze") cls = "cad-fuze";
+      emailRow.appendChild(h("td", null, e === "none" ? h("span", { class: "cad-none" }, "none") : h("span", { class: "cell-pill " + cls }, label)));
+    });
+    tb.appendChild(emailRow);
+    const socialRow = h("tr", null, [h("td", { class: "row-label" }, "Social")]);
+    J.cadence.social.forEach(function (s) {
+      socialRow.appendChild(h("td", null, h("span", { class: "cell-pill cad-social" }, s)));
+    });
+    tb.appendChild(socialRow);
+    t.appendChild(tb);
+    return t;
+  }
+
+  function monthCalendar() {
+    const wrap = h("div", { class: "panel", style: "background:var(--cream-base)" });
+    const cal = h("div", { class: "cal" });
+    ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].forEach(function (d) { cal.appendChild(h("div", { class: "cal-head" }, d)); });
+    for (let d = 1; d <= 30; d++) {
+      const wd = (d - 1) % 7; // June 1 = Monday = 0
+      const day = J.dayMap[d];
+      const cell = h("div", { class: "cal-day" + (wd >= 5 ? " weekend" : "") });
+      cell.appendChild(h("div", { class: "dnum" }, String(d)));
+      if (day.email) {
+        const cls = day.email.track === "Teams" ? "cad-teams" : day.email.track === "Retail" ? "cad-retail" : "cad-fuze";
+        cell.appendChild(h("span", { class: "em-chip " + cls, title: day.email.a }, day.email.track));
+      }
+      if (day.social) {
+        cell.appendChild(h("div", { class: "so-row", title: day.social.concept + ": " + day.social.hook }, [
+          h("span", { class: "dot", style: "background:" + (J.pillarColor[day.social.pillar] || "var(--muted)") }),
+          document.createTextNode(day.social.pillar),
+        ]));
+      }
+      cal.appendChild(cell);
+    }
+    // trailing empties to complete the final week row (30 days from Monday -> 2 trailing on row 5)
+    for (let e = 0; e < 5; e++) cal.appendChild(h("div", { class: "cal-day empty" }));
+    wrap.appendChild(cal);
+    return wrap;
+  }
+  function calLegend() {
+    return h("div", { class: "legend", style: "margin-top:14px" }, [
+      legendItem("var(--ink)", "Teams email"),
+      legendItem("var(--red)", "Retail email"),
+      legendItem("var(--cream-deep)", "CustomFuze email"),
+      legendItem("var(--done)", "Brand"),
+      legendItem("var(--progress)", "Win + BTS"),
+      legendItem("var(--idle)", "Tournament / UGC"),
+    ]);
+  }
+
+  function emailTabs(rootView) {
+    const wrap = h("div");
+    const tabs = h("div", { class: "tabs" });
+    const body = h("div");
+    const defs = [
+      ["teams", "Teams (Mon + Wed)"],
+      ["retail", "Retail (Tue + Thu)"],
+      ["customfuze", "CustomFuze (Fri)"],
+    ];
+    function paint() {
+      body.innerHTML = "";
+      tabs.querySelectorAll("button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-k") === juneTab); });
+      if (juneTab === "teams") body.appendChild(teamsTable());
+      else if (juneTab === "retail") body.appendChild(retailTable());
+      else body.appendChild(fuzeTable());
+    }
+    defs.forEach(function (d) {
+      const b = h("button", { "data-k": d[0] }, d[1]);
+      b.addEventListener("click", function () { juneTab = d[0]; paint(); });
+      tabs.appendChild(b);
+    });
+    wrap.appendChild(tabs);
+    wrap.appendChild(body);
+    paint();
+    return wrap;
+  }
+  function teamsTable() {
+    const t = h("table", { class: "matrix" });
+    t.appendChild(h("thead", null, h("tr", null, [th("Date"), th("Theme"), th("Subject A"), th("Subject B"), th("CTA"), th("Scan")])));
+    const tb = h("tbody");
+    J.teams.forEach(function (e) {
+      tb.appendChild(h("tr", null, [
+        h("td", { class: "strong", style: "white-space:nowrap" }, e.date),
+        h("td", { class: "mono", style: "font-size:10px" }, e.theme),
+        h("td", null, e.a),
+        h("td", { style: "color:var(--muted)" }, e.b),
+        h("td", { class: "mono", style: "font-size:10px" }, e.cta),
+        h("td", null, scanBadge(e.a + " " + e.b)),
+      ]));
+    });
+    t.appendChild(tb);
+    const wrap = h("div");
+    wrap.appendChild(t);
+    wrap.appendChild(h("div", { class: "note-line hot" }, "Quote CTA: " + J.quoteCTA + " No turnaround number. Club inquiries: " + J.pricingLine + " Hold the 20% ceiling internally."));
+    return wrap;
+  }
+  function retailTable() {
+    const t = h("table", { class: "matrix" });
+    t.appendChild(h("thead", null, h("tr", null, [th("Date"), th("Angle"), th("Subject A"), th("Subject B"), th("Scan")])));
+    const tb = h("tbody");
+    J.retail.forEach(function (e) {
+      tb.appendChild(h("tr", null, [
+        h("td", { class: "strong", style: "white-space:nowrap" }, e.date),
+        h("td", { class: "mono", style: "font-size:10px" }, [document.createTextNode(e.angle), e.optional ? h("span", { class: "placeholder-tag", style: "margin-left:6px" }, "optional") : null]),
+        h("td", null, e.a),
+        h("td", { style: "color:var(--muted)" }, e.b),
+        h("td", null, scanBadge(e.a + " " + e.b)),
+      ]));
+    });
+    t.appendChild(tb);
+    const wrap = h("div");
+    wrap.appendChild(t);
+    wrap.appendChild(h("div", { class: "note-line" }, "Every discount email states equipment is excluded. Jun 23 equipment is framed on durability, not price. Jun 18 gift angle is soft and optional."));
+    return wrap;
+  }
+  function fuzeTable() {
+    const t = h("table", { class: "matrix" });
+    t.appendChild(h("thead", null, h("tr", null, [th("Date"), th("Angle"), th("Subject A"), th("Subject B"), th("Scan")])));
+    const tb = h("tbody");
+    J.customfuze.forEach(function (e) {
+      tb.appendChild(h("tr", null, [
+        h("td", { class: "strong", style: "white-space:nowrap" }, e.date),
+        h("td", { class: "mono", style: "font-size:10px" }, e.angle),
+        h("td", null, [document.createTextNode(e.a), e.carries ? h("div", { class: "flag", style: "color:var(--red);font-size:11px;font-style:italic;margin-top:3px" }, e.carries) : null]),
+        h("td", { style: "color:var(--muted)" }, e.b),
+        h("td", null, scanBadge(e.a + " " + e.b)),
+      ]));
+    });
+    t.appendChild(tb);
+    return t;
+  }
+
+  /* ---- Mockup builders ---- */
+  function emailMock(track, date, subject, preheader, line, cta, artLabel) {
+    const trackCls = track === "Teams" ? "cad-teams" : track === "Retail" ? "cad-retail" : "cad-fuze";
+    return h("div", { class: "email-mock" }, [
+      h("div", { class: "em-top" }, [
+        h("div", { class: "em-from" }, "FROM ALL VOLLEYBALL  /  " + date),
+        h("div", { class: "em-brand" }, [h("span", { class: "tick" }), document.createTextNode("ALL VOLLEYBALL")]),
+      ]),
+      h("span", { class: "em-track cell-pill " + trackCls }, track + " track"),
+      h("div", { class: "em-subj" }, subject),
+      h("div", { class: "em-pre" }, preheader),
+      h("div", { class: "em-body" }, [
+        h("div", { class: "em-art" }, artLabel),
+        h("div", { class: "em-line" }, line),
+        h("span", { class: "em-cta" }, cta),
+      ]),
+      h("div", { class: "em-foot" }, [scanBadge(subject + " " + preheader + " " + line), h("span", { class: "mono", style: "font-size:9px" }, "A/B ON")]),
+    ]);
+  }
+  function socialTypo(tone, tag, l1, l2, foot, fmt) {
+    return h("div", { class: "social-mock " + tone }, [
+      h("div", { class: "sm-tag" }, tag),
+      h("div", { class: "sm-main" }, [document.createTextNode(l1), h("span", { class: "accent" }, l2)]),
+      h("div", { class: "sm-foot" }, [h("span", null, foot), h("span", null, fmt)]),
+    ]);
+  }
+  function socialPhoto(tag, headline, sub, fmt) {
+    return h("div", { class: "social-mock photo" }, [
+      h("div", { class: "sm-art" }, "REAL PHOTO"),
+      h("div", { class: "sm-tag", style: "position:relative;z-index:2" }, tag),
+      h("div", { class: "sm-overlay" }, [
+        h("div", { class: "h" }, headline),
+        h("div", { style: "font-size:11px;color:var(--muted);margin-top:4px" }, sub),
+        h("div", { style: "margin-top:8px" }, [scanBadge(sub)]),
+      ]),
+      h("div", { class: "sm-foot", style: "position:relative;z-index:2" }, [h("span", null, "@allvolleyball"), h("span", null, fmt)]),
+    ]);
+  }
+  function socialCarousel(tag, l1, l2, fmt) {
+    return h("div", { class: "social-mock ink" }, [
+      h("div", { class: "sm-tag" }, tag),
+      h("div", { class: "sm-main" }, [document.createTextNode(l1), h("span", { class: "accent" }, l2)]),
+      h("div", { class: "sm-foot" }, [h("span", { class: "carousel-dots" }, [h("i"), h("i"), h("i"), h("i")]), h("span", null, fmt)]),
+    ]);
+  }
+
+  /* ---- June charts ---- */
+  function pillarDonut() {
+    // count posts by normalized pillar
+    const counts = {};
+    J.social.forEach(function (w) { w.posts.forEach(function (p) { counts[p.pillar] = (counts[p.pillar] || 0) + 1; }); });
+    const order = ["Education", "Product", "Club Spotlight", "Win + BTS", "CustomFuze", "Tournament / UGC", "Brand"];
+    const segs = order.filter(function (k) { return counts[k]; }).map(function (k) { return { label: k, value: counts[k], color: J.pillarColor[k] }; });
+    const total = segs.reduce(function (a, s) { return a + s.value; }, 0);
+
+    const NS = "http://www.w3.org/2000/svg";
+    const size = 180, r = 70, cx = size / 2, cy = size / 2, circ = 2 * Math.PI * r;
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 " + size + " " + size);
+    svg.setAttribute("style", "max-width:180px;margin:0 auto");
+    let offset = 0;
+    segs.forEach(function (s) {
+      const c = document.createElementNS(NS, "circle");
+      const len = (s.value / total) * circ;
+      c.setAttribute("cx", cx); c.setAttribute("cy", cy); c.setAttribute("r", r);
+      c.setAttribute("fill", "none"); c.setAttribute("stroke", s.color); c.setAttribute("stroke-width", "26");
+      c.setAttribute("stroke-dasharray", len + " " + (circ - len));
+      c.setAttribute("stroke-dashoffset", -offset);
+      c.setAttribute("transform", "rotate(-90 " + cx + " " + cy + ")");
+      const tt = document.createElementNS(NS, "title"); tt.textContent = s.label + ": " + s.value + " posts"; c.appendChild(tt);
+      svg.appendChild(c);
+      offset += len;
+    });
+    const center = document.createElementNS(NS, "text");
+    center.setAttribute("x", cx); center.setAttribute("y", cy - 2); center.setAttribute("text-anchor", "middle");
+    center.setAttribute("font-size", "30"); center.setAttribute("font-weight", "700"); center.setAttribute("fill", "#1a1a1a");
+    center.textContent = String(total);
+    const sub = document.createElementNS(NS, "text");
+    sub.setAttribute("x", cx); sub.setAttribute("y", cy + 16); sub.setAttribute("text-anchor", "middle");
+    sub.setAttribute("font-size", "9"); sub.setAttribute("fill", "#6f6759"); sub.setAttribute("font-family", "var(--mono)");
+    sub.textContent = "FEED POSTS";
+    svg.appendChild(center); svg.appendChild(sub);
+
+    const wrap = h("div", { class: "chart-wrap" });
+    wrap.appendChild(h("div", { class: "mono", style: "margin-bottom:12px" }, "/ SOCIAL PILLAR MIX"));
+    wrap.appendChild(svg);
+    const leg = h("div", { class: "legend", style: "margin-top:16px" });
+    segs.forEach(function (s) { leg.appendChild(h("span", null, [h("i", { style: "background:" + s.color }), document.createTextNode(s.label + " (" + s.value + ")")])); });
+    wrap.appendChild(leg);
+    return wrap;
+  }
+  function trackSplit() {
+    const data = [
+      { label: "Teams", value: J.counts.teams, color: "var(--ink)", note: "Mon + Wed" },
+      { label: "Retail", value: J.counts.retail, color: "var(--red)", note: "Tue + Thu" },
+      { label: "CustomFuze", value: J.counts.customfuze, color: "var(--red-deep)", note: "Fri" },
+    ];
+    const max = Math.max.apply(null, data.map(function (d) { return d.value; }));
+    const wrap = h("div", { class: "chart-wrap" });
+    wrap.appendChild(h("div", { class: "mono", style: "margin-bottom:18px" }, "/ EMAIL VOLUME BY TRACK"));
+    data.forEach(function (d) {
+      wrap.appendChild(h("div", { class: "mix-row" }, [
+        h("div", { class: "mix-head" }, [
+          h("span", { style: "font-weight:700" }, d.label),
+          h("span", { class: "mono" }, d.value + " sends  /  " + d.note),
+        ]),
+        h("div", { class: "mix-track" }, [h("span", { class: "actual", "data-w": Math.round(d.value / max * 100), style: "background:" + d.color })]),
+      ]));
+    });
+    wrap.appendChild(h("p", { style: "margin-top:6px;font-size:13px;color:var(--muted)" }, "Stories run daily on top of the feed. Tournament weekends add live reposts."));
+    return wrap;
+  }
+
+  /* ============================================================
      ROUTER
      ============================================================ */
   const ROUTES = {
     "/overview": { label: "OVERVIEW", render: viewOverview },
     "/rocks": { label: "ROCKS", render: viewRocks },
+    "/june": { label: "JUNE", render: viewJune },
     "/campaigns": { label: "CAMPAIGNS", render: viewCampaigns },
     "/promos": { label: "PROMOS", render: viewPromos },
     "/budget": { label: "BUDGET", render: viewBudget },
@@ -695,7 +1123,7 @@
   function buildNav() {
     const nav = document.querySelector(".nav");
     const navItems = [
-      ["/overview", "OVERVIEW"], ["/rocks", "ROCKS"], ["/campaigns", "CAMPAIGNS"],
+      ["/overview", "OVERVIEW"], ["/rocks", "ROCKS"], ["/june", "JUNE"], ["/campaigns", "CAMPAIGNS"],
       ["/promos", "PROMOS"], ["/budget", "BUDGET"], ["/automation", "AUTOMATION"], ["/content", "CONTENT"],
     ];
     nav.appendChild(h("div", { class: "nav-group-label" }, [h("span", { class: "mono" }, "/ VIEWS")]));
